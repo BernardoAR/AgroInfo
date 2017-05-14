@@ -13,6 +13,6 @@
         android:layout_marginStart="220dp"
         android:layout_marginTop="300dp"
         android:textSize="30sp"
-        android:text="+" />
+        android:text="+ " />
 
 </FrameLayout>
