@@ -46,10 +46,24 @@ public class Inicial extends Activity {
             }
         });
 
+        // pega o botao
+        Button botaoTeste = (Button) findViewById(R.id.btnTeste);
+
+        // configurar a acao de click
+        botaoTeste.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                Intent abrirTeste = new Intent(Inicial.this,MenuP.class);
+                // solicitar para abir
+                startActivity(abrirTeste);
+
+            }
+        });
+
+
 
 
         // abrir a conexao
-        //DAO.conectar();
+        DAO.conectar();
 
     }
 

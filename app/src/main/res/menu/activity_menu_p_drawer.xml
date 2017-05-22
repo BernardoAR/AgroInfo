@@ -5,9 +5,16 @@
             android:id="@+id/nav_prod"
             android:icon="@drawable/ic_prancheta_24dp"
             android:title="Produtos" />
+
+        <item
+            android:id="@+id/nav_faturamentos"
+            android:icon="@drawable/ic_lucros"
+            android:title="Lucros" />
+
         <item
             android:id="@+id/nav_cont"
-            android:title="Contas" />
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="Configurar Conta" />
     </group>
 
     <item android:title="Subtópicos">

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.br.projeto.FormProd">
+
+
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="551dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp"
+        android:weightSum="1">
+
+
+        <EditText
+            android:id="@+id/edtProd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nome do Produto"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <EditText
+            android:id="@+id/edtPreco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Preço do Produto(EM R$)"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <Spinner
+            android:id="@+id/spnCateg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.08" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="82dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <Button
+                android:id="@+id/btnAdProd"
+                android:layout_width="wrap_content"
+                android:layout_height="61dp"
+                android:text="Adicionar Produto" />
+            <Button
+                android:id="@+id/btnExProd"
+                android:layout_width="wrap_content"
+                android:layout_height="61dp"
+                android:text="Excluir Produto" />
+
+
+
+
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnAdCat"
+            android:layout_width="wrap_content"
+            android:layout_height="57dp"
+            android:text="Adicionar Categoria"
+            android:layout_marginLeft="70dp" />
+        <ListView
+            android:id="@+id/lstProd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+</LinearLayout>

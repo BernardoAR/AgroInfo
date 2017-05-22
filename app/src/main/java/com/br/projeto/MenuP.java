@@ -1,5 +1,6 @@
 package com.br.projeto;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -74,22 +75,16 @@ public class MenuP extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_prod) {
-            // Faz a ação para activity produto, abrir
-            ProdutosFrag produtosFrag = new ProdutosFrag(); //Criar objeto para o Fragmento
-            FragmentManager manager = getSupportFragmentManager(); //FragmentManager
-            //manager.beginTransaction().replace(O que irá ser trocado, a troca,obj.getTag()).commit();
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.anim_escor_d_para_dir, R.anim.anim_escor_fora_para_dir) // Animação
-                    .replace(R.id.contraint_layout_conteudo, produtosFrag,
-                            produtosFrag.getTag()).commit(); //Serve para voltar
-        } else if (id == R.id.nav_cont) {
-            //Faz a ação para activity Contas
-            Subtopico subtopico = new Subtopico();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.anim_escor_d_para_dir, R.anim.anim_escor_fora_para_dir) // Animação
-                    .replace(R.id.contraint_layout_conteudo, subtopico,
-                            subtopico.getTag()).commit(); //Serve para voltar
+            Intent abrirProd = new Intent(MenuP.this,FormProd.class);
+            // solicitar para abir
+            startActivity(abrirProd);
+
+        } else  if(id == R.id.nav_cont){
+            Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
+
+            //solicitar para abrir
+            startActivity(abrirCont);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -97,3 +92,13 @@ public class MenuP extends AppCompatActivity
         return true;
     }
 }
+/*
+                    //               Faz a ação para activity produto, abrir
+            FormProd formProd = new FormProd(); //Criar objeto para o Fragmento
+            FragmentManager manager = getSupportFragmentManager(); //FragmentManager
+            //manager.beginTransaction().replace(O que irá ser trocado, a troca,obj.getTag()).commit();
+            manager.beginTransaction()
+                    .setCustomAnimations(R.anim.anim_escor_d_para_dir, R.anim.anim_escor_fora_para_dir) // Animação
+                    .replace(R.id.contraint_layout_conteudo, formProd,
+                            formProd.getTag()).commit(); //Serve para voltar
+ */
