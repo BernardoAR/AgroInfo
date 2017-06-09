@@ -26,19 +26,15 @@ public class FormularioCadastro extends Activity {
     TextInputLayout textNome_Layout, textEmail_Layout, textSenha_Layout ,textConfirmar_Senha_Layout;
     EditText textNome, textEmail, textSenha, textConfirmar_senha;
     Button btnCadastrar;
-    Usuario usuario, altusuario;
-    DAO DAO;
+    DAO helper = new DAO(this);
     long retornoDB;
+    // Pegar email e testar
+    public static boolean checaemails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_cadastro);
-
-        Intent abrirCadastro = getIntent();
-        altusuario = (Usuario) abrirCadastro.getSerializableExtra("usuario-enviado");
-        usuario = new Usuario();
-        DAO = new DAO(FormularioCadastro.this);
 
         //Resgatar componentes do Layout de texto
         textNome_Layout = (TextInputLayout) findViewById(R.id.textNome_Layout);
@@ -48,14 +44,11 @@ public class FormularioCadastro extends Activity {
 
         //resgatar os componentes
 
-
-
         textNome = (EditText) findViewById(R.id.textNome);
         textEmail = (EditText) findViewById(R.id.textEmail);
         textSenha = (EditText) findViewById(R.id.textSenha);
         textConfirmar_senha = (EditText) findViewById(R.id.textConfirmar_senha);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
-
 
 
         // Chamar os de Animação
@@ -65,16 +58,32 @@ public class FormularioCadastro extends Activity {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /* Verificar se os campos de senha são iguais */
+                // Verificar se já existe campo de email existente
+                EditText email = (EditText)findViewById(R.id.textEmail);
+                String emailstr = email.getText().toString();
+                checaemails = helper.checaEmails(emailstr);
+
                 submForm();
+                /* Verificar se os campos de senha são iguais */
+                // Pegar Strings
+                EditText nome = (EditText)findViewById(R.id.textNome);
+                EditText senha = (EditText)findViewById(R.id.textSenha);
+                EditText confirmar_senha = (EditText)findViewById(R.id.textConfirmar_senha);
+                // Colocar em Strings
+                String nomestr = nome.getText().toString();
+
+                String senhastr = senha.getText().toString();
+                String confsstr = confirmar_senha.getText().toString();
+
                 if (checaNome() && checaEmail() && checaSenha() && checaConf_Senha()) {
-                    usuario.setNome(textNome.getText().toString());
-                    usuario.setEmail(textEmail.getText().toString());
-                    usuario.setSenha(textSenha.getText().toString());
-                    usuario.setConfirmar_senha(textConfirmar_senha.getText().toString());
+                    // Inserir os detalhes no BD
+                    Usuario u = new Usuario();
+                    u.setNome(nomestr);
+                    u.setEmail(emailstr);
+                    u.setSenha(senhastr);
+                    u.setConfirmar_senha(confsstr);
+                    helper.salvarUsuario(u);
 
-
-                    retornoDB = DAO.salvarUsuario(usuario);
 
                     if (retornoDB == -1) {
                         AlertDialog.Builder dialog = new AlertDialog.Builder(FormularioCadastro.this);
@@ -153,7 +162,14 @@ public class FormularioCadastro extends Activity {
     }
     private boolean checaEmail(){
         String email = textEmail.getText().toString().trim();
-        if(email.isEmpty() || !eValido(email)){
+        if(email.isEmpty() || !eValido(email) || checaemails){
+            if (checaemails){
+                textEmail_Layout.setErrorEnabled(true);
+                textEmail_Layout.setError("E-mail já existente!");
+                textEmail.setError("Necessita de Entrada Válida");
+                requestFocus(textEmail);
+                return false;
+            }
             textEmail_Layout.setErrorEnabled(true);
             textEmail_Layout.setError("Entre com um E-mail Válido!");
             textEmail.setError("Necessita de Entrada Válida");
@@ -164,10 +180,10 @@ public class FormularioCadastro extends Activity {
         return true;
     }
 
+    //Ver se tem 6 caracteres no mínimo
     private boolean checaSenha(){
-        if(textSenha.getText().toString().trim().isEmpty()){
-
-            textSenha_Layout.setError("Entre com uma senha");
+        if(textSenha.getText().toString().trim().isEmpty() || textSenha.getText().toString().trim().length() <= 5){
+            textSenha_Layout.setError("Entre com uma senha, que contenha no mínimo 6 caracteres!");
             requestFocus(textSenha);
             return false;
         }

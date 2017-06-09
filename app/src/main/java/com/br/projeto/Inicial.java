@@ -2,21 +2,34 @@ package com.br.projeto;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-
+import com.br.projeto.modelo.Sessao;
 
 
 public class Inicial extends Activity {
+    //Sessão
+    private Sessao sessao;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicial);
+
+        //Sessão, e se estiver logado abrir
+        sessao = new Sessao(this);
+        if(sessao.logado()){
+            startActivity(new Intent(Inicial.this, MenuP.class));
+            finish();
+        }
+
+
 
         // pega o botao
         Button botao = (Button) findViewById(R.id.btnLogin);
@@ -24,7 +37,7 @@ public class Inicial extends Activity {
         // configurar a acao de click
         botao.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Intent abrirLogin = new Intent(Inicial.this,FormularioLogin.class);
+                Intent abrirLogin = new Intent(Inicial.this, FormularioLogin.class);
                 // solicitar para abir
                 startActivity(abrirLogin);
 
@@ -37,7 +50,7 @@ public class Inicial extends Activity {
         // configurar a acao de click
         botaoCadastro.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Intent abrirCadastro = new Intent(Inicial.this,FormularioCadastro.class);
+                Intent abrirCadastro = new Intent(Inicial.this, FormularioCadastro.class);
                 // solicitar para abir
                 startActivity(abrirCadastro);
 
@@ -50,22 +63,13 @@ public class Inicial extends Activity {
         // configurar a acao de click
         botaoTeste.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                Intent abrirTeste = new Intent(Inicial.this,MenuP.class);
+                Intent abrirTeste = new Intent(Inicial.this, MenuP.class);
                 // solicitar para abir
                 startActivity(abrirTeste);
 
             }
         });
 
-
-
-
-        // abrir a conexao
-
-
     }
-
-
-
 
 }

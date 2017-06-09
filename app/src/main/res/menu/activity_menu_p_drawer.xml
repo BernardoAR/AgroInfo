@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_anotacoes"
+            android:icon="@drawable/ic_prancheta_24dp"
+            android:title="Anotações" />
+
         <item
             android:id="@+id/nav_prod"
-            android:icon="@drawable/ic_prancheta_24dp"
+            android:icon="@drawable/ic_produto"
             android:title="Produtos" />
 
         <item
@@ -15,15 +21,14 @@
             android:id="@+id/nav_cont"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="Configurar Conta" />
+
+        <item
+            android:id="@+id/nav_sair"
+            android:icon="@drawable/ic_close"
+            android:title="Sair" />
+
     </group>
 
-    <item android:title="Subtópicos">
-        <menu>
-            <item
-                android:id="@+id/Subt1"
 
-                android:title="Subtp" />
-        </menu>
-    </item>
 
 </menu>

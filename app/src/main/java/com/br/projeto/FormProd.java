@@ -1,20 +1,35 @@
 package com.br.projeto;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.*;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.*;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
 
-public class FormProd extends AppCompatActivity implements View.OnClickListener{
+import com.br.projeto.dao.DAO;
+import com.br.projeto.modelo.Categoria;
+
+import java.util.ArrayList;
+
+public class FormProd extends AppCompatActivity {
     // Declarar
-    private EditText edtProd;
-    private EditText edtPreco;
-    public Spinner spnCateg;
+    private EditText edtNomeProd;
+    Spinner spnCateg;
+    private EditText editPrecoCusto;
+    private EditText editPrecoVenda;
+    private EditText quantidade;
+    private EditText DataCadastro;
     private Button btnAdProd;
-    private Button btnExProd;
-    public ListView lstProd;
+    public Button btnListProd;
+    private Button btnAdCat;
+    DAO dao;
+    DAO helper = new DAO(this);
+    ArrayList<Categoria> arrayListCategoria;
+    ArrayAdapter<Categoria> arrayAdapterCategoria;
 
     //Array Adapter para as Listas
     public ArrayAdapter<String> adpCateg;
@@ -26,70 +41,46 @@ public class FormProd extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_prod);
         // Pega as partes do Layout
-        edtProd = (EditText)findViewById(R.id.edtProd);
-        edtPreco = (EditText)findViewById(R.id.edtPreco);
-        spnCateg = (Spinner)findViewById(R.id.spnCateg);
-        btnAdProd = (Button)findViewById(R.id.btnAdProd);
-        btnExProd = (Button)findViewById(R.id.btnExProd);
-        lstProd = (ListView)findViewById(R.id.lstProd);
+        edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
+        spnCateg = (Spinner) findViewById(R.id.spnCateg);
+        editPrecoCusto = (EditText) findViewById(R.id.editPrecoCusto);
+        editPrecoVenda = (EditText) findViewById(R.id.editPrecoVenda);
+        quantidade = (EditText) findViewById(R.id.quantidade);
+        DataCadastro = (EditText) findViewById(R.id.DataCadastro);
+        btnAdProd = (Button) findViewById(R.id.btnAdProd);
+        btnListProd = (Button) findViewById(R.id.btnListProd);
 
-        //Chamar o setOnClickListener
-        btnAdProd.setOnClickListener(this);
-        btnExProd.setOnClickListener(this);
 
-        /* Categoria
+        // Categoria
         Button botaoCateg = (Button) findViewById(R.id.btnAdCat);
 
         // Configura a Ação de clique
         botaoCateg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirCateg = new Intent(FormProd.this,Categ.class);
+                Intent abrirCateg = new Intent(FormProd.this, NovaCategoria.class);
                 // solicitar para abir
                 startActivity(abrirCateg);
 
             }
         });
-        */
 
-        //Chamar o Array Adapter e fazer escorregar, mostrando as listas, e vincular ao Spinner
-
-        adpCateg = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        adpCateg.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnCateg.setAdapter(adpCateg);
-
-        adpCateg.add("Opção 1");
-        //
-        adpProd = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        lstProd.setAdapter(adpProd);
     }
 
+    public void populaLista() {
+        dao = new DAO(FormProd.this);
+        arrayListCategoria = dao.selectAllCategoria();
+        dao.close();
 
+        if (spnCateg != null) {
+            arrayAdapterCategoria = new ArrayAdapter<Categoria>(FormProd.this,
+                    android.R.layout.simple_spinner_dropdown_item, arrayListCategoria);
+            spnCateg.setAdapter(arrayAdapterCategoria);
+        }
+    }
 
     @Override
-    public void onClick(View v) {
-        //Ver qual objeto está chamando o Evento
-        if (v == btnAdProd){
-            // Pegar os textos colocados
-            String item = edtProd.getText().toString();
-            String item2 = edtPreco.getText().toString();
-
-            // Receber a Categoria Escolhida
-            item += " - "+ spnCateg.getSelectedItem() + " - "  + item2;
-
-            //Adicionar
-            adpProd.add(item);
-
-        } else
-            if (v == btnExProd){
-                //Código de Exclusão, pegar um Item, se for, claro, maior que 0
-                if (adpProd.getCount() > 0)
-                {
-                    // Pegar a posição do Item
-                     String item = adpProd.getItem(0);
-                    //Remover
-                     adpProd.remove(item);
-                }
-            }
-
+    protected void onResume(){
+        super.onResume();
+        populaLista();
     }
 }

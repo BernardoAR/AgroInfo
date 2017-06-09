@@ -23,7 +23,8 @@
         </activity>
         <activity
             android:name=".FormularioLogin"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".FormularioCadastro"
             android:label="@string/title_activity_cadastro" />
@@ -31,6 +32,14 @@
             android:name=".MenuP"
             android:label="" />
         <activity android:name=".FormProd" />
+        <activity android:name=".ConfConta" />
+        <activity android:name=".Lista_anotacoes" />
+        <activity android:name=".Nova_anotacao" />
+        <activity android:name=".Lista_produtos" />
+        <activity android:name=".AlterarProduto" />
+        <activity android:name=".NovaCategoria" />
+        <activity android:name=".AlterarCategoria"/>
+        <activity android:name=".alterar_anotacao"/>
 
     </application>
 
