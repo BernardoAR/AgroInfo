@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.br.projeto.MenuP;
 import com.br.projeto.modelo.Anotacao;
 import com.br.projeto.modelo.Categoria;
+import com.br.projeto.modelo.Cliente;
 import com.br.projeto.modelo.Usuario;
 
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ public class DAO extends SQLiteOpenHelper {
     private static final String TABELA2 = "anotacoes";
 
     private static final String ID_ANOTACAO = "id_anotacao";
+    private static final String ASSUNTO = "assunto";
     private static final String ANOTACAO = "anotacao";
     private static final String ID_USER = "id_usuario";
 
@@ -64,6 +67,14 @@ public class DAO extends SQLiteOpenHelper {
     private static final String ID_PROD = "id_produto";
     private static final String ID_USUAR = "id_usuario";
     private static final String ID_CATEG = "id_categoria";
+
+    private static final String TABELA6 = "cliente";
+
+    private static final String ID_CLIENTE = "id_usuario";
+    private static final String NOME_CLIENTE = "nome_usuario";
+    private static final String EMAILC = "email";
+    private static final String SENHAC = "senha";
+
     public SQLiteDatabase db;
 
     // CRIAR AS TABELAS
@@ -76,6 +87,7 @@ public class DAO extends SQLiteOpenHelper {
 
     private static final String CRIAR_TABELA_ANOTACOES = "CREATE TABLE " + TABELA2 + " ( " +
             " " + ID_ANOTACAO + " INTEGER PRIMARY KEY , " +
+            " " + ASSUNTO + " TEXT NOT NULL, " +
             " " + ANOTACAO + " TEXT NOT NULL, " +
             " " + ID_USER + " INTEGER, " +
             "CONSTRAINT fk_tbAnotacoes_tbUsuario FOREIGN KEY ( " +
@@ -93,8 +105,8 @@ public class DAO extends SQLiteOpenHelper {
     private static final String CRIAR_TABELA_PRODUTO = "CREATE TABLE " + TABELA4 + " ( " +
             " " + ID_PRODUTO + " INTEGER PRIMARY KEY , " +
             " " + NOME_PRODUTO + " VARCHAR(45) NOT NULL, " +
-            " " + PRECO_CUSTO + " DECIMAL(3,2) NOT NULL, " +
-            " " + PRECO_VENDA + " DECIMAL(3,2) NOT NULL, " +
+            " " + PRECO_CUSTO + " DECIMAL(6,2) NOT NULL, " +
+            " " + PRECO_VENDA + " DECIMAL(6,2) NOT NULL, " +
             " " + QUANTIDADE + " INTEGER NOT NULL, " +
             " " + DATA_CADASTRO + " DATE NOT NULL, " +
             " " + ID_USU + " INTEGER, " +
@@ -123,6 +135,13 @@ public class DAO extends SQLiteOpenHelper {
             " " + ID_CATEG + ") REFERENCES " + TABELA3 + " (" + ID_CATEGORIA + ")" +
             "  ON DELETE CASCADE ON UPDATE CASCADE ); ";
 
+    private static final String CRIAR_TABELA_CLIENTE = "CREATE TABLE " + TABELA6 + " ( " +
+            " " + ID_CLIENTE + " INTEGER PRIMARY KEY , " +
+            " " + NOME_CLIENTE + " VARCHAR(50) NOT NULL, " +
+            " " + EMAILC + " VARCHAR(100) NOT NULL, " +
+            " " + SENHAC + " VARCHAR(50) NOT NULL ); ";
+
+
     public DAO(Context context) {
 
         super(context, NOME_BANCO, null, VERSION);
@@ -131,11 +150,13 @@ public class DAO extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d(LOG, "Checando");
         db.execSQL(CRIAR_TABELA_LOGIN);
         db.execSQL(CRIAR_TABELA_ANOTACOES);
         db.execSQL(CRIAR_TABELA_CATEGORIA);
         db.execSQL(CRIAR_TABELA_PRODUTO);
         db.execSQL(CRIAR_TABELA_RENDIMENTO);
+        db.execSQL(CRIAR_TABELA_CLIENTE);
     }
 
 
@@ -147,11 +168,12 @@ public class DAO extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABELA3);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA4);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA5);
+        db.execSQL("DROP TABLE IF EXISTS " + TABELA6);
 
         onCreate(db);
 
     }
-
+    //USUÁRIO/ADMIN
     public void salvarUsuario(Usuario u) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -163,10 +185,22 @@ public class DAO extends SQLiteOpenHelper {
         db.insert(TABELA1, null, values);
         db.close();
     }
+    //CLIENTE
+    public void salvarCliente(Cliente c) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(NOME_CLIENTE,c.getNome());
+        values.put(EMAILC,c.getEmail());
+        values.put(SENHAC,c.getSenha());
+
+        db.insert(TABELA6, null, values);
+        db.close();
+    }
     // Pegar e Colocar a Senha
     private static String str;
     private static int id;
-
+    //Cliente ou Usuário, pegar
     public String getNomeUs() {
 
         db = this.getReadableDatabase();
@@ -188,7 +222,7 @@ public class DAO extends SQLiteOpenHelper {
     public static int getIDUs(){ return id; }
     // PEGAR O NOME
     // Método de ver se o email já está cadastrado
-    public boolean checaEmails(String email){
+    public boolean checaEmailsUs(String email){
         db = this.getReadableDatabase();
         String query = "select email from " + TABELA1;
         Cursor cursor = db.rawQuery(query, null);
@@ -203,14 +237,55 @@ public class DAO extends SQLiteOpenHelper {
         }
         return false;
     }
+    public boolean checaEmailsCli(String email){
+        db = this.getReadableDatabase();
+        String query = "select email from " + TABELA6;
+        Cursor cursor = db.rawQuery(query, null);
+        String a;
+        if (cursor.moveToFirst()){
+            do{
+                a = cursor.getString(0);
+                if(a.equals(email)){
+                    return true;
+                }
+            }while (cursor.moveToNext());
+        }
+        return false;
+    }
+    // Ver qual dos dois ficou(Cliente ou Uuário), True Usuário, False Cliente
+    private static boolean CoU;
+    public void setBolR(boolean CoU){
+        this.CoU = CoU;
+    }
+    public static boolean getBolR(){
+        return CoU;
+    }
     // Método de procurar senha
     public String checaLogin(String email){
         db = this.getReadableDatabase();
+        //Usuário
         String query = "select email, senha, id_usuario from " + TABELA1;
         Cursor cursor = db.rawQuery(query, null);
         String a, b, c;
         int d;
         b = "Não encontrado";
+        // String a para email, b para senha, c para nome do usuário e d para id do usuário
+        if(cursor.moveToFirst()) {
+            do {
+                // 0 valor email, 1 valor senha, 2 usuario, 3 id terminar após
+                a = cursor.getString(0);
+                if (a.equals(email)) {
+                    b = cursor.getString(1);
+                    d = cursor.getInt(2);
+                    setIDUs(d);
+                    setBolR(true);
+                    break;
+                }
+            } while (cursor.moveToNext());
+        }
+        //Cliente
+        String query2 = "select email, senha, id_usuario from " + TABELA6;
+        cursor = db.rawQuery(query2, null);
         // String a para email, b para senha, c para nome do usuário e d para id do usuário
         if(cursor.moveToFirst()){
             do{
@@ -220,6 +295,7 @@ public class DAO extends SQLiteOpenHelper {
                     b = cursor.getString(1);
                     d = cursor.getInt(2);
                     setIDUs(d);
+                    setBolR(false);
                     break;
                 }
             }while(cursor.moveToNext());
@@ -232,6 +308,8 @@ public class DAO extends SQLiteOpenHelper {
     public void salvarAnotacao(Anotacao a) {
         db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        values.put(ASSUNTO, a.getNovo_assunto());
         values.put(ANOTACAO,a.getNova_anotacao());
         values.put(ID_USER, ID);
 
@@ -242,7 +320,7 @@ public class DAO extends SQLiteOpenHelper {
     public ArrayList<Anotacao> selectAllAnotacao(){
 
         db = this.getReadableDatabase();
-        String[] coluns = {ID_ANOTACAO, ANOTACAO, ID_USER};
+        String[] coluns = {ID_ANOTACAO, ASSUNTO, ANOTACAO, ID_USER};
         Cursor cursor = db.query(TABELA2,coluns,ID_USER + "=" + ID,null,null,null,null,null);
 
         ArrayList<Anotacao> ListAnotacao = new ArrayList<>();
@@ -251,8 +329,8 @@ public class DAO extends SQLiteOpenHelper {
 
             Anotacao a = new Anotacao();
             a.setId_anotacao(cursor.getInt(0));
-            a.setNova_anotacao(cursor.getString(1));
-
+            a.setNovo_assunto(cursor.getString(1));
+            a.setNova_anotacao(cursor.getString(2));
             ListAnotacao.add(a);
 
         }
@@ -274,6 +352,16 @@ public class DAO extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void excluirAnotacao(Anotacao a) {
+        db = this.getWritableDatabase();
+
+        String[] args = {String.valueOf(a.getId_anotacao())};
+
+        db.delete(TABELA2,"id_anotacao=?",args);
+        db.close();
+    }
+
+
     // CATEGORIA
     public void salvarCategoria(Categoria c) {
 
@@ -291,7 +379,7 @@ public class DAO extends SQLiteOpenHelper {
 
         db = this.getReadableDatabase();
         String[] coluns = {ID_CATEGORIA, NOME_CATEGORIA, ID_USUA};
-        Cursor cursor = db.query(TABELA3,coluns,ID_USUA + "=" + ID,null,null,null,null,null);
+        Cursor cursor = db.query(TABELA3,coluns,ID_USUA + "=" + ID,null,null,null,"nome_categoria",null);
 
         ArrayList<Categoria> ListCategoria = new ArrayList<>();
 
@@ -318,6 +406,15 @@ public class DAO extends SQLiteOpenHelper {
         String[] args = {String.valueOf(c.getId_categoria())};
 
         db.update(TABELA3,values,"id_categoria=?",args);
+        db.close();
+    }
+
+    public void excluirCategoria(Categoria c) {
+        db = this.getWritableDatabase();
+
+        String[] args = {String.valueOf(c.getId_categoria())};
+
+        db.delete(TABELA3,"id_categoria=?",args);
         db.close();
     }
 }

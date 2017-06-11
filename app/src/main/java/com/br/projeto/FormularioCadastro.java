@@ -17,7 +17,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.widget.RadioButton;
+import android.widget.Toast;
+
 import com.br.projeto.dao.DAO;
+import com.br.projeto.modelo.Cliente;
 import com.br.projeto.modelo.Usuario;
 
 public class FormularioCadastro extends Activity {
@@ -27,9 +31,10 @@ public class FormularioCadastro extends Activity {
     EditText textNome, textEmail, textSenha, textConfirmar_senha;
     Button btnCadastrar;
     DAO helper = new DAO(this);
+    RadioButton rbEmpresa, rbCliente;
     long retornoDB;
     // Pegar email e testar
-    public static boolean checaemails;
+    public static boolean checaemails, checaemails2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,8 @@ public class FormularioCadastro extends Activity {
         textSenha = (EditText) findViewById(R.id.textSenha);
         textConfirmar_senha = (EditText) findViewById(R.id.textConfirmar_senha);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
-
+        rbEmpresa = (RadioButton) findViewById(R.id.rbEmpresa);
+        rbCliente = (RadioButton) findViewById(R.id.rbCliente);
 
         // Chamar os de Animação
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
@@ -61,7 +67,8 @@ public class FormularioCadastro extends Activity {
                 // Verificar se já existe campo de email existente
                 EditText email = (EditText)findViewById(R.id.textEmail);
                 String emailstr = email.getText().toString();
-                checaemails = helper.checaEmails(emailstr);
+                checaemails = helper.checaEmailsUs(emailstr);
+                checaemails2 = helper.checaEmailsCli(emailstr);
 
                 submForm();
                 /* Verificar se os campos de senha são iguais */
@@ -75,14 +82,25 @@ public class FormularioCadastro extends Activity {
                 String senhastr = senha.getText().toString();
                 String confsstr = confirmar_senha.getText().toString();
 
-                if (checaNome() && checaEmail() && checaSenha() && checaConf_Senha()) {
-                    // Inserir os detalhes no BD
-                    Usuario u = new Usuario();
-                    u.setNome(nomestr);
-                    u.setEmail(emailstr);
-                    u.setSenha(senhastr);
-                    u.setConfirmar_senha(confsstr);
-                    helper.salvarUsuario(u);
+                if (checaNome() && checaEmail() && checaSenha() && checaConf_Senha() && algSelect()) {
+                    // Inserir os detalhes no BD, dependendo de qual dos Radiobuttons for selecionado
+                    if (pressionado == 1){
+                        Usuario u = new Usuario();
+                        u.setNome(nomestr);
+                        u.setEmail(emailstr);
+                        u.setSenha(senhastr);
+                        u.setConfirmar_senha(confsstr);
+                        helper.salvarUsuario(u);
+                    } else  {
+                        Cliente c = new Cliente();
+                        c.setNome(nomestr);
+                        c.setEmail(emailstr);
+                        c.setSenha(senhastr);
+                        c.setConfirmar_senha(confsstr);
+                        helper.salvarCliente(c);
+                    }
+                    //Desligar o pressionado
+                    pressionado = 0;
 
 
                     if (retornoDB == -1) {
@@ -143,6 +161,10 @@ public class FormularioCadastro extends Activity {
             vib.vibrate(120);
             return;
         }
+        if (!algSelect()){
+            Toast temp = Toast.makeText(FormularioCadastro.this, "Marque um dos dois campos", Toast.LENGTH_SHORT);
+            temp.show();
+        }
         textNome_Layout.setErrorEnabled(false);
         textEmail_Layout.setErrorEnabled(false);
         textSenha_Layout.setErrorEnabled(false);
@@ -162,8 +184,8 @@ public class FormularioCadastro extends Activity {
     }
     private boolean checaEmail(){
         String email = textEmail.getText().toString().trim();
-        if(email.isEmpty() || !eValido(email) || checaemails){
-            if (checaemails){
+        if(email.isEmpty() || !eValido(email) || checaemails || checaemails2){
+            if (checaemails || checaemails2){
                 textEmail_Layout.setErrorEnabled(true);
                 textEmail_Layout.setError("E-mail já existente!");
                 textEmail.setError("Necessita de Entrada Válida");
@@ -198,6 +220,35 @@ public class FormularioCadastro extends Activity {
         }
         textSenha_Layout.setErrorEnabled(false);
         return true;
+    }
+    private static int pressionado;
+    public boolean algSelect(){
+        if (pressionado == 1){
+            return true;
+        } else
+            if (pressionado == 2){
+                return true;
+            } else {
+                return false;
+            }
+    }
+
+    //SOMENTE PUBLIC E VOID PARA FUNCIONAR
+    public void onRadioButtonClicado(View view) {
+        // Está checado?
+        boolean checado = ((RadioButton) view).isChecked();
+
+        // Checar qual RadioButton foi clicado
+        switch(view.getId()) {
+            case R.id.rbEmpresa:
+                if (checado)
+                    pressionado = 1;
+                    break;
+            case R.id.rbCliente:
+                if (checado)
+                    pressionado = 2;
+                    break;
+        }
     }
     //Checar certas variáveis acima
     private static boolean eValido(String email){

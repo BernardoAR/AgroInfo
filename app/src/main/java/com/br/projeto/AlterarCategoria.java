@@ -82,5 +82,46 @@ public class AlterarCategoria extends AppCompatActivity {
         });
 
 
+        btnExcluirCategoria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                categoria.setId_categoria(altcategoria.getId_categoria());
+
+                dao.excluirCategoria(categoria);
+                dao.close();
+
+
+                if (retornoDB == -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(AlterarCategoria.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Erro ao excluir o registro!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            AlterarCategoria.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+
+                } else {
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(AlterarCategoria.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Registro excluído com sucesso!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            AlterarCategoria.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+                }
+
+            }
+        });
+
     }
 }

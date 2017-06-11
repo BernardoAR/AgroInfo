@@ -47,6 +47,7 @@ public class Lista_anotacoes extends AppCompatActivity {
         listAnotacoes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                 Anotacao anotacaoEnviada = (Anotacao) arrayAdapterAnotacao.getItem(position);
 
                 Intent abrirEdicao = new Intent(Lista_anotacoes.this, alterar_anotacao.class);

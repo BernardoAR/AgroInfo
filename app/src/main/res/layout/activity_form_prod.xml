@@ -34,23 +34,35 @@
             android:layout_height="wrap_content"
             />
 
-
-        <EditText
-            android:id="@+id/editPrecoCusto"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textPrecoC"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Preço de custo (R$/unidadde)"
-            android:ems="10"
-            android:inputType="numberDecimal" />
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/editPrecoCusto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Preço de custo (R$/unidadde)"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:maxLength="7" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editPrecoVenda"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textPrecoV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Preço de venda (R$/unidadde)"
-            android:ems="10"
-            android:inputType="numberDecimal" />
-
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/editPrecoVenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Preço de venda (R$/unidadde)"
+                android:ems="10"
+                android:inputType="numberDecimal"
+                android:maxLength="7" />
+        </android.support.design.widget.TextInputLayout>
 
         <EditText
             android:id="@+id/quantidade"

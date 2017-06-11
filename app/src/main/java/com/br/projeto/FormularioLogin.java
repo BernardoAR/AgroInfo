@@ -59,10 +59,19 @@ public class FormularioLogin extends Activity {
                         sessao.dizLogado(true);
                         //Gravar ID nas preferências
                         int idusuario = DAO.getIDUs();
+                        boolean escolha = DAO.getBolR();
                         sessao.dizID(idusuario);
-                        //
-                        Intent abrirLogin = new Intent(FormularioLogin.this,MenuP.class);
-                        startActivity(abrirLogin);
+                        sessao.dizEsc(escolha);
+                        // Ver qual foi a escolha
+                        if(sessao.escolhido()) {
+                            Toast temp = Toast.makeText(FormularioLogin.this, "Usuario", Toast.LENGTH_SHORT);
+                            temp.show();
+                            Intent abrirLogin = new Intent(FormularioLogin.this, MenuP.class);
+                            startActivity(abrirLogin);
+                        } else {
+                            Toast temp = Toast.makeText(FormularioLogin.this, "Cliente", Toast.LENGTH_SHORT);
+                            temp.show();
+                        }
                     } else {
                         Toast temp = Toast.makeText(FormularioLogin.this, "E-mail e/ou Senha não correspondentes!", Toast.LENGTH_SHORT);
                         temp.show();

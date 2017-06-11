@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.br.projeto.modelo.Sessao;
 
@@ -22,13 +23,18 @@ public class Inicial extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicial);
 
-        //Sessão, e se estiver logado abrir
+        //Sessão, e se estiver logado abrir, dependendo de qual escolha abrir activities diferentes
         sessao = new Sessao(this);
-        if(sessao.logado()){
+        if(sessao.logado() && sessao.escolhido()){
             startActivity(new Intent(Inicial.this, MenuP.class));
             finish();
+        } else if (sessao.logado() && !sessao.escolhido()){
+            Toast temp = Toast.makeText(Inicial.this, "Cliente", Toast.LENGTH_SHORT);
+            temp.show();
+            sessao.dizLogado(false);
+            sessao.dizEsc(false);
         }
-
+        //
 
 
         // pega o botao

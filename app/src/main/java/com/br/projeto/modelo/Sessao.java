@@ -35,6 +35,16 @@ public class Sessao {
         return prefs.getInt("id", 0);
     }
 
+    //Ver em qual dos modos está
+    public void dizEsc(boolean escolha){
+        editor.putBoolean("modoInt", escolha);
+        editor.commit();
+    }
+
+    public boolean escolhido(){
+        return prefs.getBoolean("modoInt", false);
+    }
+
     //Ver se está logado ou não
     public void dizLogado(boolean loggado){
         editor.putBoolean("modoLogado", loggado);

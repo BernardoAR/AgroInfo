@@ -53,7 +53,7 @@ public class MenuP extends AppCompatActivity
         */
         View cabecalho = navigationView.getHeaderView(0);
 
-        //EX Pegar o ID e Mostrar
+        //EX Pegar o ID     e Mostrar
         ID = sessao.prefs.getInt("id", 0);
         Toast tempor = Toast.makeText(this,String.valueOf(ID),Toast.LENGTH_LONG);
         tempor.show();

@@ -83,6 +83,46 @@ public class alterar_anotacao extends AppCompatActivity {
             }
         });
 
+        btnExcluirAnotacao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                anotacao.setId_anotacao(altanotacao.getId_anotacao());
+
+                dao.excluirAnotacao(anotacao);
+                dao.close();
+
+
+                if (retornoDB == -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(alterar_anotacao.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Erro ao excluir o registro!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            alterar_anotacao.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+
+                } else {
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(alterar_anotacao.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Registro excluído com sucesso!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            alterar_anotacao.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+                }
+
+            }
+        });
 
     }
 }
