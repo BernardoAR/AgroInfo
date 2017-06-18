@@ -217,7 +217,7 @@ public class DAO extends SQLiteOpenHelper {
     // Pegar e Colocar a Senha
     private static String str;
     private static String str1;
-    private static String str2;
+    private static String strSenha;
     private static int id;
     //Cliente ou Usuário, pegar
 
@@ -229,9 +229,30 @@ public class DAO extends SQLiteOpenHelper {
     public void setEmail(String emailMod) { this.emailMod = emailMod; }
     public static String getEmail(){ return emailMod; }
 
-    private static String senhaMod;
-    public void setSenha(String senhaMod) { this.senhaMod = senhaMod; }
-    public static String getSenha(){ return senhaMod; }
+    //Pegar a senha do usuário
+    public String getSenhaUs(){
+        db = this.getReadableDatabase();
+        String query = "select senha from " + TABELA1 + " where id_usuario = " + MenuP.ID;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                strSenha = cursor.getString(0);
+
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        String query2 = "select senha from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        Cursor cursor2 = db.rawQuery(query, null);
+        if(cursor2.moveToFirst()){
+            do{
+                strSenha = cursor2.getString(0);
+            }while(cursor2.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return strSenha;
+    }
 
     public String getNomeUs() {
 
@@ -242,20 +263,16 @@ public class DAO extends SQLiteOpenHelper {
             do{
                 str = cursor.getString(0);
                 str1 = cursor.getString(1);
-                str2 = cursor.getString(2);
                 //Do something Here with values
 
                 setNome(str);
                 setEmail(str1);
-                setSenha(str2);
 
             }while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
         return str ;
-
-
     }
     // Pegar e Colocar ID
     public void setIDUs(int id) { this.id = id; }

@@ -13,9 +13,9 @@
 
         <TextView
             android:id="@+id/textView5"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
+            android:gravity="center"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
             android:textSize="30dp"
             android:text="Novo Produto" />
         <EditText
