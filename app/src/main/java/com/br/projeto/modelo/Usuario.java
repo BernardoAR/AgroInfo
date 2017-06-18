@@ -3,7 +3,15 @@ package com.br.projeto.modelo;
 
 public class Usuario{
 
+    private int id_usuario;
+
     String nome, email, senha, confirmar_senha;
+
+    public int getId_usuario() {
+        return id_usuario;
+    }
+
+    public void setId_usuario(int id_usuario) { this.id_usuario = id_usuario; }
 
     public String getNome() { return nome; }
 

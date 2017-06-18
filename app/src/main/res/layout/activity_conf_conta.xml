@@ -47,7 +47,7 @@
         android:inputType="textPassword"/>
 
     <EditText
-        android:id="@+id/textNova_senha"
+        android:id="@+id/textConfirmar_senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -55,7 +55,7 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/btnCadastrar"
+        android:id="@+id/btnSalvarConfiguracoes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Salvar Alterações" />

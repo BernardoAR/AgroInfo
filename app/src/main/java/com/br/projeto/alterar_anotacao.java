@@ -15,13 +15,12 @@ import com.br.projeto.modelo.Anotacao;
 
 public class alterar_anotacao extends AppCompatActivity {
 
-    EditText alteracao;
+    EditText alteracao, assunto;
     Button btnSalvarAnotacao;
     Anotacao anotacao, altanotacao;
     Button btnExcluirAnotacao;
     DAO dao;
     long retornoDB;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +34,12 @@ public class alterar_anotacao extends AppCompatActivity {
         //resgatar os componentes
 
         alteracao = (EditText) findViewById(R.id.alteracao);
+        assunto = (EditText) findViewById(R.id.edtAssuntos);
         btnSalvarAnotacao = (Button) findViewById(R.id.btnSalvarAnotacao);
         btnExcluirAnotacao = (Button) findViewById(R.id.btnExcluirAnotacao);
 
         if (altanotacao != null) {
+            assunto.setText(altanotacao.getNovo_assunto());
             alteracao.setText(altanotacao.getNova_anotacao());
             anotacao.setId_anotacao(altanotacao.getId_anotacao());
         }
@@ -47,7 +48,9 @@ public class alterar_anotacao extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 anotacao.setId_anotacao(altanotacao.getId_anotacao());
+                anotacao.setNovo_assunto(assunto.getText().toString());
                 anotacao.setNova_anotacao(alteracao.getText().toString());
+
 
                 dao.alterarAnotacao(anotacao);
                 dao.close();

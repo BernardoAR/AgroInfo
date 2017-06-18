@@ -185,6 +185,23 @@ public class DAO extends SQLiteOpenHelper {
         db.insert(TABELA1, null, values);
         db.close();
     }
+
+    //ALTERAR CONFIGURAÇÕES DO ADMIN/EMPRESÁRIO
+
+    public void alterarUsuario(Usuario u) {
+        db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(NOME_USUARIO,u.getNome());
+        values.put(EMAIL, u.getEmail());
+        values.put(SENHA, u.getSenha());
+
+        String[] args = {String.valueOf(u.getId_usuario())};
+
+        db.update(TABELA1,values,"id_usuario=?",args);
+        db.close();
+    }
+
     //CLIENTE
     public void salvarCliente(Cliente c) {
         db = this.getWritableDatabase();
@@ -199,23 +216,46 @@ public class DAO extends SQLiteOpenHelper {
     }
     // Pegar e Colocar a Senha
     private static String str;
+    private static String str1;
+    private static String str2;
     private static int id;
     //Cliente ou Usuário, pegar
+
+    private static String nomeMod;
+    public void setNome(String nomeMod) { this.nomeMod = nomeMod; }
+    public static String getNome(){ return nomeMod; }
+
+    private static String emailMod;
+    public void setEmail(String emailMod) { this.emailMod = emailMod; }
+    public static String getEmail(){ return emailMod; }
+
+    private static String senhaMod;
+    public void setSenha(String senhaMod) { this.senhaMod = senhaMod; }
+    public static String getSenha(){ return senhaMod; }
+
     public String getNomeUs() {
 
         db = this.getReadableDatabase();
-        String query = "select nome_usuario from " + TABELA1 + " where id_usuario = " + MenuP.ID;
+        String query = "select nome_usuario, email, senha from " + TABELA1 + " where id_usuario = " + MenuP.ID;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
                 str = cursor.getString(0);
+                str1 = cursor.getString(1);
+                str2 = cursor.getString(2);
                 //Do something Here with values
+
+                setNome(str);
+                setEmail(str1);
+                setSenha(str2);
 
             }while(cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return str;
+        return str ;
+
+
     }
     // Pegar e Colocar ID
     public void setIDUs(int id) { this.id = id; }
@@ -344,6 +384,7 @@ public class DAO extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(ANOTACAO,a.getNova_anotacao());
+        values.put(ASSUNTO, a.getNovo_assunto());
         values.put(ID_USER, ID);
 
         String[] args = {String.valueOf(a.getId_anotacao())};
