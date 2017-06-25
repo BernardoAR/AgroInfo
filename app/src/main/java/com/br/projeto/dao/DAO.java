@@ -7,10 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.br.projeto.AlterarProduto;
+import com.br.projeto.FormProd;
 import com.br.projeto.MenuP;
 import com.br.projeto.modelo.Anotacao;
 import com.br.projeto.modelo.Categoria;
 import com.br.projeto.modelo.Cliente;
+import com.br.projeto.modelo.Produto;
 import com.br.projeto.modelo.Usuario;
 
 import java.util.ArrayList;
@@ -214,6 +217,20 @@ public class DAO extends SQLiteOpenHelper {
         db.insert(TABELA6, null, values);
         db.close();
     }
+    //ALTERAR CONFIGURAÇÕES CLIENTE
+    public void alterarCliente(Cliente c) {
+        db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(NOME_CLIENTE,c.getNome());
+        values.put(EMAILC, c.getEmail());
+        values.put(SENHAC, c.getSenha());
+
+        String[] args = {String.valueOf(c.getId_cliente())};
+
+        db.update(TABELA6,values,"id_usuario=?",args);
+        db.close();
+    }
     // Pegar e Colocar a Senha
     private static String str;
     private static String str1;
@@ -228,7 +245,28 @@ public class DAO extends SQLiteOpenHelper {
     private static String emailMod;
     public void setEmail(String emailMod) { this.emailMod = emailMod; }
     public static String getEmail(){ return emailMod; }
-
+    //Pegar E-mail
+    public String getEmailUs(){
+        db = this.getReadableDatabase();
+        String query = "select email from " + TABELA1 + " where id_usuario = " + MenuP.ID;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                strSenha = cursor.getString(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        String query2 = "select email from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        Cursor cursor2 = db.rawQuery(query2, null);
+        if(cursor2.moveToFirst()){
+            do{
+                strSenha = cursor2.getString(0);
+            }while(cursor2.moveToNext());
+        }
+        cursor2.close();
+        db.close();
+        return strSenha;
+    }
     //Pegar a senha do usuário
     public String getSenhaUs(){
         db = this.getReadableDatabase();
@@ -237,25 +275,23 @@ public class DAO extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do{
                 strSenha = cursor.getString(0);
-
             }while(cursor.moveToNext());
         }
         cursor.close();
 
         String query2 = "select senha from " + TABELA6 + " where id_usuario = " + MenuP.ID;
-        Cursor cursor2 = db.rawQuery(query, null);
+        Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
             do{
                 strSenha = cursor2.getString(0);
             }while(cursor2.moveToNext());
         }
-        cursor.close();
+        cursor2.close();
         db.close();
         return strSenha;
     }
 
     public String getNomeUs() {
-
         db = this.getReadableDatabase();
         String query = "select nome_usuario, email, senha from " + TABELA1 + " where id_usuario = " + MenuP.ID;
         Cursor cursor = db.rawQuery(query, null);
@@ -264,13 +300,27 @@ public class DAO extends SQLiteOpenHelper {
                 str = cursor.getString(0);
                 str1 = cursor.getString(1);
                 //Do something Here with values
-
                 setNome(str);
                 setEmail(str1);
 
             }while(cursor.moveToNext());
         }
         cursor.close();
+
+        String query2 = "select nome_usuario, email, senha from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        Cursor cursor2 = db.rawQuery(query2, null);
+        if(cursor2.moveToFirst()){
+            do{
+                str = cursor2.getString(0);
+                str1 = cursor2.getString(1);
+                //Do something Here with values
+
+                setNome(str);
+                setEmail(str1);
+
+            }while(cursor2.moveToNext());
+        }
+        cursor2.close();
         db.close();
         return str ;
     }
@@ -475,4 +525,129 @@ public class DAO extends SQLiteOpenHelper {
         db.delete(TABELA3,"id_categoria=?",args);
         db.close();
     }
+
+    //PRODUTO
+
+    public void salvarProduto(Produto p) {
+        db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(NOME_PRODUTO,p.getNomeProduto());
+        values.put(PRECO_CUSTO,p.getPrecoCusto());
+        values.put(PRECO_VENDA,p.getPrecoVenda());
+        values.put(QUANTIDADE,p.getQuantidade());
+        values.put(DATA_CADASTRO,p.getDataCadastro());
+        values.put(ID_USU,MenuP.ID);
+        values.put(ID_CAT, FormProd.valorId);
+
+        db.insert(TABELA4, null, values);
+        db.close();
+    }
+
+    //LISTAR PRODUTO
+
+    public ArrayList<Produto> selectAllProduto(){
+
+        db = this.getReadableDatabase();
+        String[] coluns = {ID_PRODUTO, NOME_PRODUTO, PRECO_CUSTO, PRECO_VENDA, QUANTIDADE, DATA_CADASTRO, ID_CAT};
+        Cursor cursor = db.query(TABELA4,coluns,ID_USU + "=" + ID,null,null,null,null,null);
+
+        ArrayList<Produto> ListProduto = new ArrayList<>();
+
+        while (cursor.moveToNext()){
+
+            Produto p = new Produto();
+            Categoria c = new Categoria();
+
+            p.setId_produto(cursor.getInt(0));
+            p.setNomeProduto(cursor.getString(1));
+            p.setPrecoCusto(cursor.getFloat(2));
+            p.setPrecoVenda(cursor.getFloat(3));
+            p.setQuantidade(cursor.getInt(4));
+            p.setDataCadastro(cursor.getString(5));
+            c.setId_categoria(cursor.getInt(6));
+            ListProduto.add(p);
+
+        }
+        cursor.close();
+        return ListProduto;
+
+    }
+
+    //Alterar produto
+
+    public void alterarProduto(Produto p) {
+        db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(NOME_PRODUTO,p.getNomeProduto());
+        values.put(PRECO_CUSTO,p.getPrecoCusto());
+        values.put(PRECO_VENDA,p.getPrecoVenda());
+        values.put(QUANTIDADE,p.getQuantidade());
+        values.put(ID_USU,MenuP.ID);
+        values.put(ID_CAT, AlterarProduto.valorIdCateg);
+
+        String[] args = {String.valueOf(p.getId_produto())};
+
+        db.update(TABELA4,values,"id_produto=?",args);
+        db.close();
+    }
+
+    //EXCLUIR PRODUTO
+
+    public void excluirProduto(Produto p) {
+        db = this.getWritableDatabase();
+
+        String[] args = {String.valueOf(p.getId_produto())};
+
+        db.delete(TABELA4,"id_produto=?",args);
+        db.close();
+    }
+    //Pegar ID da Categoria do Produto
+    public int getCategoriaProd(int id){
+        db = this.getReadableDatabase();
+        String query = "select id_categoria from " + TABELA4 + " where id_produto = " + id;
+        Cursor cursor = db.rawQuery(query, null);
+        int idz;
+        idz = 0;
+        if(cursor.moveToFirst()){
+            do{
+                idz = cursor.getInt(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        db.close();
+        return idz;
+    }
+    //SOMA DO PREÇOCUSTO E PREÇOVENDA
+    public void somaPCV(){
+        db = this.getReadableDatabase();
+
+        String query = "select SUM(preco_custo) AS 'Soma dos precos de custo' FROM " + TABELA4 + " where id_usuario = " + MenuP.ID;
+        String query2 = "select SUM(preco_venda) AS 'Soma dos precos de venda' FROM " + TABELA4 + " where id_usuario = " + MenuP.ID ;
+        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor2 = db.rawQuery(query2, null);
+        float a,b;
+        a = b =0;
+
+        if(cursor.moveToFirst()) {
+            do {
+                a = cursor.getFloat(0);
+            } while (cursor.moveToNext());
+        }
+        if(cursor2.moveToFirst()) {
+            do {
+                b = cursor2.getFloat(0);
+            } while (cursor2.moveToNext());
+        }
+        setSomaPC(a);
+        setSomaPV(b);
+        db.close();
+    }
+    float precoCus, precoVen;
+    public void setSomaPC(float precoCus) { this.precoCus = precoCus; }
+    public float getSomaPC(){ return precoCus; }
+    public void setSomaPV(float precoVen) { this.precoVen = precoVen; }
+    public float getSomaPV(){ return precoVen; }
 }

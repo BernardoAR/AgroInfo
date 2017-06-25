@@ -1,6 +1,8 @@
 package com.br.projeto;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -10,41 +12,49 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Categoria;
+import com.br.projeto.modelo.Produto;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public class FormProd extends AppCompatActivity {
+
+    public static int valorId;
+
     // Declarar
-    private EditText edtNomeProd;
+    Button btnSelDataC;
+    public EditText edtNomeProd;
     Spinner spnCateg;
-    private EditText editPrecoCusto;
-    private EditText editPrecoVenda;
-    private EditText quantidade;
-    private EditText DataCadastro;
-    private Button btnAdProd;
+    public EditText editPrecoCusto;
+    public EditText editPrecoVenda;
+    public EditText quantidade;
+    public EditText DataCadastro;
+    public Button btnAdProd;
     public Button btnListProd;
-    private Button btnAdCat;
+    public Button btnAdCat;
     private TextInputLayout textPrecoC, textPrecoV;
     private Vibrator vib;
     Animation animBalanc;
 
     DAO dao;
+    Categoria helperc = new Categoria();
     DAO helper = new DAO(this);
     ArrayList<Categoria> arrayListCategoria;
     ArrayAdapter<Categoria> arrayAdapterCategoria;
-
+    long retornoDB;
     //Array Adapter para as Listas
     public ArrayAdapter<String> adpCateg;
     public ArrayAdapter<String> adpProd;
@@ -66,6 +76,7 @@ public class FormProd extends AppCompatActivity {
         btnListProd = (Button) findViewById(R.id.btnListProd);
         textPrecoC = (TextInputLayout) findViewById(R.id.textPrecoC);
         textPrecoV = (TextInputLayout) findViewById(R.id.textPrecoV);
+        btnSelDataC = (Button) findViewById(R.id.btnSelDataC);
 
         // Chamar Animações
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
@@ -74,7 +85,8 @@ public class FormProd extends AppCompatActivity {
         // Categoria
         Button botaoCateg = (Button) findViewById(R.id.btnAdCat);
         Button btnAdProd = (Button) findViewById(R.id.btnAdProd);
-
+        //Produto
+        Button btnListProd = (Button) findViewById(R.id.btnListProd);
         // Configura a Ação de clique
         botaoCateg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -84,9 +96,19 @@ public class FormProd extends AppCompatActivity {
 
             }
         });
+        //Data pegar
+        btnSelDataC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                String diaString = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(new Date());
+                DataCadastro.setText(diaString);
+            }
+        });
+        //
         btnAdProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 submForm();
                 if (checaNumC() && checaNumV()){
                     // Método para Conversão de Float
@@ -97,20 +119,100 @@ public class FormProd extends AppCompatActivity {
                     resultado2 = casas(f2,2);
                     //
 
-                    Toast tempor = Toast.makeText(FormProd.this,"Tudo certinho, com valores de",Toast.LENGTH_SHORT);
-                    tempor.show();
-                    Toast tempor2 = Toast.makeText(FormProd.this,String.valueOf(resultado),Toast.LENGTH_SHORT);
-                    tempor2.show();
-                    Toast tempor3 = Toast.makeText(FormProd.this,String.valueOf(resultado2),Toast.LENGTH_SHORT);
-                    tempor3.show();
+                    // Pegar Strings
+                    EditText edtNomeProd = (EditText)findViewById(R.id.edtNomeProd);
+                    EditText editPrecoCusto = (EditText)findViewById(R.id.editPrecoCusto);
+                    EditText editPrecoVenda = (EditText)findViewById(R.id.editPrecoVenda);
+                    EditText quantidade = (EditText) findViewById(R.id.quantidade);
+                    EditText DataCadastro = (EditText) findViewById(R.id.DataCadastro);
+                    // Colocar em Strings
+                    String nome = edtNomeProd.getText().toString();
+                    String PrecoC = editPrecoCusto.getText().toString();
+                    String PrecoV = editPrecoVenda.getText().toString();
+                    String Quantidade = quantidade.getText().toString();
+                    String Data = DataCadastro.getText().toString();
+
+
+                    // Inserir os detalhes no BD
+                    Produto p   = new Produto();
+                    p.setNomeProduto(nome);
+                    p.setPrecoCusto (Float.parseFloat(PrecoC));
+                    p.setPrecoVenda(Float.parseFloat(PrecoV));
+                    p.setQuantidade(Integer.parseInt(Quantidade));
+                    p.setDataCadastro(Data);
+
+                    dao.salvarProduto(p);
+
+                    Toast tempos = Toast.makeText(FormProd.this,String.valueOf(valorId),Toast.LENGTH_SHORT);
+                    tempos.show();
+
+                    if (retornoDB == -1) {
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(FormProd.this);
+                        dialog.setTitle("AgroInfo");
+                        dialog.setMessage("Erro ao cadastrar!");
+                        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                FormProd.this.finish();
+                            }
+                        });
+
+
+                        dialog.show();
+
+                    } else {
+
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(FormProd.this);
+                        dialog.setTitle("AgroInfo");
+                        dialog.setMessage("Cadastrado com sucesso!");
+                        dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                FormProd.this.finish();
+                            }
+                        });
+
+
+                        dialog.show();
+                    }
+
                 }
 
             }
         });
 
+        // Configura a Ação de clique listagem produtos
+        btnListProd.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent abrirListaProd = new Intent(FormProd.this, Lista_produtos.class);
+                // solicitar para abir
+                startActivity(abrirListaProd);
 
+            }
+        });
+
+        //ClickListener do Spinner
+        spnCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                // Pegar ID e o Valor da Categoria, forçar para que o Spinner pegue
+                Categoria item = (Categoria) parent.getItemAtPosition(pos);
+                String valor = item.getNova_categoria();
+                valorId = item.getId_categoria();
+                Toast tempo2 = Toast.makeText(FormProd.this,valor,Toast.LENGTH_SHORT);
+                tempo2.show();
+                Toast tempo = Toast.makeText(FormProd.this,String.valueOf(valorId),Toast.LENGTH_SHORT);
+                tempo.show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // Faz Nada
+            }
+
+
+
+
+        });
     }
-
     // Fazer com que fique com duas decimais FORÇADAMENTE
     public static BigDecimal casas(float d, int casasDec) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
@@ -175,8 +277,10 @@ public class FormProd extends AppCompatActivity {
             arrayAdapterCategoria = new ArrayAdapter<Categoria>(FormProd.this,
                     android.R.layout.simple_spinner_dropdown_item, arrayListCategoria);
             spnCateg.setAdapter(arrayAdapterCategoria);
+
         }
     }
+
 
     @Override
     protected void onResume(){

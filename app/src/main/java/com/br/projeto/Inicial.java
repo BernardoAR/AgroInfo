@@ -29,10 +29,10 @@ public class Inicial extends Activity {
             startActivity(new Intent(Inicial.this, MenuP.class));
             finish();
         } else if (sessao.logado() && !sessao.escolhido()){
+            startActivity(new Intent(Inicial.this, MenuP.class));
+            finish();
             Toast temp = Toast.makeText(Inicial.this, "Cliente", Toast.LENGTH_SHORT);
             temp.show();
-            sessao.dizLogado(false);
-            sessao.dizEsc(false);
         }
         //
 

@@ -17,19 +17,22 @@ import android.widget.Toast;
 import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Sessao;
 
-public class MenuP extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+import java.lang.annotation.Annotation;
+
+public class MenuP extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView nomeusuario;
     //Sessão
     private Sessao sessao;
+
     DAO helper = new DAO(this);
     public static int ID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Checar se está com a sessão logada, se não estiver volta ao Inicial
         sessao = new Sessao(this);
-        if(!sessao.logado()){
+        if (!sessao.logado()) {
             deslogar();
         }
         //
@@ -52,13 +55,13 @@ public class MenuP extends AppCompatActivity
             Cuidar ao pegar alguma TextView caso não esteja chamada a activity
         */
         View cabecalho = navigationView.getHeaderView(0);
-
         //EX Pegar o ID     e Mostrar
         ID = sessao.prefs.getInt("id", 0);
-        Toast tempor = Toast.makeText(this,String.valueOf(ID),Toast.LENGTH_LONG);
+        Toast tempor = Toast.makeText(this, String.valueOf(ID), Toast.LENGTH_LONG);
         tempor.show();
 
-        //Com o ID já pego, pegar o nome que possui nesse id
+
+            //Com o ID já pego, pegar o nome que possui nesse id
         String nome_usuario = helper.getNomeUs().toUpperCase();
         nomeusuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
         nomeusuario.setText(nome_usuario);
@@ -90,11 +93,39 @@ public class MenuP extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        menu = navigationView.getMenu();
+
+        // Preparar todos
+        MenuItem anotacoes = menu.findItem(R.id.nav_anotacoes);
+        MenuItem produtos = menu.findItem(R.id.nav_prod);
+        MenuItem faturamentos = menu.findItem(R.id.nav_faturamentos);
+        MenuItem pesquisa = menu.findItem(R.id.nav_pesquisa);
+        MenuItem confconta = menu.findItem(R.id.nav_cont);
+        MenuItem sair = menu.findItem(R.id.nav_sair);
+
+        anotacoes.setVisible(true);
+        produtos.setVisible(true);
+        faturamentos.setVisible(true);
+        pesquisa.setVisible(true);
+        confconta.setVisible(true);
+        sair.setVisible(true);
+
+        if (sessao.escolhido() && sessao.logado()) {
+            pesquisa.setVisible(false);
+        } else if (!sessao.escolhido() && sessao.logado()){
+            anotacoes.setVisible(false);
+            produtos.setVisible(false);
+            faturamentos.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -143,13 +174,3 @@ public class MenuP extends AppCompatActivity
         return true;
     }
 }
-/*
-                    //               Faz a ação para activity produto, abrir
-            FormProd formProd = new FormProd(); //Criar objeto para o Fragmento
-            FragmentManager manager = getSupportFragmentManager(); //FragmentManager
-            //manager.beginTransaction().replace(O que irá ser trocado, a troca,obj.getTag()).commit();
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.anim_escor_d_para_dir, R.anim.anim_escor_fora_para_dir) // Animação
-                    .replace(R.id.contraint_layout_conteudo, formProd,
-                            formProd.getTag()).commit(); //Serve para voltar
- */

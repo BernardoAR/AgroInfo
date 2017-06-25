@@ -71,6 +71,8 @@ public class FormularioLogin extends Activity {
                         } else {
                             Toast temp = Toast.makeText(FormularioLogin.this, "Cliente", Toast.LENGTH_SHORT);
                             temp.show();
+                            Intent abrirLogin = new Intent(FormularioLogin.this, MenuP.class);
+                            startActivity(abrirLogin);
                         }
                     } else {
                         Toast temp = Toast.makeText(FormularioLogin.this, "E-mail e/ou Senha não correspondentes!", Toast.LENGTH_SHORT);
@@ -82,13 +84,7 @@ public class FormularioLogin extends Activity {
 
 
     }
-    //RequestFocus para pegar as Edittext
-    private void requestFocus(View view){
-        if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
-    //
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

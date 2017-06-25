@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.br.projeto.dao.DAO;
+import com.br.projeto.modelo.Cliente;
+import com.br.projeto.modelo.Sessao;
 import com.br.projeto.modelo.Usuario;
 
 import static com.br.projeto.FormularioCadastro.checaemails;
@@ -30,7 +32,9 @@ public class ConfConta extends AppCompatActivity {
     TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga;
     EditText nome, email,senha,senha_antiga;
     Button btnSalvarConfiguracoes;
+    Sessao sessao;
     Usuario conta;
+    Cliente cliente;
     DAO dao;
     long retornoDB;
 
@@ -40,6 +44,8 @@ public class ConfConta extends AppCompatActivity {
         setContentView(R.layout.activity_conf_conta);
 
         conta = new Usuario();
+        cliente = new Cliente();
+        sessao = new Sessao(this);
         dao = new DAO(ConfConta.this);
 
         //resgatar os componentes
@@ -75,18 +81,29 @@ public class ConfConta extends AppCompatActivity {
                 checaemails2 = dao.checaEmailsCli(emailstr);
                 submForm();
                 if (checaNome() && checaEmail() && checaSenha() && checaNovaSenha()){
-                    conta.setId_usuario(MenuP.ID);
-                    conta.setNome(nome.getText().toString());
-                    conta.setEmail(email.getText().toString());
-                    if (senha.getText().toString().trim().isEmpty()) {
-                        conta.setSenha(senha_antiga.getText().toString());
+                    if (sessao.escolhido()) {
+                        conta.setId_usuario(MenuP.ID);
+                        conta.setNome(nome.getText().toString());
+                        conta.setEmail(email.getText().toString());
+                        if (senha.getText().toString().trim().isEmpty()) {
+                            conta.setSenha(senha_antiga.getText().toString());
+                        } else {
+                            conta.setSenha(senha.getText().toString());
+                        }
+                        dao.alterarUsuario(conta);
+                        dao.close();
                     } else {
-                        conta.setSenha(senha.getText().toString());
+                        cliente.setId_cliente(MenuP.ID);
+                        cliente.setNome(nome.getText().toString());
+                        cliente.setEmail(email.getText().toString());
+                        if (senha.getText().toString().trim().isEmpty()) {
+                            cliente.setSenha(senha_antiga.getText().toString());
+                        } else {
+                            cliente.setSenha(senha.getText().toString());
+                        }
+                        dao.alterarCliente(cliente);
+                        dao.close();
                     }
-
-                    dao.alterarUsuario(conta);
-                    dao.close();
-
 
                     if (retornoDB == -1) {
                         AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
@@ -158,7 +175,8 @@ public class ConfConta extends AppCompatActivity {
     }
     private boolean checaEmail(){
         String b = email.getText().toString().trim();
-        if(b.isEmpty() || checaemails || checaemails2){
+        String c = dao.getEmailUs();
+        if((b.isEmpty() || checaemails || checaemails2) && (!b.equals(c))){
             if (checaemails || checaemails2){
                 textEmailConf.setErrorEnabled(true);
                 textEmailConf.setError("E-mail já existente!");

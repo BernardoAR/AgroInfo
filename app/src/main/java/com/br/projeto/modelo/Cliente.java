@@ -5,8 +5,15 @@ package com.br.projeto.modelo;
  */
 
 public class Cliente {
+    private int id_cliente;
 
     String nome, email, senha, confirmar_senha;
+
+    public int getId_cliente() {
+        return id_cliente;
+    }
+
+    public void setId_cliente(int id_cliente) { this.id_cliente = id_cliente; }
 
     public String getNome() { return nome; }
 

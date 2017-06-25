@@ -18,6 +18,10 @@
             android:title="Lucros" />
 
         <item
+            android:id="@+id/nav_pesquisa"
+            android:icon="@drawable/ic_lucros"
+            android:title="Pesquisar Produtos" />
+        <item
             android:id="@+id/nav_cont"
             android:icon="@drawable/ic_settings_black_24dp"
             android:title="Configurar Conta" />
