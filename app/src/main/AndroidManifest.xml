@@ -6,25 +6,24 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <supports-screens android:largestWidthLimitDp="320" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Inicial"
-            android:label="@string/app_name">
+            android:name=".FormularioLogin"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="stateAlwaysVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".FormularioLogin"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="stateAlwaysVisible" />
         <activity
             android:name=".FormularioCadastro"
             android:label="@string/title_activity_cadastro" />
@@ -40,7 +39,7 @@
         <activity android:name=".NovaCategoria" />
         <activity android:name=".AlterarCategoria" />
         <activity android:name=".alterar_anotacao" />
-
+        <activity android:name=".FormVendas"></activity>
     </application>
 
 </manifest>

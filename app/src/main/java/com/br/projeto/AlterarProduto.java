@@ -151,7 +151,6 @@ public class AlterarProduto extends AppCompatActivity {
             public void onClick(View v) {
 
                 produto.setId_produto(altproduto.getId_produto());
-
                 dao.excluirProduto(produto);
                 dao.close();
 

@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Sessao;
 
-import java.lang.annotation.Annotation;
-
 public class MenuP extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     TextView nomeusuario;
     //Sessão
@@ -30,7 +28,7 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Checar se está com a sessão logada, se não estiver volta ao Inicial
+        //Checar se está com a sessão logada, se não estiver volta ao FormularioLogin
         sessao = new Sessao(this);
         if (!sessao.logado()) {
             deslogar();
@@ -77,7 +75,7 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
         //
         Toast temp = Toast.makeText(MenuP.this, "Deslogado", Toast.LENGTH_SHORT);
         temp.show();
-        startActivity(new Intent(MenuP.this, Inicial.class));
+        startActivity(new Intent(MenuP.this, FormularioLogin.class));
 
     }
     @Override
@@ -105,14 +103,16 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
         // Preparar todos
         MenuItem anotacoes = menu.findItem(R.id.nav_anotacoes);
         MenuItem produtos = menu.findItem(R.id.nav_prod);
-        MenuItem faturamentos = menu.findItem(R.id.nav_faturamentos);
+        MenuItem rendimentos = menu.findItem(R.id.nav_rendimentos);
+        MenuItem vendas = menu.findItem(R.id.nav_vendas);
         MenuItem pesquisa = menu.findItem(R.id.nav_pesquisa);
         MenuItem confconta = menu.findItem(R.id.nav_cont);
         MenuItem sair = menu.findItem(R.id.nav_sair);
 
         anotacoes.setVisible(true);
         produtos.setVisible(true);
-        faturamentos.setVisible(true);
+        rendimentos.setVisible(true);
+        vendas.setVisible(true);
         pesquisa.setVisible(true);
         confconta.setVisible(true);
         sair.setVisible(true);
@@ -122,7 +122,8 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
         } else if (!sessao.escolhido() && sessao.logado()){
             anotacoes.setVisible(false);
             produtos.setVisible(false);
-            faturamentos.setVisible(false);
+            rendimentos.setVisible(false);
+            vendas.setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -155,13 +156,20 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
 
         } else if (id == R.id.nav_prod) {
             Intent abrirProd = new Intent(MenuP.this,FormProd.class);
-            // solicitar para abir
             startActivity(abrirProd);
+
+        } else  if(id == R.id.nav_rendimentos){
+           //TODO: AINDA NADA
+
+        } else  if(id == R.id.nav_vendas){
+            Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
+            startActivity(abrirVendas);
+
+        } else  if(id == R.id.nav_cont){
+            //TODO: AINDA NADA
 
         } else  if(id == R.id.nav_cont){
             Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
-
-            //solicitar para abrir
             startActivity(abrirCont);
 
         } else  if(id == R.id.nav_sair){

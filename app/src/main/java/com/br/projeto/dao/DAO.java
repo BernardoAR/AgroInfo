@@ -62,7 +62,15 @@ public class DAO extends SQLiteOpenHelper {
     private static final String ID_USU = "id_usuario";
     private static final String ID_CAT = "id_categoria";
 
-    private static final String TABELA5 = "rendimento";
+    private static final String TABELA5 = "vendas";
+
+    private static final String ID_VENDA = "id_venda";
+    private static final String QUANTIDADE_VENDIDA = "quantidade_vendida";
+    private static final String DATA_VENDA = "data_venda";
+    private static final String ID_U = "id_usuario";
+    private static final String ID_P = "id_produto";
+
+    private static final String TABELA6 = "rendimento";
 
     private static final String ID_RENDIMENTO = "id_rendimento";
     private static final String RENDIMENTO = "rendimento";
@@ -70,8 +78,9 @@ public class DAO extends SQLiteOpenHelper {
     private static final String ID_PROD = "id_produto";
     private static final String ID_USUAR = "id_usuario";
     private static final String ID_CATEG = "id_categoria";
+    private static final String ID_VEN = "id_venda";
 
-    private static final String TABELA6 = "cliente";
+    private static final String TABELA7 = "cliente";
 
     private static final String ID_CLIENTE = "id_usuario";
     private static final String NOME_CLIENTE = "nome_usuario";
@@ -121,13 +130,27 @@ public class DAO extends SQLiteOpenHelper {
             " " + ID_CAT + ") REFERENCES " + TABELA3 + " (" + ID_CATEGORIA + ")" +
             "  ON DELETE CASCADE ON UPDATE CASCADE ); ";
 
-    private static final String CRIAR_TABELA_RENDIMENTO = "CREATE TABLE " + TABELA5 + " ( " +
+    private static final String CRIAR_TABELA_VENDAS = "CREATE TABLE " + TABELA5 + " ( " +
+            " " + ID_VENDA + " INTEGER PRIMARY KEY , " +
+            " " + QUANTIDADE_VENDIDA + " INTEGER NOT NULL, " +
+            " " + DATA_VENDA + " DATE NOT NULL, " +
+            " " + ID_U + " INTEGER, " +
+            " " + ID_P + " INTEGER, " +
+            "CONSTRAINT fk_tbVenda_tbUsuario FOREIGN KEY ( " +
+            " " + ID_U + ") REFERENCES " + TABELA1 + " (" + ID_USUARIO + ")" +
+            "  ON DELETE CASCADE ON UPDATE CASCADE," +
+            "CONSTRAINT fk_tbProduto_tbUsuario FOREIGN KEY ( " +
+            " " + ID_P + ") REFERENCES " + TABELA4 + " (" + ID_PRODUTO + ")" +
+            "  ON DELETE CASCADE ON UPDATE CASCADE ); ";
+
+    private static final String CRIAR_TABELA_RENDIMENTO = "CREATE TABLE " + TABELA6 + " ( " +
             " " + ID_RENDIMENTO + " INTEGER PRIMARY KEY , " +
             " " + RENDIMENTO + " DECIMAL(6,2) NOT NULL, " +
             " " + DATA + " DATE NOT NULL, " +
             " " + ID_PROD + " INTEGER, " +
             " " + ID_USUAR + " INTEGER, " +
             " " + ID_CATEG + " INTEGER, " +
+            " " + ID_VEN+ " INTEGER, " +
             "CONSTRAINT fk_tbRendimento_tbProduto FOREIGN KEY ( " +
             " " + ID_PROD + ") REFERENCES " + TABELA4 + " (" + ID_PRODUTO + ")" +
             "  ON DELETE CASCADE ON UPDATE CASCADE," +
@@ -136,9 +159,12 @@ public class DAO extends SQLiteOpenHelper {
             "  ON DELETE CASCADE ON UPDATE CASCADE," +
             "CONSTRAINT fk_tbRendimento_tbCategoria FOREIGN KEY ( " +
             " " + ID_CATEG + ") REFERENCES " + TABELA3 + " (" + ID_CATEGORIA + ")" +
-            "  ON DELETE CASCADE ON UPDATE CASCADE ); ";
+            "  ON DELETE CASCADE ON UPDATE CASCADE," +
+            "CONSTRAINT fk_tbRendimento_tbVendas FOREIGN KEY ( " +
+            " " + ID_VEN + ") REFERENCES " + TABELA5 + " (" + ID_VENDA + ")" +
+            "  ON DELETE CASCADE ON UPDATE CASCADE); ";
 
-    private static final String CRIAR_TABELA_CLIENTE = "CREATE TABLE " + TABELA6 + " ( " +
+    private static final String CRIAR_TABELA_CLIENTE = "CREATE TABLE " + TABELA7 + " ( " +
             " " + ID_CLIENTE + " INTEGER PRIMARY KEY , " +
             " " + NOME_CLIENTE + " VARCHAR(50) NOT NULL, " +
             " " + EMAILC + " VARCHAR(100) NOT NULL, " +
@@ -158,6 +184,7 @@ public class DAO extends SQLiteOpenHelper {
         db.execSQL(CRIAR_TABELA_ANOTACOES);
         db.execSQL(CRIAR_TABELA_CATEGORIA);
         db.execSQL(CRIAR_TABELA_PRODUTO);
+        db.execSQL(CRIAR_TABELA_VENDAS);
         db.execSQL(CRIAR_TABELA_RENDIMENTO);
         db.execSQL(CRIAR_TABELA_CLIENTE);
     }
@@ -172,6 +199,7 @@ public class DAO extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABELA4);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA5);
         db.execSQL("DROP TABLE IF EXISTS " + TABELA6);
+        db.execSQL("DROP TABLE IF EXISTS " + TABELA7);
 
         onCreate(db);
 
@@ -214,7 +242,7 @@ public class DAO extends SQLiteOpenHelper {
         values.put(EMAILC,c.getEmail());
         values.put(SENHAC,c.getSenha());
 
-        db.insert(TABELA6, null, values);
+        db.insert(TABELA7, null, values);
         db.close();
     }
     //ALTERAR CONFIGURAÇÕES CLIENTE
@@ -228,7 +256,7 @@ public class DAO extends SQLiteOpenHelper {
 
         String[] args = {String.valueOf(c.getId_cliente())};
 
-        db.update(TABELA6,values,"id_usuario=?",args);
+        db.update(TABELA7,values,"id_usuario=?",args);
         db.close();
     }
     // Pegar e Colocar a Senha
@@ -256,7 +284,7 @@ public class DAO extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
-        String query2 = "select email from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        String query2 = "select email from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
             do{
@@ -279,7 +307,7 @@ public class DAO extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        String query2 = "select senha from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        String query2 = "select senha from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
             do{
@@ -307,7 +335,7 @@ public class DAO extends SQLiteOpenHelper {
         }
         cursor.close();
 
-        String query2 = "select nome_usuario, email, senha from " + TABELA6 + " where id_usuario = " + MenuP.ID;
+        String query2 = "select nome_usuario, email, senha from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
             do{
@@ -346,7 +374,7 @@ public class DAO extends SQLiteOpenHelper {
     }
     public boolean checaEmailsCli(String email){
         db = this.getReadableDatabase();
-        String query = "select email from " + TABELA6;
+        String query = "select email from " + TABELA7;
         Cursor cursor = db.rawQuery(query, null);
         String a;
         if (cursor.moveToFirst()){
@@ -391,7 +419,7 @@ public class DAO extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         //Cliente
-        String query2 = "select email, senha, id_usuario from " + TABELA6;
+        String query2 = "select email, senha, id_usuario from " + TABELA7;
         cursor = db.rawQuery(query2, null);
         // String a para email, b para senha, c para nome do usuário e d para id do usuário
         if(cursor.moveToFirst()){

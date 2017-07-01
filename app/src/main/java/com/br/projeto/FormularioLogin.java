@@ -16,13 +16,15 @@ import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Sessao;
 import com.br.projeto.modelo.Usuario;
 
+import java.text.Normalizer;
+
 public class FormularioLogin extends Activity {
 
     //Criando os objetos necessários
 
     EditText editEmail;
     EditText editSenha;
-    Button btnLogin;
+    Button btnLogin, btnCadastrar;
     private Sessao sessao;
     public static String id;
     // Sessão
@@ -36,10 +38,20 @@ public class FormularioLogin extends Activity {
         editEmail = (EditText) findViewById(R.id.editEmail);
         editSenha = (EditText) findViewById(R.id.editSenha);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
 
         sessao = new Sessao(this);
-        //Teste <
-        Button botaoTeste = (Button) findViewById(R.id.btnTeste);
+        // VENDO SE ESTÁ LOGADO
+        if(sessao.logado() && sessao.escolhido()){
+            startActivity(new Intent(FormularioLogin.this, MenuP.class));
+            finish();
+        } else if (sessao.logado() && !sessao.escolhido()){
+            startActivity(new Intent(FormularioLogin.this, MenuP.class));
+            finish();
+            Toast temp = Toast.makeText(FormularioLogin.this, "Cliente", Toast.LENGTH_SHORT);
+            temp.show();
+        }
+
         // Request Focus para os edittexts
         editEmail.requestFocus();
         editSenha.requestFocus();
@@ -81,7 +93,15 @@ public class FormularioLogin extends Activity {
 
             }
         });
+        // BOTÃO PARA ABRIR ACTIVITY DE CADASTRAR
+        btnCadastrar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent abrirCadastro = new Intent(FormularioLogin.this, FormularioCadastro.class);
+                // solicitar para abir
+                startActivity(abrirCadastro);
 
+            }
+        });
 
     }
 

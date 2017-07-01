@@ -48,11 +48,11 @@
         android:text="Entrar" />
 
     <Button
-        android:id="@+id/btnTeste"
+        android:id="@+id/btnCadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:text="Teste" />
+        android:text="Cadastre-se" />
 
 
 </LinearLayout>
