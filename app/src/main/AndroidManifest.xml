@@ -39,7 +39,8 @@
         <activity android:name=".NovaCategoria" />
         <activity android:name=".AlterarCategoria" />
         <activity android:name=".alterar_anotacao" />
-        <activity android:name=".FormVendas"></activity>
+        <activity android:name=".FormVendas" />
+        <activity android:name=".ConfContaUs"></activity>
     </application>
 
 </manifest>

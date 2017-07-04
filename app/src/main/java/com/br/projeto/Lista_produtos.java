@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.br.projeto.dao.DAO;
+import com.br.projeto.modelo.Categoria;
 import com.br.projeto.modelo.Produto;
 
 import java.util.ArrayList;
@@ -49,7 +50,6 @@ public class Lista_produtos extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Produto produtoEnviado = (Produto) arrayAdapterProduto.getItem(position);
-
 
                 Intent abrirEdicao = new Intent(Lista_produtos.this, AlterarProduto.class);
                 abrirEdicao.putExtra("Produto-enviado",produtoEnviado);

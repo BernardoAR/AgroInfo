@@ -33,10 +33,14 @@
             />
     </android.support.design.widget.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/spnCateg"
+    <TextView
+        android:id="@+id/textCateg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Categoria: "
+        android:textSize="18dp"/>
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textPrecoCus"

@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
         <TextView
             android:id="@+id/textView2"
             android:textSize="30dp"
@@ -79,11 +79,41 @@
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textEndereco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/edtEndereco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:maxLength="50"
+                android:hint="Endereço:" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textTelefone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/edtTelefone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="phone"
+                android:hint="Telefone. Ex: (99) 99999-9999"
+                android:maxLength="15" />
+        </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/btnSalvarConfiguracoes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Salvar Alterações" />
+
     </LinearLayout>
 
 </ScrollView>

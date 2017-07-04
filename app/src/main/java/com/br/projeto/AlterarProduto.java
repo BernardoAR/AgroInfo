@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.br.projeto.dao.DAO;
@@ -28,14 +29,14 @@ import java.util.regex.Pattern;
 
 public class AlterarProduto extends AppCompatActivity {
 
-    public static int valorIdCateg;
+    public static String categN;
     public static int idCat;
     // Declarar
 
     public EditText edtNomeProd;
-    Spinner spnCateg;
+    TextView textCateg;
     Produto produto,altproduto;
-    Categoria altcategoria,categoria;
+    Categoria categoria;
     public EditText editPrecoCusto;
     public EditText editPrecoVenda;
     public EditText quantidade;
@@ -61,33 +62,35 @@ public class AlterarProduto extends AppCompatActivity {
 
         Intent abrirEdicao = getIntent();
         altproduto = (Produto) abrirEdicao.getSerializableExtra("Produto-enviado");
-        categoria = (Categoria) abrirEdicao.getSerializableExtra("IDCAT-enviada");
         produto = new Produto();
         categoria = new Categoria();
-        dao = new DAO(AlterarProduto.this);
+        dao = new DAO(this);
 
         //resgatar os componentes
 
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
-        spnCateg = (Spinner) findViewById(R.id.spnCateg);
         editPrecoCusto = (EditText) findViewById(R.id.editPrecoCusto);
         editPrecoVenda = (EditText) findViewById(R.id.editPrecoVenda);
         quantidade = (EditText) findViewById(R.id.quantidade);
         btnSalvarProd = (Button) findViewById(R.id.btnSalvarProd);
         btnExcluirProd = (Button) findViewById(R.id.btnExcluirProd);
+        textCateg = (TextView) findViewById(R.id.textCateg);
         // Layout
         textPrecoCus = (TextInputLayout) findViewById(R.id.textPrecoCus);
         textPrecoVen = (TextInputLayout) findViewById(R.id.textPrecoVen);
-
         if (altproduto != null) {
             edtNomeProd.setText(altproduto.getNomeProduto());
             produto.setId_produto(altproduto.getId_produto());
             idCat = helper.getCategoriaProd(produto.getId_produto());
+            categN = helper.getCategoriaProdN(idCat);
             categoria.setId_categoria(idCat);
+            categoria.setNova_categoria(categN);
             editPrecoCusto.setText(String.valueOf(altproduto.getPrecoCusto()));
             editPrecoVenda.setText(String.valueOf(altproduto.getPrecoVenda()));
             quantidade.setText(String.valueOf(altproduto.getQuantidade()));
         }
+
+        textCateg.setText("Categoria: " + categN);
 
         btnSalvarProd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,30 +188,6 @@ public class AlterarProduto extends AppCompatActivity {
 
             }
         });
-
-        //ClickListener do Spinner
-        spnCateg.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int pos, long id) {
-                // Pegar ID e o Valor da Categoria, forçar para que o Spinner pegue
-                Categoria item = (Categoria) parent.getItemAtPosition(pos);
-                String valor = item.getNova_categoria();
-                valorIdCateg = item.getId_categoria();
-                Toast tempo2 = Toast.makeText(AlterarProduto.this,valor,Toast.LENGTH_SHORT);
-                tempo2.show();
-                Toast tempo = Toast.makeText(AlterarProduto.this,String.valueOf(valorIdCateg),Toast.LENGTH_SHORT);
-                tempo.show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // Faz Nada
-            }
-
-
-
-
-        });
     }
 
     // Fazer com que fique com duas decimais FORÇADAMENTE
@@ -266,27 +245,4 @@ public class AlterarProduto extends AppCompatActivity {
         return !TextUtils.isEmpty(num) && Pattern.matches(validaNum, num);
     }
 
-    public void populaLista() {
-        dao = new DAO(AlterarProduto.this);
-        arrayListCategoria = dao.selectAllCategoria();
-        dao.close();
-
-        if (spnCateg != null) {
-            arrayAdapterCategoria = new ArrayAdapter<Categoria>(AlterarProduto.this,
-                    android.R.layout.simple_spinner_dropdown_item, arrayListCategoria);
-            spnCateg.setAdapter(arrayAdapterCategoria);
-
-        }
-    }
-
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        populaLista();
-        //Fazer com que pegue no OnResume o da Categoria Escolhida
-        spnCateg.setSelection(idCat - 1);
-        //
-
-    }
 }

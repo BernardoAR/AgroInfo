@@ -37,6 +37,8 @@ public class DAO extends SQLiteOpenHelper {
     private static final String NOME_USUARIO = "nome_usuario";
     private static final String EMAIL = "email";
     private static final String SENHA = "senha";
+    private static final String ENDERECO = "endereco";
+    private static final String TELEFONE = "telefone";
 
     private static final String TABELA2 = "anotacoes";
 
@@ -95,7 +97,9 @@ public class DAO extends SQLiteOpenHelper {
             " " + ID_USUARIO + " INTEGER PRIMARY KEY , " +
             " " + NOME_USUARIO + " VARCHAR(50) NOT NULL, " +
             " " + EMAIL + " VARCHAR(100) NOT NULL, " +
-            " " + SENHA + " VARCHAR(50) NOT NULL ); ";
+            " " + SENHA + " VARCHAR(50) NOT NULL, " +
+            " " + ENDERECO + " VARCHAR(50), " +
+            " " + TELEFONE + " VARCHAR(20) ); ";
 
     private static final String CRIAR_TABELA_ANOTACOES = "CREATE TABLE " + TABELA2 + " ( " +
             " " + ID_ANOTACAO + " INTEGER PRIMARY KEY , " +
@@ -226,6 +230,8 @@ public class DAO extends SQLiteOpenHelper {
         values.put(NOME_USUARIO,u.getNome());
         values.put(EMAIL, u.getEmail());
         values.put(SENHA, u.getSenha());
+        values.put(ENDERECO, u.getEndereco());
+        values.put(TELEFONE, u.getTelefone());
 
         String[] args = {String.valueOf(u.getId_usuario())};
 
@@ -259,10 +265,8 @@ public class DAO extends SQLiteOpenHelper {
         db.update(TABELA7,values,"id_usuario=?",args);
         db.close();
     }
-    // Pegar e Colocar a Senha
-    private static String str;
-    private static String str1;
-    private static String strSenha;
+    // Pegar e Colocar nome, email, endereco, telefone, senha
+    private static String str, str1, str2, str3, strSenha;
     private static int id;
     //Cliente ou Usuário, pegar
 
@@ -273,6 +277,15 @@ public class DAO extends SQLiteOpenHelper {
     private static String emailMod;
     public void setEmail(String emailMod) { this.emailMod = emailMod; }
     public static String getEmail(){ return emailMod; }
+
+    private static String enderecoMod;
+    public void setEndereco(String enderecoMod) { this.enderecoMod = enderecoMod; }
+    public static String getEndereco(){ return enderecoMod; }
+
+    private static String telefoneMod;
+    public void setTelefone(String telefoneMod) { this.telefoneMod = telefoneMod; }
+    public static String getTelefone(){ return telefoneMod; }
+
     //Pegar E-mail
     public String getEmailUs(){
         db = this.getReadableDatabase();
@@ -284,6 +297,11 @@ public class DAO extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
+        db.close();
+        return strSenha;
+    }
+    public String getEmailCl(){
+        db = this.getReadableDatabase();
         String query2 = "select email from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
@@ -295,6 +313,7 @@ public class DAO extends SQLiteOpenHelper {
         db.close();
         return strSenha;
     }
+
     //Pegar a senha do usuário
     public String getSenhaUs(){
         db = this.getReadableDatabase();
@@ -321,32 +340,38 @@ public class DAO extends SQLiteOpenHelper {
 
     public String getNomeUs() {
         db = this.getReadableDatabase();
-        String query = "select nome_usuario, email, senha from " + TABELA1 + " where id_usuario = " + MenuP.ID;
+        String query = "select nome_usuario, email, endereco, telefone from " + TABELA1 + " where id_usuario = " + MenuP.ID;
         Cursor cursor = db.rawQuery(query, null);
         if(cursor.moveToFirst()){
             do{
                 str = cursor.getString(0);
                 str1 = cursor.getString(1);
+                str2 = cursor.getString(2);
+                str3 = cursor.getString(3);
                 //Do something Here with values
                 setNome(str);
                 setEmail(str1);
-
+                setEndereco(str2);
+                setTelefone(str3);
             }while(cursor.moveToNext());
         }
         cursor.close();
-
+        db.close();
+        return str ;
+    }
+    public String getNomeCl() {
+        db = this.getReadableDatabase();
         String query2 = "select nome_usuario, email, senha from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
-        if(cursor2.moveToFirst()){
-            do{
+        if (cursor2.moveToFirst()) {
+            do {
                 str = cursor2.getString(0);
                 str1 = cursor2.getString(1);
                 //Do something Here with values
-
                 setNome(str);
                 setEmail(str1);
 
-            }while(cursor2.moveToNext());
+            } while (cursor2.moveToNext());
         }
         cursor2.close();
         db.close();
@@ -613,7 +638,7 @@ public class DAO extends SQLiteOpenHelper {
         values.put(PRECO_VENDA,p.getPrecoVenda());
         values.put(QUANTIDADE,p.getQuantidade());
         values.put(ID_USU,MenuP.ID);
-        values.put(ID_CAT, AlterarProduto.valorIdCateg);
+        values.put(ID_CAT, AlterarProduto.idCat);
 
         String[] args = {String.valueOf(p.getId_produto())};
 
@@ -631,7 +656,7 @@ public class DAO extends SQLiteOpenHelper {
         db.delete(TABELA4,"id_produto=?",args);
         db.close();
     }
-    //Pegar ID da Categoria do Produto
+    //Pegar ID e Nome da Categoria do Produto
     public int getCategoriaProd(int id){
         db = this.getReadableDatabase();
         String query = "select id_categoria from " + TABELA4 + " where id_produto = " + id;
@@ -641,6 +666,22 @@ public class DAO extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do{
                 idz = cursor.getInt(0);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        db.close();
+        return idz;
+    }
+    public String getCategoriaProdN(int id){
+        db = this.getReadableDatabase();
+        String query = "select nome_categoria from " + TABELA3 + " where id_categoria = " + id;
+        Cursor cursor = db.rawQuery(query, null);
+        String idz;
+        idz = "0";
+        if(cursor.moveToFirst()){
+            do{
+                idz = cursor.getString(0);
             }while(cursor.moveToNext());
         }
         cursor.close();

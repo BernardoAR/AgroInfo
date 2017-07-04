@@ -21,7 +21,7 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
     TextView nomeusuario;
     //Sessão
     private Sessao sessao;
-
+    String nome_usuario;
     DAO helper = new DAO(this);
     public static int ID;
 
@@ -60,7 +60,11 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
 
 
             //Com o ID já pego, pegar o nome que possui nesse id
-        String nome_usuario = helper.getNomeUs().toUpperCase();
+        if (sessao.escolhido() == true) {
+            nome_usuario = helper.getNomeUs().toUpperCase();
+        } else {
+            nome_usuario = helper.getNomeCl().toUpperCase();
+        }
         nomeusuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
         nomeusuario.setText(nome_usuario);
     }
@@ -86,6 +90,13 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            System.exit(0);
+
         }
     }
 
@@ -166,12 +177,13 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
             startActivity(abrirVendas);
 
         } else  if(id == R.id.nav_cont){
-            //TODO: AINDA NADA
-
-        } else  if(id == R.id.nav_cont){
-            Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
-            startActivity(abrirCont);
-
+            if (sessao.escolhido()){
+                Intent abrirCont = new Intent(MenuP.this, ConfContaUs.class);
+                startActivity(abrirCont);
+            } else {
+                Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
+                startActivity(abrirCont);
+            }
         } else  if(id == R.id.nav_sair){
             //Deslogar
             deslogar();
