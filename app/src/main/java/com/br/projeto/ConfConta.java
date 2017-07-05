@@ -2,6 +2,7 @@ package com.br.projeto;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,14 +11,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Cliente;
 import com.br.projeto.modelo.Sessao;
 import com.br.projeto.modelo.Usuario;
 
-import static com.br.projeto.FormularioCadastro.checaemails;
 import static com.br.projeto.FormularioCadastro.checaemails2;
 import static com.br.projeto.dao.DAO.getEmail;
 import static com.br.projeto.dao.DAO.getNome;
@@ -30,8 +29,8 @@ public class ConfConta extends AppCompatActivity {
     TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga;
     EditText nome, email,senha,senha_antiga;
     Button btnSalvarConfiguracoes;
+    Button btnExcluirCliente;
     Sessao sessao;
-    Usuario conta;
     Cliente cliente;
     DAO dao;
     long retornoDB;
@@ -52,6 +51,7 @@ public class ConfConta extends AppCompatActivity {
         senha = (EditText) findViewById(R.id.edtNovaSenha);
         senha_antiga = (EditText) findViewById(R.id.edtSenhaAntiga);
         btnSalvarConfiguracoes = (Button) findViewById(R.id.btnSalvarConfiguracoes);
+        btnExcluirCliente = (Button) findViewById(R.id.btnExcluirCliente);
 
         //TextInputLayouts que terão, animação
         textNomeUs = (TextInputLayout) findViewById(R.id.textNomeUs);
@@ -73,16 +73,16 @@ public class ConfConta extends AppCompatActivity {
                 checaemails2 = dao.checaEmailsCli(emailstr);
                 submForm();
                 if (checaNome() && checaEmail() && checaSenha() && checaNovaSenha()){
-                        cliente.setId_cliente(MenuP.ID);
-                        cliente.setNome(nome.getText().toString());
-                        cliente.setEmail(email.getText().toString());
-                        if (senha.getText().toString().trim().isEmpty()) {
-                            cliente.setSenha(senha_antiga.getText().toString());
-                        } else {
-                            cliente.setSenha(senha.getText().toString());
-                        }
-                        dao.alterarCliente(cliente);
-                        dao.close();
+                    cliente.setId_cliente(MenuP.ID);
+                    cliente.setNome(nome.getText().toString());
+                    cliente.setEmail(email.getText().toString());
+                    if (senha.getText().toString().trim().isEmpty()) {
+                        cliente.setSenha(senha_antiga.getText().toString());
+                    } else {
+                        cliente.setSenha(senha.getText().toString());
+                    }
+                    dao.alterarCliente(cliente);
+                    dao.close();
 
                     if (retornoDB == -1) {
                         AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
@@ -112,6 +112,51 @@ public class ConfConta extends AppCompatActivity {
                         dialog.show();
                     }
                 }
+            }
+        });
+
+        btnExcluirCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cliente.setId_cliente(cliente.getId_cliente());
+
+                dao.excluirCliente(cliente);
+                dao.close();
+
+
+                if (retornoDB == -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Erro ao excluir sua conta!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ConfConta.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+
+                } else {
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Conta excluída com sucesso!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sessao.dizLogado(false);
+                            sessao.dizID(0);
+                            Intent abrirLogin = new Intent(ConfConta.this, FormularioLogin.class);
+                            // solicitar para abir
+                            startActivity(abrirLogin);
+                        }
+                    });
+
+
+                    dialog.show();
+                }
+
             }
         });
 
@@ -173,7 +218,7 @@ public class ConfConta extends AppCompatActivity {
     }
     //Pegar a string de e-mail do ID
     private boolean checaSenha() {
-        String a = dao.getSenhaUs();
+        String a = dao.getSenhaCl();
         if(senha_antiga.getText().toString().trim().length() <= 5 || !senha_antiga.getText().toString().trim().equals(a)){
             textSenhaAntiga.setError("Entre com a Senha Antiga Corretamente");
             senha_antiga.setError("Entrada Obrigatória!");
@@ -185,7 +230,7 @@ public class ConfConta extends AppCompatActivity {
     private boolean checaNovaSenha() {
         if(!senha.getText().toString().trim().isEmpty() && senha_antiga.getText().toString().trim().length() <= 5){
             textNovaSenha.setError("Entre com uma nova senha de no Mínimo 6 dígitos");
-            senha.setError("Entrada Opcional, porém obrigado 6 dígitos!");
+            senha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
             return false;
         }
         textSenhaAntiga.setErrorEnabled(false);

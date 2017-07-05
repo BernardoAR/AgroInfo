@@ -39,8 +39,10 @@
         <activity android:name=".NovaCategoria" />
         <activity android:name=".AlterarCategoria" />
         <activity android:name=".alterar_anotacao" />
+        <activity android:name=".PesquisarProduto" />
         <activity android:name=".FormVendas" />
-        <activity android:name=".ConfContaUs"></activity>
+        <activity android:name=".ConfContaUs" />
+        <activity android:name=".DetalhesProduto" />
     </application>
 
 </manifest>

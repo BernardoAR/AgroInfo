@@ -38,20 +38,20 @@ public class Produto implements Serializable {
         DataCadastro = dataCadastro;
     }
 
-    public float getPrecoCusto() {
-        return PrecoCusto;
-    }
-
     public void setPrecoCusto(float precoCusto) {
         PrecoCusto = precoCusto;
     }
 
-    public float getPrecoVenda() {
-        return PrecoVenda;
+    public float getPrecoCusto() {
+        return PrecoCusto;
     }
 
     public void setPrecoVenda(float precoVenda) {
         PrecoVenda = precoVenda;
+    }
+
+    public float getPrecoVenda() {
+        return PrecoVenda;
     }
 
     public int getQuantidade() {

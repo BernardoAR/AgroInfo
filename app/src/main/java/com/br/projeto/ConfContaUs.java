@@ -35,7 +35,6 @@ public class ConfContaUs extends AppCompatActivity {
     Button btnSalvarConfiguracoes;
     Sessao sessao;
     Usuario conta;
-    Cliente cliente;
     DAO dao;
     long retornoDB;
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.br.projeto.AlterarProduto;
 import com.br.projeto.FormProd;
 import com.br.projeto.MenuP;
+import com.br.projeto.PesquisarProduto;
 import com.br.projeto.modelo.Anotacao;
 import com.br.projeto.modelo.Categoria;
 import com.br.projeto.modelo.Cliente;
@@ -56,7 +57,7 @@ public class DAO extends SQLiteOpenHelper {
     private static final String TABELA4 = "produto";
 
     private static final String ID_PRODUTO = "id_produto";
-    private static final String NOME_PRODUTO = "anotacao";
+    private static final String NOME_PRODUTO = "nome_produto";
     private static final String PRECO_CUSTO = "preco_custo";
     private static final String PRECO_VENDA = "preco_venda";
     private static final String QUANTIDADE = "quantidade";
@@ -251,6 +252,16 @@ public class DAO extends SQLiteOpenHelper {
         db.insert(TABELA7, null, values);
         db.close();
     }
+
+    public void excluirCliente(Cliente c) {
+        db = this.getWritableDatabase();
+
+        String[] args = {String.valueOf(MenuP.ID)};
+
+        db.delete(TABELA7,"id_usuario=?",args);
+        db.close();
+    }
+
     //ALTERAR CONFIGURAÇÕES CLIENTE
     public void alterarCliente(Cliente c) {
         db = this.getWritableDatabase();
@@ -325,7 +336,11 @@ public class DAO extends SQLiteOpenHelper {
             }while(cursor.moveToNext());
         }
         cursor.close();
-
+        db.close();
+        return strSenha;
+    }
+    public String getSenhaCl(){
+        db = this.getReadableDatabase();
         String query2 = "select senha from " + TABELA7 + " where id_usuario = " + MenuP.ID;
         Cursor cursor2 = db.rawQuery(query2, null);
         if(cursor2.moveToFirst()){
@@ -719,4 +734,60 @@ public class DAO extends SQLiteOpenHelper {
     public float getSomaPC(){ return precoCus; }
     public void setSomaPV(float precoVen) { this.precoVen = precoVen; }
     public float getSomaPV(){ return precoVen; }
+
+    //LISTAR PRODUTO
+
+    public ArrayList<Produto> selectAllProdutos(){
+
+        db = this.getReadableDatabase();
+        String[] coluns = {ID_PRODUTO, NOME_PRODUTO};
+        Cursor cursor = db.query(TABELA4,coluns, NOME_PRODUTO + " like '%" + PesquisarProduto.pesquisar + "%' ",null,null,null,null,null);
+        ArrayList<Produto> ListProduto = new ArrayList<>();
+
+        while (cursor.moveToNext()){
+
+            Produto p = new Produto();
+            p.setId_produto(cursor.getInt(0));
+            p.setNomeProduto(cursor.getString(1));
+            ListProduto.add(p);
+        }
+        cursor.close();
+        return ListProduto;
+
+    }
+    public static String telefon, enderexo, nome_emp;
+    public static int idUs;
+    public static float precoVenda;
+    // Pegar IDUsuário do Produto
+    public void getIDUsP(int id_prod) {
+        db = this.getReadableDatabase();
+        String query = "select id_usuario, preco_venda from " + TABELA4 + " where id_produto = " + id_prod;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                idUs = cursor.getInt(0);
+                precoVenda = cursor.getFloat(1);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+    }
+    // CONSULTA DE DETALHES DO PRODUTO
+    public void getDetProd() {
+        db = this.getReadableDatabase();
+        String query = "select telefone, endereco, nome_usuario from " + TABELA1 + " where id_usuario = " + idUs;
+        Cursor cursor = db.rawQuery(query, null);
+        if(cursor.moveToFirst()){
+            do{
+                telefon = cursor.getString(0);
+                enderexo = cursor.getString(1);
+                nome_emp = cursor.getString(2);
+                if (telefon == null ){ telefon = "Não Informado"; }
+                if (enderexo == null ){ enderexo = "Não Informado"; }
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+    }
+
 }

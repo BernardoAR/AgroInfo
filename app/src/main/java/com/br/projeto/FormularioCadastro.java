@@ -102,7 +102,6 @@ public class FormularioCadastro extends Activity {
                     //Desligar o pressionado
                     pressionado = 0;
 
-
                     if (retornoDB == -1) {
                         AlertDialog.Builder dialog = new AlertDialog.Builder(FormularioCadastro.this);
                         dialog.setTitle("AgroInfo");

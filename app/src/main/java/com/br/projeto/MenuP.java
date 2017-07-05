@@ -59,7 +59,7 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
         tempor.show();
 
 
-            //Com o ID já pego, pegar o nome que possui nesse id
+        //Com o ID já pego, pegar o nome que possui nesse id
         if (sessao.escolhido() == true) {
             nome_usuario = helper.getNomeUs().toUpperCase();
         } else {
@@ -170,11 +170,15 @@ public class MenuP extends AppCompatActivity implements NavigationView.OnNavigat
             startActivity(abrirProd);
 
         } else  if(id == R.id.nav_rendimentos){
-           //TODO: AINDA NADA
-
+            Intent abrirRendimentos = new Intent(MenuP.this, Rendimentos.class);
+            startActivity(abrirRendimentos);
         } else  if(id == R.id.nav_vendas){
             Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
             startActivity(abrirVendas);
+
+        }else  if(id == R.id.nav_pesquisa){
+            Intent abrirPesquisa = new Intent(MenuP.this, PesquisarProduto.class);
+            startActivity(abrirPesquisa);
 
         } else  if(id == R.id.nav_cont){
             if (sessao.escolhido()){

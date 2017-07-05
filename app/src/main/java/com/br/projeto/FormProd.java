@@ -134,7 +134,7 @@ public class FormProd extends AppCompatActivity {
 
 
                     // Inserir os detalhes no BD
-                    Produto p   = new Produto();
+                    Produto p = new Produto();
                     p.setNomeProduto(nome);
                     p.setPrecoCusto (Float.parseFloat(PrecoC));
                     p.setPrecoVenda(Float.parseFloat(PrecoV));
