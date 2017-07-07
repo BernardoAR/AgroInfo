@@ -7,14 +7,14 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.br.projeto.FormularioLogin" >
+    tools:context="com.br.agroinfo.FormularioLogin" >
 
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
+        android:gravity="center"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="120dp"
         android:textSize="30dp"
         android:text="Entrar" />
 
@@ -48,11 +48,10 @@
         android:text="Entrar" />
 
     <Button
-        android:id="@+id/btnTeste"
+        android:id="@+id/btnCadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Teste" />
+        android:text="Cadastre-se" />
 
 
 </LinearLayout>

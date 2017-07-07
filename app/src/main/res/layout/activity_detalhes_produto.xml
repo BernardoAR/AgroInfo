@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.br.agroinfo.DetalhesProduto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <TextView
+            android:id="@+id/textNomeProduto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nome do Produto: "
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/textPrecoVenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Preço de Venda: "
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/textQuantidadeDisp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Possui Estoque: "
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/textNomeEmp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Empresário/Vendedor: "
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/textEndereco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Endereço:"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/textTelefoneCont"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Telefone: "
+            android:textSize="20dp"/>
+    </LinearLayout>
+</ScrollView>

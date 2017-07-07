@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.br.projeto.MenuP"
+    tools:context="com.br.agroinfo.MenuP"
     tools:showIn="@layout/bar_app_menu_p"
     android:orientation="vertical">
 

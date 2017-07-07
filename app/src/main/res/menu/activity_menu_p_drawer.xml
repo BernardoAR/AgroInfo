@@ -13,10 +13,17 @@
             android:title="Produtos" />
 
         <item
-            android:id="@+id/nav_faturamentos"
+            android:id="@+id/nav_rendimentos"
             android:icon="@drawable/ic_lucros"
-            android:title="Lucros" />
-
+            android:title="Rendimentos" />
+        <item
+            android:id="@+id/nav_vendas"
+            android:icon="@drawable/ic_lucros"
+            android:title="Vendas" />
+        <item
+            android:id="@+id/nav_pesquisa"
+            android:icon="@drawable/ic_lucros"
+            android:title="Pesquisar Produtos" />
         <item
             android:id="@+id/nav_cont"
             android:icon="@drawable/ic_settings_black_24dp"

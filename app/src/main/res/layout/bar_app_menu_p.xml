@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.br.projeto.MenuP">
+    tools:context="com.br.agroinfo.MenuP">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

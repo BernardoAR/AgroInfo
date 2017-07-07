@@ -6,13 +6,13 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.br.projeto.Lista_anotacoes"
+    tools:context="com.br.agroinfo.Lista_anotacoes"
     android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
+        android:gravity="center"
         android:text="Alterar Categria"
-        android:layout_marginLeft="70dp"
         android:textSize="30dp"
         android:layout_height="wrap_content" />
 

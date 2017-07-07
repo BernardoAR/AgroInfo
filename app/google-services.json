@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "252317546723",
+    "firebase_url": "https://agroinfo-410e4.firebaseio.com",
+    "project_id": "agroinfo-410e4",
+    "storage_bucket": "agroinfo-410e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252317546723:android:aca79b9d5fe2a557",
+        "android_client_info": {
+          "package_name": "com.br.agroinfo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252317546723-2cotsr37nr5eo275s2df71qc69dlab05.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.br.agroinfo",
+            "certificate_hash": "95f5557dce74e6f7ecf4a0dd6ca01e2982068fb3"
+          }
+        },
+        {
+          "client_id": "252317546723-fj4n12nfgtvtvm12keun2is4til5vu3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjXiwvlJW7qiKW05bZt8ZBsgTrHe8tOwY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "252317546723-fj4n12nfgtvtvm12keun2is4til5vu3h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
