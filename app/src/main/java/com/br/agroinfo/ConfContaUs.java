@@ -77,16 +77,18 @@ public class ConfContaUs extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                usuarioF.updatePassword(senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            alerta("Senha alterada com sucesso");
-                                        } else {
-                                            alerta("Erro ao alterar senha, tente novamente mais tarde");
+                                if (!senha.getText().toString().trim().isEmpty()){
+                                    usuarioF.updatePassword(senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                alerta("Senha alterada com sucesso");
+                                            } else {
+                                                alerta("Erro ao alterar senha, tente novamente mais tarde");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                                 usuarioF.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -115,14 +117,8 @@ public class ConfContaUs extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        pegaDados();
-    }
-
     private void pegaDados() {
-        DatabaseReference db  = databaseReference.child("Usuario").child(MenuP.usuario.getUid());
+        DatabaseReference db  = databaseReference.child("Usuario").child(usuarioF.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -147,6 +143,7 @@ public class ConfContaUs extends AppCompatActivity {
         usuarioF = FirebaseAuth.getInstance().getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        pegaDados();
     }
 
     private void submForm() {

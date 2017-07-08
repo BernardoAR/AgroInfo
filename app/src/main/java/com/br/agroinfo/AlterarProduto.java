@@ -19,8 +19,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -45,6 +47,7 @@ public class AlterarProduto extends AppCompatActivity {
     public EditText quantidade;
     public Button btnSalvarProd;
     public Button btnExcluirProd;
+    FirebaseUser usuario;
 
     private TextInputLayout textPrecoCus, textPrecoVen;
     private Vibrator vib;
@@ -98,15 +101,17 @@ public class AlterarProduto extends AppCompatActivity {
                     Produto p = new Produto();
                     Categoria c = new Categoria();
                     p.setId_produto(altproduto.getId_produto());
-                    p.setNomeProduto(edtNomeProd.getText().toString());
+                    p.setNomeProduto(edtNomeProd.getText().toString().toUpperCase());
                     p.setPrecoCusto(Float.valueOf(editPrecoCusto.getText().toString()));
                     p.setPrecoVenda(Float.valueOf(editPrecoVenda.getText().toString()));
                     p.setQuantidade(Integer.valueOf(quantidade.getText().toString()));
                     c.setId_categoria(getId_Catego());
-                    databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+                    databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).setValue(p);
-                    databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+                    databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
+                    databaseReference.child("Produto").child("Produtos")
+                            .child(p.getId_produto()).child("Usuario").setValue(usuario.getUid());
                     alerta("Alterado com Sucesso");
                     limpaCampos();
                     finish();
@@ -117,7 +122,7 @@ public class AlterarProduto extends AppCompatActivity {
         btnExcluirProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+                databaseReference.child("Produto").child("Produtos")
                         .child(altproduto.getId_produto()).removeValue();
                 alerta("Excluído com Sucesso");
                 limpaCampos();
@@ -137,7 +142,7 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void pegaVCategoria() {
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+        databaseReference.child("Produto").child("Produtos")
                 .child(altproduto.getId_produto()).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -156,7 +161,7 @@ public class AlterarProduto extends AppCompatActivity {
 
     private void categorias() {
         Toast.makeText(AlterarProduto.this,"PegaCCategoria:" + getId_Catego(), Toast.LENGTH_SHORT).show();
-        databaseReference.child("Categoria").child(MenuP.usuario.getUid()).child(getId_Catego()).child("nova_categoria")
+        databaseReference.child("Categoria").child(usuario.getUid()).child(getId_Catego()).child("nova_categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -178,6 +183,7 @@ public class AlterarProduto extends AppCompatActivity {
     private void inicializarFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
 
     // Fazer com que fique com duas decimais FORÇADAMENTE

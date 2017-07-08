@@ -59,7 +59,6 @@ public class CadastrosOpcionais extends AppCompatActivity {
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,6 +86,9 @@ public class CadastrosOpcionais extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        autent = Conexao.getFirebaseAuth();
+        usuario = Conexao.getFirebaseUser();
+        TestaDados();
     }
 
     private void TestaDados() {
@@ -158,13 +160,6 @@ public class CadastrosOpcionais extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        autent = Conexao.getFirebaseAuth();
-        usuario = Conexao.getFirebaseUser();
-        TestaDados();
-    }
     private void submForm() {
         if (!checaNome()) {
             edtNome.setAnimation(animBalanc);
@@ -176,7 +171,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
             alerta("Marque um dos dois campos");
         }
         if (!algSelect2()){
-            alerta("Campo cliente não usa Endereço e Telefone");
+            alerta("Cliente não possui os campos Endereço e Telefone");
         }
         textNome.setErrorEnabled(false);
     }

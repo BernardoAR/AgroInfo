@@ -21,9 +21,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
 import com.br.agroinfo.modelo.Vendas;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +54,7 @@ public class FormVendas extends AppCompatActivity {
     private ArrayAdapter<Produto> arrayAdapterProduto;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    FirebaseUser usuario;
     int total;
     float precoCusto, precoVenda, precoFinal;
     private Vibrator vib;
@@ -145,12 +148,14 @@ public class FormVendas extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
+        populaLista();
     }
     private void alerta(String mensagem) {
         Toast.makeText(FormVendas.this, mensagem, Toast.LENGTH_SHORT).show();
     }
     private void populaLista() {
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos").orderByChild("Categoria")
+        databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -171,8 +176,7 @@ public class FormVendas extends AppCompatActivity {
     }
     // PEGAR A CATEGORIA
     private void pegaVCategoria() {
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
-                .child(valorId).child("Categoria")
+        databaseReference.child("Produto").child("Produtos").child(valorId).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -196,7 +200,7 @@ public class FormVendas extends AppCompatActivity {
         ve.setId_venda(UUID.randomUUID().toString());
         ve.setData_venda(edtData.getText().toString());
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
-        databaseReference.child("Vendas").child(MenuP.usuario.getUid()).child(ve.getId_venda()).setValue(ve);
+        databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 
         p.setId_produto(valorId);
         p.setNomeProduto(valor);
@@ -206,12 +210,14 @@ public class FormVendas extends AppCompatActivity {
         p.setDataCadastro(dataC);
         c.setId_categoria(getCatego());
 
-        databaseReference.child("Vendas").child(MenuP.usuario.getUid()).child(ve.getId_venda())
+        databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda())
                 .child("Id_produto").setValue(p.getId_produto());
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+        databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).setValue(p);
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+        databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
+        databaseReference.child("Produto").child("Produtos")
+                .child(p.getId_produto()).child("Usuario").setValue(usuario.getUid());
         alerta("Venda feita com Sucesso");
         // Modificar no Campo do Produto
         limpaCampos();
@@ -239,16 +245,6 @@ public class FormVendas extends AppCompatActivity {
         textQuant.setErrorEnabled(false);
         return true;
     }
-
-
-
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        populaLista();
-    }
-
     public void setCatego(String catego) { this.catego = catego; }
 
     public String getCatego() { return catego; }

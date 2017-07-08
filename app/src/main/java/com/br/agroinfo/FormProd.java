@@ -17,8 +17,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +54,7 @@ public class FormProd extends AppCompatActivity {
     String valorId;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
+    FirebaseUser usuario;
     private List<Categoria> listCategoria = new ArrayList<Categoria>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
 
@@ -119,16 +122,17 @@ public class FormProd extends AppCompatActivity {
                     Produto p = new Produto();
                     p.setId_produto(UUID.randomUUID().toString());
                     p.setDataCadastro(DataCadastro.getText().toString());
-                    p.setNomeProduto(edtNomeProd.getText().toString());
+                    p.setNomeProduto(edtNomeProd.getText().toString().toUpperCase());
                     p.setPrecoCusto(precoC);
                     p.setPrecoVenda(precoV);
                     p.setQuantidade(quant);
                     Categoria c = new Categoria();
                     c.setId_categoria(valorId);
-                    databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
-                            .child(p.getId_produto()).setValue(p);
-                    databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos")
+                    databaseReference.child("Produto").child("Produtos").child(p.getId_produto()).setValue(p);
+                    databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
+                    databaseReference.child("Produto").child("Produtos")
+                            .child(p.getId_produto()).child("Usuario").setValue(usuario.getUid());
                     alerta("Cadastrado com Sucesso!");
                     limpaCampos();
                     finish();
@@ -178,6 +182,7 @@ public class FormProd extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
     // Fazer com que fique com duas decimais FORÇADAMENTE
     public static BigDecimal casas(float d, int casasDec) {
@@ -236,7 +241,7 @@ public class FormProd extends AppCompatActivity {
 
     // Pegar os Valores
     private void populaLista() {
-        DatabaseReference db  = databaseReference.child("Categoria").child(MenuP.usuario.getUid());
+        DatabaseReference db  = databaseReference.child("Categoria").child(usuario.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

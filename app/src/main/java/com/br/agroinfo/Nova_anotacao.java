@@ -36,8 +36,7 @@ public class Nova_anotacao extends AppCompatActivity {
     Button btnCadastrar, btnSelData;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-
-    long retornoDB;
+    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +90,7 @@ public class Nova_anotacao extends AppCompatActivity {
                     a.setId_anotacao(UUID.randomUUID().toString());
                     a.setNovo_assunto(data + " - " + assunto);
                     a.setNova_anotacao(anotacao);
-                    databaseReference.child("Anotacao").child(MenuP.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
+                    databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                     alerta("Salvado com Sucesso");
                     limparCampos();
                     finish();
@@ -113,6 +112,7 @@ public class Nova_anotacao extends AppCompatActivity {
     private void inicializarFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
     private void submForm() {
         if (!checaAssunto()) {

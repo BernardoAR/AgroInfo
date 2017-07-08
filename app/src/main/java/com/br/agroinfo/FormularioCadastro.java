@@ -114,7 +114,6 @@ public class FormularioCadastro extends Activity {
                 });
     }
 
-
     private void limpaCampos() {
         textEmail.setText("");
         textSenha.setText("");

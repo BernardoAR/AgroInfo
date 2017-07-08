@@ -46,8 +46,7 @@ public class FormularioLogin extends Activity {
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
 
-        //Teste <
-        Button botaoTeste = (Button) findViewById(R.id.btnTeste);
+
         // Request Focus para os edittexts
         editEmail.requestFocus();
         editSenha.requestFocus();
@@ -118,12 +117,7 @@ public class FormularioLogin extends Activity {
         usuario = Conexao.getFirebaseUser();
     }
 
-    //RequestFocus para pegar as Edittext
-    private void requestFocus(View view){
-        if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-    }
+
     //
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

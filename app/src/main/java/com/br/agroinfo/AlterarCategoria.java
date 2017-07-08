@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -21,6 +23,7 @@ public class AlterarCategoria extends AppCompatActivity {
     Button btnExcluirCategoria;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +48,8 @@ public class AlterarCategoria extends AppCompatActivity {
             public void onClick(View view) {
                 Categoria c = new Categoria();
                 c.setId_categoria(altcategoria.getId_categoria());
-                c.setNova_categoria(alteracaoCat.getText().toString());
-                databaseReference.child("Categoria").child(MenuP.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                c.setNova_categoria(alteracaoCat.getText().toString().toUpperCase());
+                databaseReference.child("Categoria").child(usuario.getUid()).child(c.getId_categoria()).setValue(c);
                 alerta("Alterado com Sucesso");
                 // Limpa Campo
                 alteracaoCat.setText("");
@@ -59,7 +62,7 @@ public class AlterarCategoria extends AppCompatActivity {
             public void onClick(View v) {
                 Categoria c = new Categoria();
                 c.setId_categoria(altcategoria.getId_categoria());
-                databaseReference.child("Categoria").child(MenuP.usuario.getUid()).child(c.getId_categoria()).removeValue();
+                databaseReference.child("Categoria").child(usuario.getUid()).child(c.getId_categoria()).removeValue();
                 alerta("Excluído com Sucesso");
                 // Limpa Campo
                 alteracaoCat.setText("");
@@ -74,5 +77,6 @@ public class AlterarCategoria extends AppCompatActivity {
     private void inicializarFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
 }

@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Anotacao;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -71,11 +72,12 @@ public class Lista_anotacoes extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
 
     // Pegar os Valores
     private void populaLista() {
-        DatabaseReference db  = databaseReference.child("Anotacao").child(MenuP.usuario.getUid());
+        DatabaseReference db  = databaseReference.child("Anotacao").child(usuario.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

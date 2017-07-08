@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Anotacao;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,6 +25,7 @@ public class alterar_anotacao extends AppCompatActivity {
     Button btnExcluirAnotacao;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class alterar_anotacao extends AppCompatActivity {
                 a.setId_anotacao(altanotacao.getId_anotacao());
                 a.setNovo_assunto(assunto.getText().toString());
                 a.setNova_anotacao(alteracao.getText().toString());
-                databaseReference.child("Anotacao").child(MenuP.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
+                databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                 alerta("Alterado com Sucesso");
                 limparCampos();
                 finish();
@@ -64,7 +67,7 @@ public class alterar_anotacao extends AppCompatActivity {
             public void onClick(View v) {
                 Anotacao a = new Anotacao();
                 a.setId_anotacao(altanotacao.getId_anotacao());
-                databaseReference.child("Anotacao").child(MenuP.usuario.getUid()).child(a.getId_anotacao()).removeValue();
+                databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).removeValue();
                 alerta("Excluído com Sucesso");
                 limparCampos();
                 finish();
@@ -85,6 +88,7 @@ public class alterar_anotacao extends AppCompatActivity {
     private void inicializarFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
 }
 

@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -49,10 +50,6 @@ public class PesquisarProduto extends AppCompatActivity {
             public void onClick(View view) {
                 pesquisar = pesquisa.getText().toString();
                 populaLista();
-                if (listProduto.isEmpty() || listProduto == null){
-                    Toast sem = Toast.makeText(PesquisarProduto.this, "Não foi encontrado resultados", Toast.LENGTH_SHORT);
-                    sem.show();
-                }
             }
         });
 
@@ -71,8 +68,8 @@ public class PesquisarProduto extends AppCompatActivity {
     }
 
     public void populaLista(){
-        databaseReference.child("Produto").orderByChild("nomeProduto").startAt(pesquisa.getText().toString())
-                .addValueEventListener(new ValueEventListener() {
+        Query query = databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         listProduto.clear();
@@ -83,15 +80,20 @@ public class PesquisarProduto extends AppCompatActivity {
                         arrayAdapterProduto = new ArrayAdapter<Produto>(PesquisarProduto.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         lstProd.setAdapter(arrayAdapterProduto);
+                        checaPopulacao();
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
 
                 });
-
+    }
+    private void checaPopulacao() {
+        if (listProduto.isEmpty() || listProduto == null){
+            Toast sem = Toast.makeText(PesquisarProduto.this, "Não foi encontrado resultados", Toast.LENGTH_SHORT);
+            sem.show();
+        }
     }
 
     private void inicFirebase() {

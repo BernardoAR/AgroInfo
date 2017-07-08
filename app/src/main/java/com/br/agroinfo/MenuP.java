@@ -30,19 +30,17 @@ public class MenuP extends AppCompatActivity
     //Sessão
     String nomeUs;
     private FirebaseAuth autent;
-    public static FirebaseUser usuario;
+    FirebaseUser usuario;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     boolean escolha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         inicFirebase();
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_p);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -88,13 +86,6 @@ public class MenuP extends AppCompatActivity
         usuario = Conexao.getFirebaseUser();
         verificaUsuario();
         pegaNomeeEsc();
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
     }
 
     @Override
@@ -118,7 +109,6 @@ public class MenuP extends AppCompatActivity
         pesquisa.setVisible(true);
         confconta.setVisible(true);
         sair.setVisible(true);
-
 
        if (escolha) {
             pesquisa.setVisible(false);

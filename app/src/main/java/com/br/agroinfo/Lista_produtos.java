@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,7 +30,7 @@ public class Lista_produtos extends AppCompatActivity {
     private ArrayAdapter<Produto> arrayAdapterProduto;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-    Categoria categoria;
+    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +72,10 @@ public class Lista_produtos extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
-
     private void populaLista() {
-        databaseReference.child("Produto").child(MenuP.usuario.getUid()).child("Produtos").orderByChild("Categoria")
+        databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

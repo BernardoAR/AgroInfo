@@ -11,8 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +37,7 @@ public class NovaCategoria extends AppCompatActivity {
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
+    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,23 +73,30 @@ public class NovaCategoria extends AppCompatActivity {
                 // Inserir os detalhes no BD
                 Categoria c = new Categoria();
                 c.setId_categoria(UUID.randomUUID().toString());
-                c.setNova_categoria(categoriastr);
-                databaseReference.child("Categoria").child(MenuP.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                c.setNova_categoria(categoriastr.toUpperCase());
+                databaseReference.child("Categoria").child(usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                alerta("Categoria Salva com Sucesso");
+                nova_categoria.setText("");
+                finish();
             }
         });
     }
+    private void alerta(String s) {
+        Toast.makeText(NovaCategoria.this, s, Toast.LENGTH_SHORT).show();
+    }
+
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+        usuario = Conexao.getFirebaseUser();
     }
 
     // Pegar os Valores
     private void populaLista() {
-        DatabaseReference db  = databaseReference.child("Categoria").child(MenuP.usuario.getUid());
+        DatabaseReference db  = databaseReference.child("Categoria").child(usuario.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                listCategoria.clear();
                 for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
                     Categoria c = objSnapshot.getValue(Categoria.class);
                     listCategoria.add(c);
@@ -97,15 +108,9 @@ public class NovaCategoria extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
-
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }
 

@@ -77,16 +77,18 @@ public class ConfConta extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                usuarioF.updatePassword(senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            alerta("Senha alterada com sucesso");
-                                        } else {
-                                            alerta("Erro ao alterar senha, tente novamente mais tarde");
+                                if (!senha.getText().toString().trim().isEmpty()){
+                                    usuarioF.updatePassword(senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                alerta("Senha alterada com sucesso");
+                                            } else {
+                                                alerta("Erro ao alterar senha, tente novamente mais tarde");
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                                 usuarioF.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
@@ -114,7 +116,7 @@ public class ConfConta extends AppCompatActivity {
         btnExcluirCliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.child("Usuario").child(MenuP.usuario.getUid()).removeValue();
+                databaseReference.child("Usuario").child(usuarioF.getUid()).removeValue();
                 usuarioF.delete()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -140,7 +142,7 @@ public class ConfConta extends AppCompatActivity {
     }
 
     private void pegaDados() {
-        DatabaseReference db  = databaseReference.child("Usuario").child(MenuP.usuario.getUid());
+        DatabaseReference db  = databaseReference.child("Usuario").child(usuarioF.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
