@@ -53,7 +53,7 @@ public class AlterarProduto extends AppCompatActivity {
     private Vibrator vib;
     Animation animBalanc;
 
-    private List<Categoria> listCategoria = new ArrayList<Categoria>() ;
+    private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
@@ -130,6 +130,14 @@ public class AlterarProduto extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AlterarProduto.this, Lista_produtos.class);
+        startActivity(i);
+    }
+
     private void limpaCampos() {
         edtNomeProd.setText("");
         editPrecoCusto.setText("");

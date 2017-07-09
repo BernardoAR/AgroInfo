@@ -55,7 +55,12 @@ public class DetalhesProduto extends AppCompatActivity {
             pegaDadoExt();
         }
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(DetalhesProduto.this, PesquisarProduto.class);
+        startActivity(i);
+    }
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();

@@ -36,7 +36,6 @@ public class MenuP extends AppCompatActivity
     boolean escolha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        inicFirebase();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_p);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -58,7 +57,7 @@ public class MenuP extends AppCompatActivity
 
         //Com o ID já pego, pegar o nome que possui nesse id
         nomeusuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
-
+        inicFirebase();
 
     }
     // PEGAR A CATEGORIA
@@ -67,10 +66,10 @@ public class MenuP extends AppCompatActivity
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        invalidateOptionsMenu();
                         Usuario u = dataSnapshot.getValue(Usuario.class);
-                        nomeUs = u.getNome().toString();
                         escolha = u.getEscolha();
-                        nomeusuario.setText(nomeUs.toUpperCase());
+                        nomeusuario.setText(u.getNome().toUpperCase());
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -80,19 +79,24 @@ public class MenuP extends AppCompatActivity
     }
 
     private void inicFirebase() {
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         autent = Conexao.getFirebaseAuth();
         usuario = Conexao.getFirebaseUser();
         verificaUsuario();
         pegaNomeeEsc();
     }
-
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
-
+        alerta(String.valueOf(escolha));
         // Preparar todos
         MenuItem anotacoes = menu.findItem(R.id.nav_anotacoes);
         MenuItem produtos = menu.findItem(R.id.nav_prod);
@@ -109,8 +113,7 @@ public class MenuP extends AppCompatActivity
         pesquisa.setVisible(true);
         confconta.setVisible(true);
         sair.setVisible(true);
-
-       if (escolha) {
+        if (escolha) {
             pesquisa.setVisible(false);
         } else if (!escolha){
             anotacoes.setVisible(false);
@@ -120,11 +123,12 @@ public class MenuP extends AppCompatActivity
         }
         return super.onPrepareOptionsMenu(menu);
     }
+    private void alerta(String mensagem){
+        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
+    }
     private void verificaUsuario() {
         if (usuario == null){
-            finish();
-        } else {
-
+            alerta("Por algum motivo está nulo");
         }
     }
 
@@ -146,26 +150,12 @@ public class MenuP extends AppCompatActivity
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -178,29 +168,33 @@ public class MenuP extends AppCompatActivity
         if (id == R.id.nav_anotacoes) {
             Intent abrirAnotacoes = new Intent(MenuP.this,Lista_anotacoes.class);
             // solicitar para abir
+            invalidateOptionsMenu();
             startActivity(abrirAnotacoes);
-
         } else if (id == R.id.nav_prod) {
             Intent abrirProd = new Intent(MenuP.this,FormProd.class);
+            invalidateOptionsMenu();
             startActivity(abrirProd);
-
         } else  if(id == R.id.nav_rendimentos){
            // Intent abrirRendimentos = new Intent(MenuP.this, Rendimentos.class);
             //startActivity(abrirRendimentos);
         } else  if(id == R.id.nav_vendas){
             Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
+            invalidateOptionsMenu();
             startActivity(abrirVendas);
 
         }else  if(id == R.id.nav_pesquisa){
             Intent abrirPesquisa = new Intent(MenuP.this, PesquisarProduto.class);
+            invalidateOptionsMenu();
             startActivity(abrirPesquisa);
 
         } else  if(id == R.id.nav_cont){
             if (escolha){
                 Intent abrirCont = new Intent(MenuP.this, ConfContaUs.class);
+                invalidateOptionsMenu();
                 startActivity(abrirCont);
             } else {
                 Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
+                invalidateOptionsMenu();
                 startActivity(abrirCont);
             }
         } else  if(id == R.id.nav_sair){
@@ -209,7 +203,6 @@ public class MenuP extends AppCompatActivity
             Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
             startActivity(abrirLogin);
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

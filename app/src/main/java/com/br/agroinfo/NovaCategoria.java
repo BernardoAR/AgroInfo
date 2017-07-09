@@ -33,7 +33,7 @@ public class NovaCategoria extends AppCompatActivity {
 
     long retornoDB;
     ListView lstCategoria;
-    private List<Categoria> listCategoria = new ArrayList<Categoria>() ;
+    private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
@@ -54,7 +54,7 @@ public class NovaCategoria extends AppCompatActivity {
         lstCategoria.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Categoria categoriaEnviada = (Categoria) arrayAdapterCategoria.getItem(position);
+                Categoria categoriaEnviada = arrayAdapterCategoria.getItem(position);
 
                 Intent abrirEdicao = new Intent(NovaCategoria.this, AlterarCategoria.class);
                 abrirEdicao.putExtra("Categoria-enviada",categoriaEnviada);
@@ -81,6 +81,13 @@ public class NovaCategoria extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(NovaCategoria.this, FormProd.class);
+        startActivity(i);
+    }
     private void alerta(String s) {
         Toast.makeText(NovaCategoria.this, s, Toast.LENGTH_SHORT).show();
     }
@@ -101,7 +108,7 @@ public class NovaCategoria extends AppCompatActivity {
                     Categoria c = objSnapshot.getValue(Categoria.class);
                     listCategoria.add(c);
                 }
-                arrayAdapterCategoria = new ArrayAdapter<Categoria>(NovaCategoria.this,
+                arrayAdapterCategoria = new ArrayAdapter<>(NovaCategoria.this,
                         android.R.layout.simple_list_item_1, listCategoria);
                 lstCategoria.setAdapter(arrayAdapterCategoria);
 

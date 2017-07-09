@@ -2,6 +2,7 @@ package com.br.agroinfo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -99,8 +100,18 @@ public class ConfContaUs extends AppCompatActivity {
                                         }
                                     }
                                 });
+                                UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nome.getText().toString().trim()).build();
+                                usuarioF.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            alerta("Nome Alterado com Sucesso!");
+                                        }
+                                    }
+                                });
                                 Usuario u = new Usuario();
-                                u.setNome(nome.getText().toString());
+                                u.setNome(usuarioF.getDisplayName());
                                 u.setEndereco(edtEndereco.getText().toString());
                                 u.setTelefone(edtTelefone.getText().toString());
                                 u.setEscolha(escolha);
@@ -109,21 +120,27 @@ public class ConfContaUs extends AppCompatActivity {
                                 alerta("Erro ao alterar, tente novamente mais tarde");
                             }
                         }
+
                     });
-                        finish();
+                    finish();
                     }
                 }
         });
 
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(ConfContaUs.this, MenuP.class);
+        startActivity(i);
+    }
     private void pegaDados() {
         DatabaseReference db  = databaseReference.child("Usuario").child(usuarioF.getUid());
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
-                nome.setText(u.getNome());
+                nome.setText(usuarioF.getDisplayName());
                 edtEndereco.setText(u.getEndereco());
                 edtTelefone.setText(u.getTelefone());
                 escolha = u.getEscolha();

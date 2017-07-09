@@ -3,6 +3,7 @@ package com.br.agroinfo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,6 @@ public class Nova_anotacao extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 String diaString = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(new Date());
-                diaString = diaString.replace('/', '-');
                 edtDataAn.setText(diaString);
             }
         });
@@ -76,19 +76,14 @@ public class Nova_anotacao extends AppCompatActivity {
 
                 submForm();
                 if(checaAssunto() && checaAnotacao() && checaData()){
-                    // Pegar Strings
-                    EditText nova_anotacao = (EditText)findViewById(R.id.nova_anotacao);
-                    EditText edtDatanAn = (EditText)findViewById(R.id.edtDataAn);
-                    EditText assuntoAn = (EditText)findViewById(R.id.edtAssunto);
                     // Colocar em Strings
                     String anotacao = nova_anotacao.getText().toString();
-                    String data = edtDatanAn.getText().toString();
-                    String assunto = assuntoAn.getText().toString();
-
+                    String data = edtDataAn.getText().toString();
+                    String assunto = edtAssunto.getText().toString();
                     // Inserir os detalhes no BD
                     Anotacao a = new Anotacao();
                     a.setId_anotacao(UUID.randomUUID().toString());
-                    a.setNovo_assunto(data + " - " + assunto);
+                    a.setNovo_assunto(data.replace('/', '-') + " - " + assunto);
                     a.setNova_anotacao(anotacao);
                     databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                     alerta("Salvado com Sucesso");
@@ -99,6 +94,14 @@ public class Nova_anotacao extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Nova_anotacao.this, Lista_anotacoes.class);
+        startActivity(i);
+    }
+
     private void alerta(String mensagem) {
         Toast.makeText(Nova_anotacao.this, mensagem, Toast.LENGTH_SHORT).show();
     }

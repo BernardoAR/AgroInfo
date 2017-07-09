@@ -55,7 +55,7 @@ public class FormProd extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
     FirebaseUser usuario;
-    private List<Categoria> listCategoria = new ArrayList<Categoria>() ;
+    private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
 
 
@@ -102,7 +102,6 @@ public class FormProd extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 String diaString = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(new Date());
-                diaString = diaString.replace('/', '-');
                 DataCadastro.setText(diaString);
             }
         });
@@ -112,16 +111,12 @@ public class FormProd extends AppCompatActivity {
                 submForm();
                 if (checaNumC() && checaNumV()){
                     // Método para Conversão de Float
-                    Float f = Float.parseFloat(editPrecoCusto.getText().toString());
-                    BigDecimal f1;
-                    f1 = casas(f,2);
-
                     Float precoC = Float.valueOf(editPrecoCusto.getText().toString());
                     Float precoV = Float.valueOf(editPrecoVenda.getText().toString());
                     int quant = Integer.valueOf(quantidade.getText().toString());
                     Produto p = new Produto();
                     p.setId_produto(UUID.randomUUID().toString());
-                    p.setDataCadastro(DataCadastro.getText().toString());
+                    p.setDataCadastro(DataCadastro.getText().toString().replace('/', '-'));
                     p.setNomeProduto(edtNomeProd.getText().toString().toUpperCase());
                     p.setPrecoCusto(precoC);
                     p.setPrecoVenda(precoV);
@@ -167,7 +162,12 @@ public class FormProd extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(FormProd.this, MenuP.class);
+        startActivity(i);
+    }
     private void limpaCampos() {
         edtNomeProd.setText("");
         editPrecoCusto.setText("");
@@ -250,7 +250,7 @@ public class FormProd extends AppCompatActivity {
                     Categoria c = objSnapshot.getValue(Categoria.class);
                     listCategoria.add(c);
                 }
-                arrayAdapterCategoria = new ArrayAdapter<Categoria>(FormProd.this,
+                arrayAdapterCategoria = new ArrayAdapter<>(FormProd.this,
                         android.R.layout.simple_list_item_1, listCategoria);
                 spnCateg.setAdapter(arrayAdapterCategoria);
             }

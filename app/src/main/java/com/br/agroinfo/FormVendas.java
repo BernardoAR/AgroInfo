@@ -1,11 +1,8 @@
 package com.br.agroinfo;
 
-import android.app.AlertDialog;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -32,11 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +46,7 @@ public class FormVendas extends AppCompatActivity {
     TextView textQuanti, textPreco, textPrecoFin;
     TextInputLayout textQuant, textLData;
     Spinner spnProd;
-    private List<Produto> listProduto = new ArrayList<Produto>() ;
+    private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -84,7 +80,6 @@ public class FormVendas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String diaString = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault()).format(new Date());
-                diaString = diaString.replace('/', '-');
                 edtData.setText(diaString);
             }
         });
@@ -140,6 +135,12 @@ public class FormVendas extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(FormVendas.this, MenuP.class);
+        startActivity(i);
+    }
 
     private void limpaCampos() {
         edtData.setText("");
@@ -164,7 +165,7 @@ public class FormVendas extends AppCompatActivity {
                             Produto p = objSnapshot.getValue(Produto.class);
                             listProduto.add(p);
                         }
-                        arrayAdapterProduto = new ArrayAdapter<Produto>(FormVendas.this,
+                        arrayAdapterProduto = new ArrayAdapter<>(FormVendas.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         spnProd.setAdapter(arrayAdapterProduto);
 
@@ -198,7 +199,7 @@ public class FormVendas extends AppCompatActivity {
         Categoria c = new Categoria();
 
         ve.setId_venda(UUID.randomUUID().toString());
-        ve.setData_venda(edtData.getText().toString());
+        ve.setData_venda(edtData.getText().toString().replace('/', '-'));
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
         databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 

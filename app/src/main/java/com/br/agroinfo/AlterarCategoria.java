@@ -51,9 +51,9 @@ public class AlterarCategoria extends AppCompatActivity {
                 c.setNova_categoria(alteracaoCat.getText().toString().toUpperCase());
                 databaseReference.child("Categoria").child(usuario.getUid()).child(c.getId_categoria()).setValue(c);
                 alerta("Alterado com Sucesso");
+                finish();
                 // Limpa Campo
                 alteracaoCat.setText("");
-                finish();
             }
         });
 
@@ -64,12 +64,18 @@ public class AlterarCategoria extends AppCompatActivity {
                 c.setId_categoria(altcategoria.getId_categoria());
                 databaseReference.child("Categoria").child(usuario.getUid()).child(c.getId_categoria()).removeValue();
                 alerta("Excluído com Sucesso");
+                finish();
                 // Limpa Campo
                 alteracaoCat.setText("");
-                finish();
             }
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(AlterarCategoria.this, NovaCategoria.class);
+        startActivity(i);
     }
     private void alerta(String mensagem) {
         Toast.makeText(AlterarCategoria.this, mensagem, Toast.LENGTH_SHORT).show();

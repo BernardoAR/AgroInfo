@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +42,6 @@ public class CadastrosOpcionais extends AppCompatActivity {
     Button btnCadastrar;
     private Vibrator vib;
     Animation animBalanc;
-    boolean existe, existe1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,16 +66,24 @@ public class CadastrosOpcionais extends AppCompatActivity {
                 if (checaNome() && algSelect() && algSelect2()){
                     Usuario u = new Usuario();
                     if (pressionado == 1) {
-                        u.setNome(edtNome.getText().toString());
-                        u.setTelefone(edtEndereco.getText().toString());
+                        u.setTelefone(edtTelefone.getText().toString());
                         u.setEndereco(edtEndereco.getText().toString());
                         u.setEscolha(true);
                     } else {
-                        u.setNome(edtNome.getText().toString());
                         u.setEscolha(false);
                     }
+                    UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(edtNome.getText().toString().trim()).build();
+                    usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                alerta("Cadastrado completamente com Sucesso!");
+                            }
+                        }
+                    });
+                    u.setNome(usuario.getDisplayName());
                     databaseReference.child("Usuario").child(usuario.getUid()).setValue(u);
-                    alerta("Cadastrado completamente com Sucesso!");
                     Intent abrirLogin = new Intent(CadastrosOpcionais.this, MenuP.class);
                     startActivity(abrirLogin);
                 }
@@ -86,42 +94,13 @@ public class CadastrosOpcionais extends AppCompatActivity {
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         autent = Conexao.getFirebaseAuth();
         usuario = Conexao.getFirebaseUser();
-        TestaDados();
-    }
-
-    private void TestaDados() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                existe1 = dataSnapshot.hasChild("Usuario");
-                if (existe1 == true){
-                    TestaDados2();
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void TestaDados2() {
-        databaseReference.child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                existe = dataSnapshot.hasChild(usuario.getUid());
-                if (existe == true){
-                    Intent abrirMenuP = new Intent(CadastrosOpcionais.this, MenuP.class);
-                    startActivity(abrirMenuP);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     //Excluir o Criado
@@ -147,16 +126,12 @@ public class CadastrosOpcionais extends AppCompatActivity {
                                     startActivity(abrirFormC);
                                 } else {
                                     alerta("Não foi possível excluir, tente novamente mais tarde");
-                                    finish();
                                 }
                             }
                         });
             }
         });
-
-
         dialog.show();
-
     }
 
 

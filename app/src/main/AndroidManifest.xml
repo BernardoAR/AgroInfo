@@ -30,7 +30,8 @@
             android:label="@string/title_activity_cadastro" />
         <activity
             android:name=".MenuP"
-            android:label="" />
+            android:label=""
+            android:launchMode="singleInstance" />
         <activity android:name=".FormProd" />
         <activity android:name=".ConfConta" />
         <activity android:name=".Lista_anotacoes" />
@@ -44,7 +45,8 @@
         <activity android:name=".FormVendas" />
         <activity android:name=".ConfContaUs" />
         <activity android:name=".DetalhesProduto" />
-        <activity android:name=".CadastrosOpcionais"></activity>
+        <activity android:name=".CadastrosOpcionais" />
+        <activity android:name=".ResetarSenha"></activity>
     </application>
 
 </manifest>

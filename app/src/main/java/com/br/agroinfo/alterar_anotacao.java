@@ -54,7 +54,7 @@ public class alterar_anotacao extends AppCompatActivity {
             public void onClick(View view) {
                 Anotacao a = new Anotacao();
                 a.setId_anotacao(altanotacao.getId_anotacao());
-                a.setNovo_assunto(assunto.getText().toString());
+                a.setNovo_assunto(assunto.getText().toString().replace('/', '-'));
                 a.setNova_anotacao(alteracao.getText().toString());
                 databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                 alerta("Alterado com Sucesso");
@@ -71,9 +71,15 @@ public class alterar_anotacao extends AppCompatActivity {
                 alerta("Excluído com Sucesso");
                 limparCampos();
                 finish();
-
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(alterar_anotacao.this, Lista_anotacoes.class);
+        startActivity(i);
     }
 
     private void alerta(String mensagem) {

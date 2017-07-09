@@ -15,30 +15,45 @@
         android:layout_width="fill_parent"
         android:gravity="center"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:text="Entrar" />
 
-
-    <EditText
-        android:id="@+id/editEmail"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textEmail_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="E-mail:"
-        android:inputType="textEmailAddress" >
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="E-mail:"
+            android:inputType="textEmailAddress" />
+    </android.support.design.widget.TextInputLayout>
 
-
-    </EditText>
-
-    <EditText
-        android:id="@+id/editSenha"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textSenha_Layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Senha:"
-        android:inputType="textPassword" />
-
-
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/editSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Senha:"
+            android:inputType="textPassword" />
+    </android.support.design.widget.TextInputLayout>
+    <TextView
+        android:id="@+id/textResetarSenha"
+        android:textColor="#0645AD"
+        android:layout_width="match_parent"
+        android:gravity="end"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="Esqueceu a senha?"
+          />
 
     <Button
         android:id="@+id/btnLogin"

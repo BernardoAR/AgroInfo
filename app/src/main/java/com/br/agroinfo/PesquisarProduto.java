@@ -29,7 +29,7 @@ public class PesquisarProduto extends AppCompatActivity {
     Button btnPesquisar;
 
     ListView lstProd;
-    private List<Produto> listProduto = new ArrayList<Produto>() ;
+    private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -57,7 +57,7 @@ public class PesquisarProduto extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Produto produtoEnviado = (Produto) arrayAdapterProduto.getItem(position);
+                Produto produtoEnviado = arrayAdapterProduto.getItem(position);
 
                 Intent abrirVisualizacao = new Intent(PesquisarProduto.this, DetalhesProduto.class);
                 abrirVisualizacao.putExtra("Produto-enviado",produtoEnviado);
@@ -66,7 +66,12 @@ public class PesquisarProduto extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(PesquisarProduto.this, MenuP.class);
+        startActivity(i);
+    }
     public void populaLista(){
         Query query = databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());
                 query.addValueEventListener(new ValueEventListener() {
@@ -77,7 +82,7 @@ public class PesquisarProduto extends AppCompatActivity {
                             Produto p = objSnapshot.getValue(Produto.class);
                             listProduto.add(p);
                         }
-                        arrayAdapterProduto = new ArrayAdapter<Produto>(PesquisarProduto.this,
+                        arrayAdapterProduto = new ArrayAdapter<>(PesquisarProduto.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         lstProd.setAdapter(arrayAdapterProduto);
                         checaPopulacao();

@@ -94,6 +94,13 @@ public class FormularioCadastro extends Activity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(FormularioCadastro.this, FormularioCadastro.class);
+        startActivity(i);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         auth = Conexao.getFirebaseAuth();

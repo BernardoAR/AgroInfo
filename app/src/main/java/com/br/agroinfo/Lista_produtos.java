@@ -26,7 +26,7 @@ import java.util.List;
 public class Lista_produtos extends AppCompatActivity {
 
     ListView listProdutos;
-    private List<Produto> listProduto = new ArrayList<Produto>() ;
+    private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -59,7 +59,7 @@ public class Lista_produtos extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Produto produtoEnviado = (Produto) arrayAdapterProduto.getItem(position);
+                Produto produtoEnviado = arrayAdapterProduto.getItem(position);
 
                 Intent abrirEdicao = new Intent(Lista_produtos.this, AlterarProduto.class);
                 abrirEdicao.putExtra("Produto-enviado",produtoEnviado);
@@ -84,7 +84,7 @@ public class Lista_produtos extends AppCompatActivity {
                     Produto p = objSnapshot.getValue(Produto.class);
                     listProduto.add(p);
                 }
-                arrayAdapterProduto = new ArrayAdapter<Produto>(Lista_produtos.this,
+                arrayAdapterProduto = new ArrayAdapter<>(Lista_produtos.this,
                         android.R.layout.simple_list_item_1, listProduto);
                 listProdutos.setAdapter(arrayAdapterProduto);
 
@@ -99,9 +99,10 @@ public class Lista_produtos extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        populaLista();
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Lista_produtos.this, FormProd.class);
+        startActivity(i);
     }
 
 }

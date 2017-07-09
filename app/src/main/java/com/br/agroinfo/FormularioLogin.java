@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.br.agroinfo.dao.Conexao;
@@ -19,20 +21,26 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.Normalizer;
 
 public class FormularioLogin extends Activity {
 
     //Criando os objetos necessários
 
-    EditText editEmail;
-    EditText editSenha;
+    EditText editEmail, editSenha;
     Button btnLogin, btnCadastrar;
     FirebaseAuth autent;
     FirebaseUser usuario;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+    boolean existe1, existe;
+    TextView textResetarSenha;
     //Chamado serve para ver se a persistência já foi chamada
     public static boolean chamado = false;
     @Override
@@ -45,7 +53,7 @@ public class FormularioLogin extends Activity {
         editSenha = (EditText) findViewById(R.id.editSenha);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
-
+        textResetarSenha = (TextView) findViewById(R.id.textResetarSenha);
 
         // Request Focus para os edittexts
         editEmail.requestFocus();
@@ -76,6 +84,13 @@ public class FormularioLogin extends Activity {
 
             }
         });
+        textResetarSenha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resetar = new Intent(FormularioLogin.this, ResetarSenha.class);
+                startActivity(resetar);
+            }
+        });
     }
 
     private void inicializarFirebase() {
@@ -95,15 +110,65 @@ public class FormularioLogin extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Intent abrirCOP = new Intent(FormularioLogin.this, CadastrosOpcionais.class);
                             editEmail.setText("");
                             editSenha.setText("");
-                            startActivity(abrirCOP);
+                            usuario = Conexao.getFirebaseUser();
+                            TestaDados();
                         } else {
                             alerta("E-mail ou Senha não Correspondem!");
                         }
                     }
                 });
+    }
+
+    private void TestaDados() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                existe1 = dataSnapshot.hasChild("Usuario");
+                if (existe1){
+                    TestaDados2();
+                } else {
+                    Intent abrirCOP = new Intent(FormularioLogin.this, CadastrosOpcionais.class);
+                    startActivity(abrirCOP);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void TestaDados2() {
+        databaseReference.child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                existe = dataSnapshot.hasChild(usuario.getUid());
+                if (existe){
+                    Intent abrirMenuP = new Intent(FormularioLogin.this, MenuP.class);
+                    startActivity(abrirMenuP);
+                } else {
+                    Intent abrirCOP = new Intent(FormularioLogin.this, CadastrosOpcionais.class);
+                    startActivity(abrirCOP);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 
     private void alerta(String s) {
@@ -114,10 +179,11 @@ public class FormularioLogin extends Activity {
     protected void onStart() {
         super.onStart();
         autent = Conexao.getFirebaseAuth();
-        usuario = Conexao.getFirebaseUser();
+        if (autent.getCurrentUser() != null){
+            Intent abrirMenuP = new Intent(FormularioLogin.this, MenuP.class);
+            startActivity(abrirMenuP);
+        }
     }
-
-
     //
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

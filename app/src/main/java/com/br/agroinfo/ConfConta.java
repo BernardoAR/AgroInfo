@@ -20,6 +20,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -97,10 +98,21 @@ public class ConfConta extends AppCompatActivity {
                                         } else {
                                             alerta("Erro ao alterar e-mail, tente novamente mais tarde");
                                         }
+
+                                    }
+                                });
+                                UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(nome.getText().toString().trim()).build();
+                                usuarioF.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            alerta("Nome Alterado com Sucesso!");
+                                        }
                                     }
                                 });
                                 Usuario u = new Usuario();
-                                u.setNome(nome.getText().toString());
+                                u.setNome(usuarioF.getDisplayName());
                                 u.setEscolha(escolha);
                                 databaseReference.child("Usuario").child(usuarioF.getUid()).setValue(u);
                             } else {
@@ -127,13 +139,18 @@ public class ConfConta extends AppCompatActivity {
                                     startActivity(abrirFormC);
                                 } else {
                                     alerta("Não foi possível excluir, tente novamente mais tarde");
-                                    finish();
                                 }
                             }
                         });
+                finish();
             }
         });
-
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(ConfConta.this, MenuP.class);
+        startActivity(i);
     }
     @Override
     protected void onStart() {
@@ -147,7 +164,7 @@ public class ConfConta extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
-                nome.setText(u.getNome());
+                nome.setText(usuarioF.getDisplayName());
                 escolha = u.getEscolha();
             }
             @Override

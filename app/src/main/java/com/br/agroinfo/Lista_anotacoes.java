@@ -25,7 +25,7 @@ public class Lista_anotacoes extends AppCompatActivity {
     private long a;
     ListView listAnotacoes;
     Anotacao anotacao;
-    private List<Anotacao> listAnotacao = new ArrayList<Anotacao>() ;
+    private List<Anotacao> listAnotacao = new ArrayList<>() ;
     private ArrayAdapter<Anotacao> arrayAdapterAnotacao;
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
@@ -59,7 +59,7 @@ public class Lista_anotacoes extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Anotacao anotacaoEnviada = (Anotacao) arrayAdapterAnotacao.getItem(position);
+                Anotacao anotacaoEnviada = arrayAdapterAnotacao.getItem(position);
 
                 Intent abrirEdicao = new Intent(Lista_anotacoes.this, alterar_anotacao.class);
                 abrirEdicao.putExtra("Anotacao-enviada",anotacaoEnviada);
@@ -69,6 +69,12 @@ public class Lista_anotacoes extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(Lista_anotacoes.this, MenuP.class);
+        startActivity(i);
+    }
     private void inicFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -86,7 +92,7 @@ public class Lista_anotacoes extends AppCompatActivity {
                         Anotacao a = objSnapshot.getValue(Anotacao.class);
                         listAnotacao.add(a);
                     }
-                arrayAdapterAnotacao = new ArrayAdapter<Anotacao>(Lista_anotacoes.this,
+                arrayAdapterAnotacao = new ArrayAdapter<>(Lista_anotacoes.this,
                         android.R.layout.simple_list_item_1, listAnotacao);
                 listAnotacoes.setAdapter(arrayAdapterAnotacao);
 
@@ -100,8 +106,4 @@ public class Lista_anotacoes extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
 }
