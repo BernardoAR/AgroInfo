@@ -40,18 +40,22 @@ import java.util.UUID;
 
 public class FormVendas extends AppCompatActivity {
 
+    String[] datas = new String[]
+            {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro",
+                    "Novembro", "Dezembro"};
     String valorId, valor, dataC, id_categ, catego;
-    Button btnPData, btnCalcular, btnVenda;
-    EditText edtQuant, edtData;
+    Button btnCalcular, btnVenda;
+    EditText edtQuant, edtAno;
     TextView textQuanti, textPreco, textPrecoFin;
-    TextInputLayout textQuant, textLData;
-    Spinner spnProd;
+    TextInputLayout textQuant, textAno;
+    Spinner spnProd, spnMes;
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
+    private ArrayAdapter<String> arrayAdapterMes;
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     FirebaseUser usuario;
-    int total;
+    int total, posicaoMes;
     float precoCusto, precoVenda, precoFinal;
     private Vibrator vib;
     Animation animBalanc;
@@ -63,26 +67,21 @@ public class FormVendas extends AppCompatActivity {
         //Chamar Componentes
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
         btnVenda = (Button) findViewById(R.id.btnVenda);
-        btnPData = (Button) findViewById(R.id.btnData);
-        edtData = (EditText) findViewById(R.id.edtData);
+        edtAno = (EditText) findViewById(R.id.edtAno);
         edtQuant = (EditText) findViewById(R.id.edtQuantV);
         textQuanti = (TextView) findViewById(R.id.textQuanti);
         textPreco = (TextView) findViewById(R.id.textPrecoVenn);
         textPrecoFin = (TextView) findViewById(R.id.textPrecoVV);
-        textLData = (TextInputLayout) findViewById(R.id.textLData);
+        textAno = (TextInputLayout) findViewById(R.id.textAno);
         textQuant = (TextInputLayout) findViewById(R.id.textQuant);
         spnProd = (Spinner) findViewById(R.id.spnProd);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
+        spnMes = (Spinner) findViewById(R.id.spnMes);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // ARRAY PARA OS MESES
+        spinnerMes();
 
         //FUNÇÕES DOS BOTÕES
-        btnPData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String diaString = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault()).format(new Date());
-                edtData.setText(diaString);
-            }
-        });
 
         btnCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,15 +98,28 @@ public class FormVendas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submForm();
-                if (checaCalculo()) {
-                    //TODO: FALTA PARÂMETROS, como checaData, falta também no FormProd
+                if (checaCalculo() && checaAno()) {
                     // Modificar na Venda
                     pegaVCategoria();
                 }
             }
         });
+        //ItemSelectedListenerMes
+        spnMes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int pos, long id) {
+                // Pegar ID e o Valor do Produto, forçar para que o Spinner pegue
+                posicaoMes = spnMes.getSelectedItemPosition();
+                Toast.makeText(FormVendas.this, String.valueOf(posicaoMes), Toast.LENGTH_SHORT).show();
+            }
 
-        //ClickListener do Spinner
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // Faz Nada
+            }
+        });
+
+        //ItemSelectedListenerProduto
         spnProd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int pos, long id) {
@@ -135,6 +147,13 @@ public class FormVendas extends AppCompatActivity {
             }
         });
     }
+
+    private void spinnerMes() {
+        arrayAdapterMes = new ArrayAdapter<>(FormVendas.this,android.R.layout.simple_spinner_item, datas);
+        arrayAdapterMes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnMes.setAdapter(arrayAdapterMes);
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -143,7 +162,7 @@ public class FormVendas extends AppCompatActivity {
     }
 
     private void limpaCampos() {
-        edtData.setText("");
+        edtAno.setText("");
         edtQuant.setText("");
     }
     private void inicFirebase() {
@@ -199,7 +218,9 @@ public class FormVendas extends AppCompatActivity {
         Categoria c = new Categoria();
 
         ve.setId_venda(UUID.randomUUID().toString());
-        ve.setData_venda(edtData.getText().toString().replace('/', '-'));
+        ve.setPreco_venda(precoFinal);
+        ve.setMes(posicaoMes + 1);
+        ve.setAno(Integer.valueOf(edtAno.getText().toString()));
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
         databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 
@@ -232,7 +253,14 @@ public class FormVendas extends AppCompatActivity {
             vib.vibrate(120);
             return;
         }
+        if (!checaAno()) {
+            edtAno.setAnimation(animBalanc);
+            edtAno.startAnimation(animBalanc);
+            vib.vibrate(120);
+            return;
+        }
         textQuant.setErrorEnabled(false);
+        textAno.setErrorEnabled(false);
     }
     private boolean checaCalculo(){
         String calc = edtQuant.getText().toString().trim();
@@ -244,6 +272,18 @@ public class FormVendas extends AppCompatActivity {
             return false;
         }
         textQuant.setErrorEnabled(false);
+        return true;
+    }
+    private boolean checaAno(){
+        String ano = edtAno.getText().toString().trim();
+        int quant = Integer.parseInt(ano);
+        if(quant < 2017 || ano.trim().isEmpty()){
+            textAno.setErrorEnabled(true);
+            textAno.setError("Insira um ano, sendo ele maior ou igual a 2017");
+            edtAno.setError("Necessita de Entrada Válida");
+            return false;
+        }
+        textAno.setErrorEnabled(false);
         return true;
     }
     public void setCatego(String catego) { this.catego = catego; }

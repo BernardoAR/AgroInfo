@@ -40,7 +40,7 @@ public class AlterarProduto extends AppCompatActivity {
 
     public EditText edtNomeProd;
     TextView textCateg;
-    Produto produto,altproduto;
+    Produto altproduto;
     Categoria categoria;
     public EditText editPrecoCusto;
     public EditText editPrecoVenda;
@@ -53,8 +53,7 @@ public class AlterarProduto extends AppCompatActivity {
     private Vibrator vib;
     Animation animBalanc;
 
-    private List<Categoria> listCategoria = new ArrayList<>() ;
-    private ArrayAdapter<Categoria> arrayAdapterCategoria;
+
     DatabaseReference databaseReference;
     FirebaseDatabase firebaseDatabase;
     public static String id_categ, id_Catego, nome_categ, nome_Catego;
@@ -102,6 +101,7 @@ public class AlterarProduto extends AppCompatActivity {
                     Categoria c = new Categoria();
                     p.setId_produto(altproduto.getId_produto());
                     p.setNomeProduto(edtNomeProd.getText().toString().toUpperCase());
+                    p.setDataCadastro(altproduto.getDataCadastro());
                     p.setPrecoCusto(Float.valueOf(editPrecoCusto.getText().toString()));
                     p.setPrecoVenda(Float.valueOf(editPrecoVenda.getText().toString()));
                     p.setQuantidade(Integer.valueOf(quantidade.getText().toString()));

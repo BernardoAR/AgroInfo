@@ -65,15 +65,18 @@ public class CadastrosOpcionais extends AppCompatActivity {
                 submForm();
                 if (checaNome() && algSelect() && algSelect2()){
                     Usuario u = new Usuario();
+                    String nome = edtNome.getText().toString().trim();
                     if (pressionado == 1) {
+                        u.setNome(nome);
                         u.setTelefone(edtTelefone.getText().toString());
                         u.setEndereco(edtEndereco.getText().toString());
                         u.setEscolha(true);
                     } else {
+                        u.setNome(nome);
                         u.setEscolha(false);
                     }
                     UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(edtNome.getText().toString().trim()).build();
+                            .setDisplayName(nome).build();
                     usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -82,7 +85,6 @@ public class CadastrosOpcionais extends AppCompatActivity {
                             }
                         }
                     });
-                    u.setNome(usuario.getDisplayName());
                     databaseReference.child("Usuario").child(usuario.getUid()).setValue(u);
                     Intent abrirLogin = new Intent(CadastrosOpcionais.this, MenuP.class);
                     startActivity(abrirLogin);

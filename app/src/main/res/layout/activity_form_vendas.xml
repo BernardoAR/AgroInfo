@@ -67,34 +67,32 @@
                android:inputType="number"
                android:hint="Preço Final:"
                android:textSize="18dp"/>
-
        <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="horizontal">
-           <Button
-               android:id="@+id/btnData"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal" >
+           <Spinner
+               android:id="@+id/spnMes"
                android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:layout_weight="1"
-               android:text="Adicionar" />
+               android:layout_height="match_parent" />
 
            <android.support.design.widget.TextInputLayout
-               android:id="@+id/textLData"
-               android:layout_width="wrap_content"
+               android:id="@+id/textAno"
+               android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:layout_marginTop="10dp">
 
                <EditText
-                   android:id="@+id/edtData"
-                   android:layout_width="match_parent"
+                   android:id="@+id/edtAno"
+                   android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:ems="10"
-                   android:maxLength="8"
-                   android:inputType="date"
-                   android:hint="Data Completa: " />
+                   android:maxLength="4"
+                   android:inputType="number"
+                   android:hint="Ano: " />
            </android.support.design.widget.TextInputLayout>
        </LinearLayout>
+
        <Button
            android:id="@+id/btnCalcular"
            android:layout_width="match_parent"

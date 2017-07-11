@@ -96,7 +96,7 @@ public class FormularioCadastro extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(FormularioCadastro.this, FormularioCadastro.class);
+        Intent i = new Intent(FormularioCadastro.this, FormularioLogin.class);
         startActivity(i);
     }
 
@@ -113,9 +113,10 @@ public class FormularioCadastro extends Activity {
                         if (task.isSuccessful()){
                             alerta("Usuário Cadastrado com Sucesso");
                             limpaCampos();
+                            Conexao.deslogar();
                             finish();
                         } else {
-                            alerta("Erro de Cadastro");
+                            alerta("Erro de Cadastro, e-mail existente");
                         }
                     }
                 });
