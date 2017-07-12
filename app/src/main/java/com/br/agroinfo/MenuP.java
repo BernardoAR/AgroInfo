@@ -27,8 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 public class MenuP extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     TextView nomeusuario;
-    //Sessão
-    String nomeUs;
     private FirebaseAuth autent;
     FirebaseUser usuario;
     FirebaseDatabase firebaseDatabase;
@@ -79,7 +77,6 @@ public class MenuP extends AppCompatActivity
     }
 
     private void inicFirebase() {
-
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
     }
@@ -175,8 +172,8 @@ public class MenuP extends AppCompatActivity
             invalidateOptionsMenu();
             startActivity(abrirProd);
         } else  if(id == R.id.nav_rendimentos){
-           // Intent abrirRendimentos = new Intent(MenuP.this, Rendimentos.class);
-            //startActivity(abrirRendimentos);
+           Intent abrirRendimentos = new Intent(MenuP.this, Rendimentos.class);
+            startActivity(abrirRendimentos);
         } else  if(id == R.id.nav_vendas){
             Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
             invalidateOptionsMenu();

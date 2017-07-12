@@ -142,7 +142,6 @@ public class ConfConta extends AppCompatActivity {
                                 }
                             }
                         });
-                finish();
             }
         });
     }

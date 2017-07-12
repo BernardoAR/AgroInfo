@@ -89,7 +89,8 @@
                    android:ems="10"
                    android:maxLength="4"
                    android:inputType="number"
-                   android:hint="Ano: " />
+                   android:hint="Ano: (20xx)"
+                   android:text="20" />
            </android.support.design.widget.TextInputLayout>
        </LinearLayout>
 

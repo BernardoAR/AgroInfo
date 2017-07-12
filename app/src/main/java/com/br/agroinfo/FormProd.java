@@ -36,6 +36,8 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
+
 public class FormProd extends AppCompatActivity {
     // Declarar
     Button btnSelDataC;
@@ -44,7 +46,7 @@ public class FormProd extends AppCompatActivity {
     private EditText editPrecoCusto;
     private EditText editPrecoVenda;
     private EditText quantidade;
-    private EditText DataCadastro;
+    private EditText edtDataCadastro;
     private Button btnAdProd;
     public Button btnListProd;
     private Button btnAdCat;
@@ -74,12 +76,11 @@ public class FormProd extends AppCompatActivity {
         editPrecoCusto = (EditText) findViewById(R.id.editPrecoCusto);
         editPrecoVenda = (EditText) findViewById(R.id.editPrecoVenda);
         quantidade = (EditText) findViewById(R.id.quantidade);
-        DataCadastro = (EditText) findViewById(R.id.DataCadastro);
+        edtDataCadastro = (EditText) findViewById(R.id.DataCadastro);
         btnListProd = (Button) findViewById(R.id.btnListProd);
+        btnSelDataC = (Button) findViewById(R.id.btnSelDataC);
         textPrecoC = (TextInputLayout) findViewById(R.id.textPrecoC);
         textPrecoV = (TextInputLayout) findViewById(R.id.textPrecoV);
-        btnSelDataC = (Button) findViewById(R.id.btnSelDataC);
-
 
         // Chamar Animações
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
@@ -102,7 +103,7 @@ public class FormProd extends AppCompatActivity {
             @Override
             public void onClick(View v){
                 String diaString = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault()).format(new Date());
-                DataCadastro.setText(diaString);
+                edtDataCadastro.setText(diaString);
             }
         });
         btnAdProd.setOnClickListener(new View.OnClickListener() {
@@ -116,7 +117,7 @@ public class FormProd extends AppCompatActivity {
                     int quant = Integer.valueOf(quantidade.getText().toString());
                     Produto p = new Produto();
                     p.setId_produto(UUID.randomUUID().toString());
-                    p.setDataCadastro(DataCadastro.getText().toString().replace('/', '-'));
+                    p.setDataCadastro(edtDataCadastro.getText().toString().replace('/', '-'));
                     p.setNomeProduto(edtNomeProd.getText().toString().toUpperCase());
                     p.setPrecoCusto(precoC);
                     p.setPrecoVenda(precoV);
@@ -173,7 +174,7 @@ public class FormProd extends AppCompatActivity {
         editPrecoCusto.setText("");
         editPrecoVenda.setText("");
         quantidade.setText("");
-        DataCadastro.setText("");
+        edtDataCadastro.setText("");
     }
 
     private void alerta(String mensagem) {

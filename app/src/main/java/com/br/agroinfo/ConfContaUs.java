@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
+
 
 public class ConfContaUs extends AppCompatActivity {
 
@@ -65,6 +67,11 @@ public class ConfContaUs extends AppCompatActivity {
         textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
         textTelefone = (TextInputLayout) findViewById(R.id.textTelefone);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
+
+        //Máscara
+        MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
+        edtTelefone.addTextChangedListener(maskTel);
+
 
         email.setText(usuarioF.getEmail());
         btnSalvarConfiguracoes.setOnClickListener(new View.OnClickListener() {

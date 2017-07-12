@@ -31,7 +31,6 @@ import java.util.UUID;
 public class Nova_anotacao extends AppCompatActivity {
     private Vibrator vib;
     Animation animBalanc;
-    DateFormat formatarData = DateFormat.getDateInstance();
     EditText nova_anotacao, edtDataAn, edtAssunto;
     TextInputLayout textAssunto, textAnotacao, textDataLayout;
     Button btnCadastrar, btnSelData;
@@ -44,8 +43,6 @@ public class Nova_anotacao extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nova_anotacao);
         inicializarFirebase();
-
-
         //resgatar os componentes
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         btnSelData = (Button) findViewById(R.id.btnSelData);

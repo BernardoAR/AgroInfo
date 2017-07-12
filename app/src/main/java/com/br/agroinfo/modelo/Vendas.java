@@ -6,9 +6,17 @@ package com.br.agroinfo.modelo;
 
 public class Vendas {
 
-    String id_venda;
+    String id_venda, mes_ano;
     int quant_venda, ano, mes;
-    float preco_venda;
+    float preco_venda, preco_custo;
+
+    public String getMes_ano() { return mes_ano; }
+
+    public void setMes_ano(String mes_ano) { this.mes_ano = mes_ano; }
+
+    public float getPreco_custo() { return preco_custo; }
+
+    public void setPreco_custo(float preco_custo) { this.preco_custo = preco_custo; }
 
     public int getAno() { return ano; }
 

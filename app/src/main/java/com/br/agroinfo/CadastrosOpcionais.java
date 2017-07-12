@@ -32,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
+
 public class CadastrosOpcionais extends AppCompatActivity {
     FirebaseAuth autent;
     FirebaseUser usuario;
@@ -58,6 +60,10 @@ public class CadastrosOpcionais extends AppCompatActivity {
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        //Máscara
+        MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
+        edtTelefone.addTextChangedListener(maskTel);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override

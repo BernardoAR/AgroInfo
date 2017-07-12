@@ -33,10 +33,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
+
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class FormVendas extends AppCompatActivity {
 
@@ -56,7 +56,7 @@ public class FormVendas extends AppCompatActivity {
     DatabaseReference databaseReference;
     FirebaseUser usuario;
     int total, posicaoMes;
-    float precoCusto, precoVenda, precoFinal;
+    float precoCusto, precoVenda, precoFinalC,precoFinalV;
     private Vibrator vib;
     Animation animBalanc;
     @Override
@@ -82,15 +82,15 @@ public class FormVendas extends AppCompatActivity {
         spinnerMes();
 
         //FUNÇÕES DOS BOTÕES
-
         btnCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BigDecimal precoF;
                 String quant = edtQuant.getText().toString();
-                int quantidade = Integer.parseInt(quant);
-                precoFinal = precoVenda * quantidade;
-                precoF = FormProd.casas(precoFinal, 2);
+                int quantidade = Integer.valueOf(quant);
+                precoFinalV = precoVenda * quantidade;
+                precoFinalC = precoCusto * quantidade;
+                precoF = FormProd.casas(precoFinalV, 2);
                 textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
             }
         });
@@ -217,10 +217,13 @@ public class FormVendas extends AppCompatActivity {
         Produto p = new Produto();
         Categoria c = new Categoria();
 
+        String ano = edtAno.getText().toString();
         ve.setId_venda(UUID.randomUUID().toString());
-        ve.setPreco_venda(precoFinal);
+        ve.setMes_ano(String.valueOf(posicaoMes + 1) + "_" + String.valueOf(ano));
+        ve.setPreco_venda(precoFinalV);
+        ve.setPreco_custo(precoFinalC);
         ve.setMes(posicaoMes + 1);
-        ve.setAno(Integer.valueOf(edtAno.getText().toString()));
+        ve.setAno(Integer.valueOf(ano));
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
         databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 
@@ -276,7 +279,11 @@ public class FormVendas extends AppCompatActivity {
     }
     private boolean checaAno(){
         String ano = edtAno.getText().toString().trim();
-        int quant = Integer.parseInt(ano);
+        int quant;
+        quant = 0;
+        if (!ano.trim().isEmpty()){
+            quant = Integer.valueOf(ano);
+        }
         if(quant < 2017 || ano.trim().isEmpty()){
             textAno.setErrorEnabled(true);
             textAno.setError("Insira um ano, sendo ele maior ou igual a 2017");
