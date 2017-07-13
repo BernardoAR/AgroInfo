@@ -1,8 +1,6 @@
 package com.br.agroinfo;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
@@ -15,12 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Anotacao;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -28,27 +21,26 @@ import java.util.Locale;
 import java.util.UUID;
 
 
-public class Nova_anotacao extends AppCompatActivity {
+public class NovaAnotacao extends AppCompatActivity {
     private Vibrator vib;
     Animation animBalanc;
-    EditText nova_anotacao, edtDataAn, edtAssunto;
+    EditText edtNovaAn, edtDataAn, edtAssunto;
     TextInputLayout textAssunto, textAnotacao, textDataLayout;
     Button btnCadastrar, btnSelData;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nova_anotacao);
-        inicializarFirebase();
         //resgatar os componentes
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         btnSelData = (Button) findViewById(R.id.btnSelData);
-        nova_anotacao = (EditText) findViewById(R.id.nova_anotacao);
+        edtNovaAn = (EditText) findViewById(R.id.nova_anotacao);
         edtDataAn = (EditText) findViewById(R.id.edtDataAn);
         edtAssunto = (EditText) findViewById(R.id.edtAssunto);
+        textAssunto = (TextInputLayout) findViewById(R.id.textAssunto);
+        textAnotacao = (TextInputLayout) findViewById(R.id.textAnotacao);
+        textDataLayout = (TextInputLayout) findViewById(R.id.textDataLayout);
 
         btnSelData.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,15 +58,11 @@ public class Nova_anotacao extends AppCompatActivity {
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TextInputLayouts
-                textAssunto = (TextInputLayout) findViewById(R.id.textAssunto);
-                textAnotacao = (TextInputLayout) findViewById(R.id.textAnotacao);
-                textDataLayout = (TextInputLayout) findViewById(R.id.textDataLayout);
 
                 submForm();
                 if(checaAssunto() && checaAnotacao() && checaData()){
                     // Colocar em Strings
-                    String anotacao = nova_anotacao.getText().toString();
+                    String anotacao = edtNovaAn.getText().toString();
                     String data = edtDataAn.getText().toString();
                     String assunto = edtAssunto.getText().toString();
                     // Inserir os detalhes no BD
@@ -82,7 +70,7 @@ public class Nova_anotacao extends AppCompatActivity {
                     a.setId_anotacao(UUID.randomUUID().toString());
                     a.setNovo_assunto(data.replace('/', '-') + " - " + assunto);
                     a.setNova_anotacao(anotacao);
-                    databaseReference.child("Anotacao").child(usuario.getUid()).child(a.getId_anotacao()).setValue(a);
+                    FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                     alerta("Salvado com Sucesso");
                     limparCampos();
                     finish();
@@ -95,25 +83,20 @@ public class Nova_anotacao extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Nova_anotacao.this, Lista_anotacoes.class);
+        Intent i = new Intent(NovaAnotacao.this, ListaAnotacoes.class);
         startActivity(i);
     }
 
     private void alerta(String mensagem) {
-        Toast.makeText(Nova_anotacao.this, mensagem, Toast.LENGTH_SHORT).show();
+        Toast.makeText(NovaAnotacao.this, mensagem, Toast.LENGTH_SHORT).show();
     }
 
     private void limparCampos() {
-        nova_anotacao.setText("");
+        edtNovaAn.setText("");
         edtDataAn.setText("");
         edtAssunto.setText("");
     }
 
-    private void inicializarFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
-    }
     private void submForm() {
         if (!checaAssunto()) {
             edtAssunto.setAnimation(animBalanc);
@@ -122,8 +105,8 @@ public class Nova_anotacao extends AppCompatActivity {
             return;
         }
         if (!checaAnotacao()) {
-            nova_anotacao.setAnimation(animBalanc);
-            nova_anotacao.startAnimation(animBalanc);
+            edtNovaAn.setAnimation(animBalanc);
+            edtNovaAn.startAnimation(animBalanc);
             vib.vibrate(120);
             return;
         }
@@ -150,10 +133,10 @@ public class Nova_anotacao extends AppCompatActivity {
         return true;
     }
     private boolean checaAnotacao(){
-        if(nova_anotacao.getText().toString().trim().isEmpty()){
+        if(edtNovaAn.getText().toString().trim().isEmpty()){
             textAnotacao.setErrorEnabled(true);
             textAnotacao.setError("Entre com a Anotação");
-            nova_anotacao.setError("Campo não pode ser nulo");
+            edtNovaAn.setError("Campo não pode ser nulo");
             return false;
         }
         textAnotacao.setErrorEnabled(false);

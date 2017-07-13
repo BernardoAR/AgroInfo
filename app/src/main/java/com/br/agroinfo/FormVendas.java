@@ -3,10 +3,10 @@ package com.br.agroinfo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,18 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
 import com.br.agroinfo.modelo.Vendas;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -44,7 +38,7 @@ public class FormVendas extends AppCompatActivity {
             {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro",
                     "Novembro", "Dezembro"};
     String valorId, valor, dataC, id_categ, catego;
-    Button btnCalcular, btnVenda;
+    Button btnCalcular, btnVenda, btnVerVendas;
     EditText edtQuant, edtAno;
     TextView textQuanti, textPreco, textPrecoFin;
     TextInputLayout textQuant, textAno;
@@ -52,9 +46,6 @@ public class FormVendas extends AppCompatActivity {
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
     private ArrayAdapter<String> arrayAdapterMes;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    FirebaseUser usuario;
     int total, posicaoMes;
     float precoCusto, precoVenda, precoFinalC,precoFinalV;
     private Vibrator vib;
@@ -67,6 +58,7 @@ public class FormVendas extends AppCompatActivity {
         //Chamar Componentes
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
         btnVenda = (Button) findViewById(R.id.btnVenda);
+        btnVerVendas = (Button) findViewById(R.id.btnlistarVendas);
         edtAno = (EditText) findViewById(R.id.edtAno);
         edtQuant = (EditText) findViewById(R.id.edtQuantV);
         textQuanti = (TextView) findViewById(R.id.textQuanti);
@@ -104,6 +96,15 @@ public class FormVendas extends AppCompatActivity {
                 }
             }
         });
+        //Clicar para Listar
+        btnVerVendas.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent VerVendas = new Intent(FormVendas.this, ListaVendas.class);
+                // solicitar para abir
+                startActivity(VerVendas);
+
+            }
+        });
         //ItemSelectedListenerMes
         spnMes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -118,6 +119,9 @@ public class FormVendas extends AppCompatActivity {
                 // Faz Nada
             }
         });
+        //Máscara
+        MaskEditTextChangedListener maskAno = new MaskEditTextChangedListener("20##", edtAno);
+        edtAno.addTextChangedListener(maskAno);
 
         //ItemSelectedListenerProduto
         spnProd.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -166,16 +170,13 @@ public class FormVendas extends AppCompatActivity {
         edtQuant.setText("");
     }
     private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
         populaLista();
     }
     private void alerta(String mensagem) {
         Toast.makeText(FormVendas.this, mensagem, Toast.LENGTH_SHORT).show();
     }
     private void populaLista() {
-        databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(usuario.getUid())
+        FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -196,7 +197,7 @@ public class FormVendas extends AppCompatActivity {
     }
     // PEGAR A CATEGORIA
     private void pegaVCategoria() {
-        databaseReference.child("Produto").child("Produtos").child(valorId).child("Categoria")
+        FormularioLogin.databaseReference.child("Produto").child("Produtos").child(valorId).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -225,7 +226,7 @@ public class FormVendas extends AppCompatActivity {
         ve.setMes(posicaoMes + 1);
         ve.setAno(Integer.valueOf(ano));
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
-        databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda()).setValue(ve);
+        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 
         p.setId_produto(valorId);
         p.setNomeProduto(valor);
@@ -235,14 +236,14 @@ public class FormVendas extends AppCompatActivity {
         p.setDataCadastro(dataC);
         c.setId_categoria(getCatego());
 
-        databaseReference.child("Vendas").child(usuario.getUid()).child(ve.getId_venda())
+        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).child(ve.getId_venda())
                 .child("Id_produto").setValue(p.getId_produto());
-        databaseReference.child("Produto").child("Produtos")
+        FormularioLogin.databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).setValue(p);
-        databaseReference.child("Produto").child("Produtos")
+        FormularioLogin.databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
-        databaseReference.child("Produto").child("Produtos")
-                .child(p.getId_produto()).child("Usuario").setValue(usuario.getUid());
+        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
         alerta("Venda feita com Sucesso");
         // Modificar no Campo do Produto
         limpaCampos();
@@ -266,11 +267,14 @@ public class FormVendas extends AppCompatActivity {
         textAno.setErrorEnabled(false);
     }
     private boolean checaCalculo(){
+        int quant = 0;
         String calc = edtQuant.getText().toString().trim();
-        int quant = Integer.parseInt(calc);
+        if (!calc.isEmpty()){
+            quant = Integer.parseInt(calc);
+        }
         if(calc.isEmpty() || quant > total){
             textQuant.setErrorEnabled(true);
-            textQuant.setError("Insira um número, sendo ele menor ou igual a quantidade total");
+            textQuant.setError("Insira um número, sendo ele menor ou igual a Quantidade total");
             edtQuant.setError("Necessita de Entrada Válida");
             return false;
         }
@@ -279,8 +283,7 @@ public class FormVendas extends AppCompatActivity {
     }
     private boolean checaAno(){
         String ano = edtAno.getText().toString().trim();
-        int quant;
-        quant = 0;
+        int quant = 0;
         if (!ano.trim().isEmpty()){
             quant = Integer.valueOf(ano);
         }

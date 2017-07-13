@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -16,18 +15,23 @@
             android:layout_width="fill_parent"
             android:gravity="center"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:text="Novo Produto:" />
-        <EditText
-            android:id="@+id/edtNomeProd"
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textNomeProd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nome do Produto:"
-            android:inputType="textPersonName"
-            android:layout_marginTop="20dp"
-            />
-
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/edtNomeProd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Nome do Produto:"
+                android:inputType="textPersonName"
+                android:layout_marginTop="20dp" />
+        </android.support.design.widget.TextInputLayout>
         <Spinner
             android:id="@+id/spnCateg"
             android:layout_width="match_parent"
@@ -63,15 +67,19 @@
                 android:inputType="numberDecimal"
                 android:maxLength="7" />
         </android.support.design.widget.TextInputLayout>
-
-        <EditText
-            android:id="@+id/quantidade"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/textQuant"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Quantidade:"
-            android:inputType="number" />
-
+            android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/quantidade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Quantidade:"
+                android:inputType="number" />
+        </android.support.design.widget.TextInputLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,7 +87,7 @@
             <Button
                 android:id="@+id/btnSelDataC"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text="Selecionar:" />
 
             <android.support.design.widget.TextInputLayout

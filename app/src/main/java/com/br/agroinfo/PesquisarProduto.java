@@ -14,8 +14,6 @@ import android.widget.Toast;
 import com.br.agroinfo.modelo.Produto;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -23,23 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PesquisarProduto extends AppCompatActivity {
-    public static String pesquisar;
 
+    public static String pesquisar;
     EditText pesquisa;
     Button btnPesquisar;
-
     ListView lstProd;
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pesquisar_produto);
-        inicFirebase();
         //Pega o que foi digitado no Edit
         pesquisa = (EditText) findViewById(R.id.pesquisa);
         btnPesquisar= (Button) findViewById(R.id.btnPesquisar);
@@ -73,7 +67,7 @@ public class PesquisarProduto extends AppCompatActivity {
         startActivity(i);
     }
     public void populaLista(){
-        Query query = databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());
+        Query query = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -96,13 +90,8 @@ public class PesquisarProduto extends AppCompatActivity {
     }
     private void checaPopulacao() {
         if (listProduto.isEmpty() || listProduto == null){
-            Toast sem = Toast.makeText(PesquisarProduto.this, "Não foi encontrado resultados", Toast.LENGTH_SHORT);
-            sem.show();
+            Toast.makeText(PesquisarProduto.this, "Não foi encontrado resultados", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-    }
 }

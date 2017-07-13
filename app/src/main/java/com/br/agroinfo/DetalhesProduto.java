@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
 import com.br.agroinfo.modelo.Usuario;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
@@ -21,18 +17,14 @@ public class DetalhesProduto extends AppCompatActivity {
     TextView textNomeProduto, textPrecoVenda, textQuantidadeDisp, textNomeEmp, textEndereco, textTelefoneCont;
     Produto mostraProduto;
     BigDecimal precoVendas;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
     String id, idus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_produto);
-        inicFirebase();
         Intent abrirVisualizacao = getIntent();
         mostraProduto = (Produto) abrirVisualizacao.getSerializableExtra("Produto-enviado");
-
 
         //Resgatar Componentes
         textNomeProduto = (TextView) findViewById(R.id.textNomeProduto);
@@ -61,13 +53,9 @@ public class DetalhesProduto extends AppCompatActivity {
         Intent i = new Intent(DetalhesProduto.this, PesquisarProduto.class);
         startActivity(i);
     }
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-    }
 
     private void pegaDadoExt() {
-        databaseReference.child("Produto").child("Produtos").child(id).child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
+        FormularioLogin.databaseReference.child("Produto").child("Produtos").child(id).child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idus = dataSnapshot.getValue().toString();
@@ -81,7 +69,7 @@ public class DetalhesProduto extends AppCompatActivity {
     }
 
     private void pegaDadosExternos() {
-        databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
+        FormularioLogin.databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
@@ -96,9 +84,6 @@ public class DetalhesProduto extends AppCompatActivity {
                 } else {
                     textEndereco.setText("Endereço: Não Informado");
                 }
-
-
-
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

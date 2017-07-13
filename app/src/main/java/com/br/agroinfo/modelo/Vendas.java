@@ -1,22 +1,32 @@
 package com.br.agroinfo.modelo;
 
+import java.io.Serializable;
+
 /**
  * Created by Bernardo on 06/07/2017.
  */
 
-public class Vendas {
+public class Vendas implements Serializable {
 
     String id_venda, mes_ano;
     int quant_venda, ano, mes;
     float preco_venda, preco_custo;
 
-    public String getMes_ano() { return mes_ano; }
+    public String getMes_ano() {
+        return mes_ano;
+    }
 
-    public void setMes_ano(String mes_ano) { this.mes_ano = mes_ano; }
+    public void setMes_ano(String mes_ano) {
+        this.mes_ano = mes_ano;
+    }
 
-    public float getPreco_custo() { return preco_custo; }
+    public float getPreco_custo() {
+        return preco_custo;
+    }
 
-    public void setPreco_custo(float preco_custo) { this.preco_custo = preco_custo; }
+    public void setPreco_custo(float preco_custo) {
+        this.preco_custo = preco_custo;
+    }
 
     public int getAno() { return ano; }
 
@@ -37,4 +47,9 @@ public class Vendas {
     public int getQuant_venda() { return quant_venda; }
 
     public void setQuant_venda(int quant_venda) { this.quant_venda = quant_venda; }
+
+    @Override
+    public String toString() {
+        return (" Mês " + String.valueOf(mes) + " Ano " + String.valueOf(ano) + " Preço " + String.valueOf(preco_venda));
+    }
 }

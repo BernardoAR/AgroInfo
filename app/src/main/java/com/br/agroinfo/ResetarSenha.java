@@ -9,15 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetarSenha extends AppCompatActivity {
     TextInputEditText edtEmail;
     Button btnResetar;
-    private FirebaseAuth auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,11 +40,11 @@ public class ResetarSenha extends AppCompatActivity {
     }
 
     private void resetarSenha(String email) {
-        auth.sendPasswordResetEmail(email).addOnCompleteListener(ResetarSenha.this, new OnCompleteListener<Void>() {
+        FormularioLogin.autent.sendPasswordResetEmail(email).addOnCompleteListener(ResetarSenha.this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    alerta("Um e-mail de redefinição de senha foi enviado");
+                    alerta("Um e-mail de redefinição de edtSenha foi enviado");
                     finish();
                 } else {
                     alerta("E-mail não encontrado");
@@ -60,9 +57,4 @@ public class ResetarSenha extends AppCompatActivity {
         Toast.makeText(ResetarSenha.this, s, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        auth = Conexao.getFirebaseAuth();
-    }
 }

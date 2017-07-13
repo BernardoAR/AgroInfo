@@ -6,35 +6,18 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.br.agroinfo.ListaAnotacoes"
+    tools:context="com.br.agroinfo.ListaVendas"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:text="Nova Categria"
-        android:textSize="30sp"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/nova_categoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nome da Categoria"
-        android:layout_marginTop="20dp"
-        android:inputType="textPersonName" />
-
     <Button
-        android:id="@+id/btnCadastrar"
+        android:id="@+id/btnNovaVenda"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cadastrar" />
+        android:text="Nova Venda" />
 
     <ListView
         android:layout_marginTop="20dp"
-        android:id="@+id/lstCategorias"
-
+        android:id="@+id/lstVendas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

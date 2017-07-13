@@ -9,46 +9,37 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Anotacao;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lista_anotacoes extends AppCompatActivity {
-    private long a;
+public class ListaAnotacoes extends AppCompatActivity {
     ListView listAnotacoes;
-    Anotacao anotacao;
+    Button btnNovaAn;
     private List<Anotacao> listAnotacao = new ArrayList<>() ;
     private ArrayAdapter<Anotacao> arrayAdapterAnotacao;
-    DatabaseReference databaseReference;
-    FirebaseDatabase firebaseDatabase;
-    private FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_anotacoes);
         //Modificar na Nuvem e no Aplicativo
-        inicFirebase();
         populaLista();
         // pega o botao
-        Button botao = (Button) findViewById(R.id.btnNovaAnotacao);
+        btnNovaAn = (Button) findViewById(R.id.btnNovaAnotacao);
 
         //Pega a lista
 
         listAnotacoes = (ListView) findViewById(R.id.lstAnotacoes);
 
         // configurar a acao de click
-        botao.setOnClickListener(new View.OnClickListener() {
+        btnNovaAn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirNova_anotacao = new Intent(Lista_anotacoes.this, Nova_anotacao.class);
+                Intent abrirNova_anotacao = new Intent(ListaAnotacoes.this, NovaAnotacao.class);
                 // solicitar para abir
                 startActivity(abrirNova_anotacao);
 
@@ -61,7 +52,7 @@ public class Lista_anotacoes extends AppCompatActivity {
 
                 Anotacao anotacaoEnviada = arrayAdapterAnotacao.getItem(position);
 
-                Intent abrirEdicao = new Intent(Lista_anotacoes.this, alterar_anotacao.class);
+                Intent abrirEdicao = new Intent(ListaAnotacoes.this, AlterarAnotacao.class);
                 abrirEdicao.putExtra("Anotacao-enviada",anotacaoEnviada);
                 // solicitar para abir
                 startActivity(abrirEdicao);
@@ -72,19 +63,13 @@ public class Lista_anotacoes extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Lista_anotacoes.this, MenuP.class);
+        Intent i = new Intent(ListaAnotacoes.this, MenuP.class);
         startActivity(i);
     }
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
-    }
-
     // Pegar os Valores
     private void populaLista() {
-        DatabaseReference db  = databaseReference.child("Anotacao").child(usuario.getUid());
-        db.addValueEventListener(new ValueEventListener() {
+        FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listAnotacao.clear();
@@ -92,7 +77,7 @@ public class Lista_anotacoes extends AppCompatActivity {
                         Anotacao a = objSnapshot.getValue(Anotacao.class);
                         listAnotacao.add(a);
                     }
-                arrayAdapterAnotacao = new ArrayAdapter<>(Lista_anotacoes.this,
+                arrayAdapterAnotacao = new ArrayAdapter<>(ListaAnotacoes.this,
                         android.R.layout.simple_list_item_1, listAnotacao);
                 listAnotacoes.setAdapter(arrayAdapterAnotacao);
 

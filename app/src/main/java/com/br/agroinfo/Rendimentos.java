@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Vendas;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -26,11 +25,8 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
@@ -40,9 +36,6 @@ import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class Rendimentos extends AppCompatActivity {
 
-    DatabaseReference databaseReference;
-    FirebaseDatabase firebaseDatabase;
-    FirebaseUser usuario;
     TextInputLayout textAno;
     EditText edtAno;
     Spinner spnMes;
@@ -61,14 +54,17 @@ public class Rendimentos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rendimentos);
-        inicializarFirebase();
         spnMes = (Spinner) findViewById(R.id.spnMes);
         edtAno = (EditText) findViewById(R.id.edtAno);
         btnChecRend = (Button) findViewById(R.id.btnChecRend);
         gfcRend = (PieChart) findViewById(R.id.gfcRend);
         textAno = (TextInputLayout) findViewById(R.id.textAno);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
-        //Cria Spinner Mês e fazer o SelectedListener
+        //Cria Spinner Mês e fazer o SelectedListener e máscara
+        //Máscara
+        MaskEditTextChangedListener maskAno = new MaskEditTextChangedListener("20##", edtAno);
+        edtAno.addTextChangedListener(maskAno);
+
         spinnerMes();
         spnMes.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -103,7 +99,7 @@ public class Rendimentos extends AppCompatActivity {
                 if (checaAno()){
                     String mes = String.valueOf(posicaoMes + 1);
                     String ano = edtAno.getText().toString();
-                    databaseReference.child("Vendas").child(usuario.getUid()).orderByChild("mes_ano").equalTo(mes + "_" + ano)
+                    FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).orderByChild("mes_ano").equalTo(mes + "_" + ano)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -189,12 +185,6 @@ public class Rendimentos extends AppCompatActivity {
         arrayAdapterMes = new ArrayAdapter<>(Rendimentos.this,android.R.layout.simple_spinner_item, datas);
         arrayAdapterMes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnMes.setAdapter(arrayAdapterMes);
-    }
-
-    private void inicializarFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
     }
 
     private boolean checaAno(){

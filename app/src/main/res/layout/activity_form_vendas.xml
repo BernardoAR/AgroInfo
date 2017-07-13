@@ -19,7 +19,7 @@
            android:layout_width="fill_parent"
            android:gravity="center"
            android:layout_height="wrap_content"
-           android:textSize="30dp"
+           android:textSize="30sp"
            android:text="Vendas" />
 
        <Spinner
@@ -34,7 +34,7 @@
            android:ems="10"
            android:inputType="number"
            android:hint="Quantidade total:"
-           android:textSize="18dp"/>
+           android:textSize="18sp"/>
        <TextView
            android:id="@+id/textPrecoVenn"
            android:layout_width="match_parent"
@@ -42,7 +42,7 @@
            android:ems="10"
            android:inputType="number"
            android:hint="Preço:"
-           android:textSize="18dp"/>
+           android:textSize="18sp"/>
        <android.support.design.widget.TextInputLayout
            android:id="@+id/textQuant"
            android:layout_width="match_parent"
@@ -64,9 +64,8 @@
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:ems="10"
-               android:inputType="number"
                android:hint="Preço Final:"
-               android:textSize="18dp"/>
+               android:textSize="18sp"/>
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -106,6 +105,12 @@
            android:layout_height="wrap_content"
            android:layout_weight="1"
            android:text="Vender" />
+       <Button
+           android:id="@+id/btnlistarVendas"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:text="Listar Vendas" />
 
    </LinearLayout>
 

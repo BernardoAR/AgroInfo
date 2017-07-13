@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,49 +25,45 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.Normalizer;
-
 public class FormularioLogin extends Activity {
 
     //Criando os objetos necessários
 
-    EditText editEmail, editSenha;
+    EditText edtEmail, edtSenha;
     Button btnLogin, btnCadastrar;
-    FirebaseAuth autent;
-    FirebaseUser usuario;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    public static FirebaseAuth autent;
+    public static FirebaseUser usuario;
+    public static FirebaseDatabase firebaseDatabase;
+    public static DatabaseReference databaseReference;
     boolean existe1, existe;
     TextView textResetarSenha;
+    String email, senha;
     //Chamado serve para ver se a persistência já foi chamada
     public static boolean chamado = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_login);
-        inicializarFirebase();
         //Vinculando os objetos aos IDs
-        editEmail = (EditText) findViewById(R.id.editEmail);
-        editSenha = (EditText) findViewById(R.id.editSenha);
+        edtEmail = (EditText) findViewById(R.id.editEmail);
+        edtSenha = (EditText) findViewById(R.id.editSenha);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         textResetarSenha = (TextView) findViewById(R.id.textResetarSenha);
 
         // Request Focus para os edittexts
-        editEmail.requestFocus();
-        editSenha.requestFocus();
+        edtEmail.requestFocus();
+        edtSenha.requestFocus();
         //Programando o Botão para realizar Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //Colocando em String
-                EditText a = (EditText)findViewById(R.id.editEmail);
-                String str = a.getText().toString().trim();
-                EditText b = (EditText)findViewById(R.id.editSenha);
-                String senha = b.getText().toString().trim();
-                if (((str != null) && (!str.isEmpty())) && ((senha != null) && (!senha.isEmpty()))) {
-                    login(str, senha);
+                email = edtEmail.getText().toString().trim();
+                senha = edtSenha.getText().toString().trim();
+                if (((email != null) && (!email.isEmpty())) && ((senha != null) && (!senha.isEmpty()))) {
+                    login(email, senha);
                 } else {
                     alerta("Algum dos campos está vazio");
                 }
@@ -110,8 +104,8 @@ public class FormularioLogin extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            editEmail.setText("");
-                            editSenha.setText("");
+                            edtEmail.setText("");
+                            edtSenha.setText("");
                             usuario = Conexao.getFirebaseUser();
                             TestaDados();
                         } else {
@@ -178,8 +172,10 @@ public class FormularioLogin extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
+        inicializarFirebase();
         autent = Conexao.getFirebaseAuth();
         if (autent.getCurrentUser() != null){
+            usuario = autent.getCurrentUser();
             Intent abrirMenuP = new Intent(FormularioLogin.this, MenuP.class);
             startActivity(abrirMenuP);
         }

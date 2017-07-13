@@ -17,28 +17,14 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class CadastrosOpcionais extends AppCompatActivity {
-    FirebaseAuth autent;
-    FirebaseUser usuario;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
     TextInputLayout textEndereco, textNome, textTelefone;
     EditText edtNome, edtEndereco, edtTelefone;
     Button btnCadastrar;
@@ -49,7 +35,6 @@ public class CadastrosOpcionais extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastros_opcionais);
-        inicFirebase();
         //Resgatar componentes
         textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
         textNome = (TextInputLayout) findViewById(R.id.textNome);
@@ -83,7 +68,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
                     }
                     UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
                             .setDisplayName(nome).build();
-                    usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
@@ -91,24 +76,13 @@ public class CadastrosOpcionais extends AppCompatActivity {
                             }
                         }
                     });
-                    databaseReference.child("Usuario").child(usuario.getUid()).setValue(u);
+                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
+                    finish();
                     Intent abrirLogin = new Intent(CadastrosOpcionais.this, MenuP.class);
                     startActivity(abrirLogin);
                 }
             }
         });
-    }
-
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        autent = Conexao.getFirebaseAuth();
-        usuario = Conexao.getFirebaseUser();
     }
 
     //Excluir o Criado
@@ -124,12 +98,13 @@ public class CadastrosOpcionais extends AppCompatActivity {
         });
         dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                usuario.delete()
+                FormularioLogin.usuario.delete()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     alerta("Conta deletada com Sucesso!");
+                                    finish();
                                     Intent abrirFormC = new Intent(CadastrosOpcionais.this, FormularioLogin.class);
                                     startActivity(abrirFormC);
                                 } else {
@@ -167,7 +142,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
         String nome = edtNome.getText().toString();
         if (nome.isEmpty() || nome.length() < 5){
             textNome.setErrorEnabled(true);
-            textNome.setError("Entre com um nome válido!");
+            textNome.setError("Entre com um Nome válido!");
             edtNome.setError("Necessita de Entrada Válida, de pelo menos 5 caracteres");
             return false;
         }

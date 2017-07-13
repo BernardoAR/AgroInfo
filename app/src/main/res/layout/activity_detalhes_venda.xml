@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.br.agroinfo.DetalhesVenda">
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Detalhes Venda" />
+
+    <TextView
+        android:id="@+id/textProd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Produto: "
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/textPreco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Preço de venda: "
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/textQuantV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Quantidade de venda: "
+        android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/textMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Mês: "
+            android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/Ano"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Ano: "
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/btnExcluirVenda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Excluir Venda" />
+
+</LinearLayout>

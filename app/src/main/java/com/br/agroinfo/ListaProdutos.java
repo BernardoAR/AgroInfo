@@ -9,46 +9,36 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.br.agroinfo.dao.Conexao;
-import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lista_produtos extends AppCompatActivity {
-
+public class ListaProdutos extends AppCompatActivity {
+    Button btnNovoProd;
     ListView listProdutos;
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
-    FirebaseUser usuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_produtos);
-        inicFirebase();
         populaLista();
         // pega o botao
-        Button botao = (Button) findViewById(R.id.btnNovoProd);
+        btnNovoProd = (Button) findViewById(R.id.btnNovoProd);
 
         //Pega a lista
 
         listProdutos = (ListView) findViewById(R.id.lstProdutos);
 
         // configurar a acao de click
-        botao.setOnClickListener(new View.OnClickListener() {
+        btnNovoProd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirFormProd = new Intent(Lista_produtos.this, FormProd.class);
+                Intent abrirFormProd = new Intent(ListaProdutos.this, FormProd.class);
                 // solicitar para abir
                 startActivity(abrirFormProd);
 
@@ -61,7 +51,7 @@ public class Lista_produtos extends AppCompatActivity {
 
                 Produto produtoEnviado = arrayAdapterProduto.getItem(position);
 
-                Intent abrirEdicao = new Intent(Lista_produtos.this, AlterarProduto.class);
+                Intent abrirEdicao = new Intent(ListaProdutos.this, AlterarProduto.class);
                 abrirEdicao.putExtra("Produto-enviado",produtoEnviado);
                 // solicitar para abir
                 startActivity(abrirEdicao);
@@ -69,13 +59,9 @@ public class Lista_produtos extends AppCompatActivity {
         });
 
     }
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
-    }
+
     private void populaLista() {
-        databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(usuario.getUid())
+        FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -84,7 +70,7 @@ public class Lista_produtos extends AppCompatActivity {
                     Produto p = objSnapshot.getValue(Produto.class);
                     listProduto.add(p);
                 }
-                arrayAdapterProduto = new ArrayAdapter<>(Lista_produtos.this,
+                arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
                         android.R.layout.simple_list_item_1, listProduto);
                 listProdutos.setAdapter(arrayAdapterProduto);
 
@@ -101,7 +87,7 @@ public class Lista_produtos extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Lista_produtos.this, FormProd.class);
+        Intent i = new Intent(ListaProdutos.this, FormProd.class);
         startActivity(i);
     }
 

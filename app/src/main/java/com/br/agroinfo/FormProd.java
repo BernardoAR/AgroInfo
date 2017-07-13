@@ -17,15 +17,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.br.agroinfo.dao.Conexao;
+
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -36,62 +35,45 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
-
 public class FormProd extends AppCompatActivity {
-    // Declarar
-    Button btnSelDataC;
-    private EditText edtNomeProd;
+    Button btnSelDataC, btnListProd, btnCateg, btnAdProd;
     Spinner spnCateg;
-    private EditText editPrecoCusto;
-    private EditText editPrecoVenda;
-    private EditText quantidade;
-    private EditText edtDataCadastro;
-    private Button btnAdProd;
-    public Button btnListProd;
-    private Button btnAdCat;
-    private TextInputLayout textPrecoC, textPrecoV;
-    private Vibrator vib;
+    EditText edtPrecoCusto, edtPrecoVenda, edtQuantidade, edtDataCadastro, edtNomeProd;
+    TextInputLayout textPrecoC, textPrecoV, textDataCLayout, textQuant, textNomeProd;
+    Vibrator vib;
     Animation animBalanc;
     String valorId;
-    DatabaseReference databaseReference;
-    FirebaseDatabase firebaseDatabase;
-    FirebaseUser usuario;
     private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
-
-
-    // Deixar como Padrão o decimal com 2 casas
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_prod);
-        inicFirebase();
-        populaLista();
+
         // Pega as partes do Layout
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
         spnCateg = (Spinner) findViewById(R.id.spnCateg);
-        editPrecoCusto = (EditText) findViewById(R.id.editPrecoCusto);
-        editPrecoVenda = (EditText) findViewById(R.id.editPrecoVenda);
-        quantidade = (EditText) findViewById(R.id.quantidade);
+        edtPrecoCusto = (EditText) findViewById(R.id.editPrecoCusto);
+        edtPrecoVenda = (EditText) findViewById(R.id.editPrecoVenda);
+        edtQuantidade = (EditText) findViewById(R.id.quantidade);
         edtDataCadastro = (EditText) findViewById(R.id.DataCadastro);
+        btnCateg = (Button) findViewById(R.id.btnAdCat);
+        btnAdProd = (Button) findViewById(R.id.btnAdProd);
         btnListProd = (Button) findViewById(R.id.btnListProd);
         btnSelDataC = (Button) findViewById(R.id.btnSelDataC);
         textPrecoC = (TextInputLayout) findViewById(R.id.textPrecoC);
         textPrecoV = (TextInputLayout) findViewById(R.id.textPrecoV);
+        textDataCLayout = (TextInputLayout) findViewById(R.id.textDataCLayout);
+        textNomeProd = (TextInputLayout) findViewById(R.id.textNomeProd);
+        textQuant = (TextInputLayout) findViewById(R.id.textQuant);
 
         // Chamar Animações
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-        // Categoria
-        Button botaoCateg = (Button) findViewById(R.id.btnAdCat);
-        Button btnAdProd = (Button) findViewById(R.id.btnAdProd);
-
         // Configura a Ação de clique
-        botaoCateg.setOnClickListener(new View.OnClickListener() {
+        btnCateg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent abrirCateg = new Intent(FormProd.this, NovaCategoria.class);
                 // solicitar para abir
@@ -110,11 +92,11 @@ public class FormProd extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submForm();
-                if (checaNumC() && checaNumV()){
+                if (checaNumC() && checaNumV() && checaNomeProd() && checaQuant() && checaData()){
                     // Método para Conversão de Float
-                    Float precoC = Float.valueOf(editPrecoCusto.getText().toString());
-                    Float precoV = Float.valueOf(editPrecoVenda.getText().toString());
-                    int quant = Integer.valueOf(quantidade.getText().toString());
+                    Float precoC = Float.valueOf(edtPrecoCusto.getText().toString());
+                    Float precoV = Float.valueOf(edtPrecoVenda.getText().toString());
+                    int quant = Integer.valueOf(edtQuantidade.getText().toString());
                     Produto p = new Produto();
                     p.setId_produto(UUID.randomUUID().toString());
                     p.setDataCadastro(edtDataCadastro.getText().toString().replace('/', '-'));
@@ -124,11 +106,11 @@ public class FormProd extends AppCompatActivity {
                     p.setQuantidade(quant);
                     Categoria c = new Categoria();
                     c.setId_categoria(valorId);
-                    databaseReference.child("Produto").child("Produtos").child(p.getId_produto()).setValue(p);
-                    databaseReference.child("Produto").child("Produtos")
+                    FormularioLogin.databaseReference.child("Produto").child("Produtos").child(p.getId_produto()).setValue(p);
+                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
-                    databaseReference.child("Produto").child("Produtos")
-                            .child(p.getId_produto()).child("Usuario").setValue(usuario.getUid());
+                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                            .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
                     alerta("Cadastrado com Sucesso!");
                     limpaCampos();
                     finish();
@@ -137,7 +119,7 @@ public class FormProd extends AppCompatActivity {
         });
         btnListProd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirListaProd = new Intent(FormProd.this, Lista_produtos.class);
+                Intent abrirListaProd = new Intent(FormProd.this, ListaProdutos.class);
                 // solicitar para abir
                 startActivity(abrirListaProd);
 
@@ -163,6 +145,13 @@ public class FormProd extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        populaLista();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -171,20 +160,16 @@ public class FormProd extends AppCompatActivity {
     }
     private void limpaCampos() {
         edtNomeProd.setText("");
-        editPrecoCusto.setText("");
-        editPrecoVenda.setText("");
-        quantidade.setText("");
+        edtPrecoCusto.setText("");
+        edtPrecoVenda.setText("");
+        edtQuantidade.setText("");
         edtDataCadastro.setText("");
     }
 
     private void alerta(String mensagem) {
         Toast.makeText(FormProd.this, mensagem, Toast.LENGTH_SHORT).show();
     }
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
-        usuario = Conexao.getFirebaseUser();
-    }
+
     // Fazer com que fique com duas decimais FORÇADAMENTE
     public static BigDecimal casas(float d, int casasDec) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
@@ -193,30 +178,86 @@ public class FormProd extends AppCompatActivity {
     }
     //Void para ver todos
     private void submForm() {
+        if (!checaNomeProd()) {
+            edtNomeProd.setAnimation(animBalanc);
+            edtNomeProd.startAnimation(animBalanc);
+            vib.vibrate(120);
+            return;
+        }
         if (!checaNumC()) {
-            editPrecoCusto.setAnimation(animBalanc);
-            editPrecoCusto.startAnimation(animBalanc);
+            edtPrecoCusto.setAnimation(animBalanc);
+            edtPrecoCusto.startAnimation(animBalanc);
             vib.vibrate(120);
             return;
         }
         if (!checaNumV()) {
-            editPrecoVenda.setAnimation(animBalanc);
-            editPrecoVenda.startAnimation(animBalanc);
+            edtPrecoVenda.setAnimation(animBalanc);
+            edtPrecoVenda.startAnimation(animBalanc);
             vib.vibrate(120);
             return;
         }
+        if (!checaQuant()) {
+            edtQuantidade.setAnimation(animBalanc);
+            edtQuantidade.startAnimation(animBalanc);
+            vib.vibrate(120);
+            return;
+        }
+        if (!checaData()) {
+            edtDataCadastro.setAnimation(animBalanc);
+            edtDataCadastro.startAnimation(animBalanc);
+            vib.vibrate(120);
+            return;
+        }
+        textNomeProd.setErrorEnabled(false);
         textPrecoC.setErrorEnabled(false);
         textPrecoV.setErrorEnabled(false);
-
-
+        textQuant.setErrorEnabled(false);
+        textDataCLayout.setErrorEnabled(false);
     }
-    // FLOAT PRECOCUSTO
+
+    private boolean checaNomeProd(){
+        String nomeProd = edtNomeProd.getText().toString().trim();
+        if(nomeProd.isEmpty()){
+            textNomeProd.setErrorEnabled(true);
+            textNomeProd.setError("Indique o nome do produto");
+            edtNomeProd.setError("Necessita de Entrada Válida");
+            return false;
+        }
+        textNomeProd.setErrorEnabled(false);
+        return true;
+    }
+    private boolean checaQuant(){
+        String quanti = edtPrecoCusto.getText().toString().trim();
+        int quant = 0;
+        if (!quanti.isEmpty()){
+            quant = Integer.valueOf(edtPrecoCusto.getText().toString().trim());
+        }
+        if(quant < 1){
+            textQuant.setErrorEnabled(true);
+            textQuant.setError("Indique a edtQuantidade, sendo maior que 0");
+            edtQuantidade.setError("Necessita de Entrada Válida");
+            return false;
+        }
+        textQuant.setErrorEnabled(false);
+        return true;
+    }
+    private boolean checaData(){
+        String data = edtPrecoCusto.getText().toString().trim();
+        if(data.length() < 6){
+            textDataCLayout.setErrorEnabled(true);
+            textDataCLayout.setError("Indique uma data");
+            edtDataCadastro.setError("Necessita de Entrada Válida");
+            return false;
+        }
+        textDataCLayout.setErrorEnabled(false);
+        return true;
+    }
     private boolean checaNumC(){
-        String num = editPrecoCusto.getText().toString().trim();
+        String num = edtPrecoCusto.getText().toString().trim();
         if(num.isEmpty() || !validNum(num)){
             textPrecoC.setErrorEnabled(true);
             textPrecoC.setError("Máximo 6 Números, sendo 2 Decimais");
-            editPrecoCusto.setError("Necessita de Entrada Válida");
+            edtPrecoCusto.setError("Necessita de Entrada Válida");
             return false;
         }
         textPrecoC.setErrorEnabled(false);
@@ -224,11 +265,11 @@ public class FormProd extends AppCompatActivity {
     }
     //FLOAT PRECOVENDA
     private boolean checaNumV(){
-        String num = editPrecoVenda.getText().toString().trim();
+        String num = edtPrecoVenda.getText().toString().trim();
         if(num.isEmpty() || !validNum(num)){
             textPrecoV.setErrorEnabled(true);
             textPrecoV.setError("Máximo 6 Números, sendo 2 Decimais");
-            editPrecoVenda.setError("Necessita de Entrada Válida");
+            edtPrecoVenda.setError("Necessita de Entrada Válida");
             return false;
         }
         textPrecoV.setErrorEnabled(false);
@@ -242,8 +283,8 @@ public class FormProd extends AppCompatActivity {
 
     // Pegar os Valores
     private void populaLista() {
-        DatabaseReference db  = databaseReference.child("Categoria").child(usuario.getUid());
-        db.addValueEventListener(new ValueEventListener() {
+        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 listCategoria.clear();
@@ -257,9 +298,7 @@ public class FormProd extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
-
         });
     }
 

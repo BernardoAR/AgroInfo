@@ -16,21 +16,13 @@ import android.widget.Toast;
 
 import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Usuario;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MenuP extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    TextView nomeusuario;
-    private FirebaseAuth autent;
-    FirebaseUser usuario;
-    FirebaseDatabase firebaseDatabase;
-    DatabaseReference databaseReference;
+    TextView textNomeUsuario;
     boolean escolha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +45,25 @@ public class MenuP extends AppCompatActivity
 
         View cabecalho = navigationView.getHeaderView(0);
 
-        //Com o ID já pego, pegar o nome que possui nesse id
-        nomeusuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
-        inicFirebase();
+        //Com o ID já pego, pegar o edtNome que possui nesse id
+        textNomeUsuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
 
     }
     // PEGAR A CATEGORIA
     private void pegaNomeeEsc() {
-        databaseReference.child("Usuario").child(usuario.getUid())
+        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        invalidateOptionsMenu();
-                        Usuario u = dataSnapshot.getValue(Usuario.class);
-                        escolha = u.getEscolha();
-                        nomeusuario.setText(u.getNome().toUpperCase());
+                        if (dataSnapshot.exists()){
+                            invalidateOptionsMenu();
+                            Usuario u = dataSnapshot.getValue(Usuario.class);
+                            escolha = u.getEscolha();
+                            textNomeUsuario.setText(u.getNome().toUpperCase());
+                        } else {
+                            Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
+                            startActivity(abrirLogin);
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -76,19 +72,12 @@ public class MenuP extends AppCompatActivity
                 });
     }
 
-    private void inicFirebase() {
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        verificaUsuario();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        autent = Conexao.getFirebaseAuth();
-        usuario = Conexao.getFirebaseUser();
-        verificaUsuario();
-        pegaNomeeEsc();
-    }
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -124,8 +113,11 @@ public class MenuP extends AppCompatActivity
         Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
     }
     private void verificaUsuario() {
-        if (usuario == null){
-            alerta("Por algum motivo está nulo");
+        if (FormularioLogin.autent.getCurrentUser() == null){
+            Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
+            startActivity(abrirLogin);
+        } else {
+            pegaNomeeEsc();
         }
     }
 
@@ -163,7 +155,7 @@ public class MenuP extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_anotacoes) {
-            Intent abrirAnotacoes = new Intent(MenuP.this,Lista_anotacoes.class);
+            Intent abrirAnotacoes = new Intent(MenuP.this,ListaAnotacoes.class);
             // solicitar para abir
             invalidateOptionsMenu();
             startActivity(abrirAnotacoes);
@@ -178,7 +170,6 @@ public class MenuP extends AppCompatActivity
             Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
             invalidateOptionsMenu();
             startActivity(abrirVendas);
-
         }else  if(id == R.id.nav_pesquisa){
             Intent abrirPesquisa = new Intent(MenuP.this, PesquisarProduto.class);
             invalidateOptionsMenu();
@@ -187,11 +178,11 @@ public class MenuP extends AppCompatActivity
         } else  if(id == R.id.nav_cont){
             if (escolha){
                 Intent abrirCont = new Intent(MenuP.this, ConfContaUs.class);
-                invalidateOptionsMenu();
+                finish();
                 startActivity(abrirCont);
             } else {
                 Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
-                invalidateOptionsMenu();
+                finish();
                 startActivity(abrirCont);
             }
         } else  if(id == R.id.nav_sair){

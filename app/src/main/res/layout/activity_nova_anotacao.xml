@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.br.agroinfo.Nova_anotacao"
+    tools:context="com.br.agroinfo.NovaAnotacao"
     >
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_width="fill_parent"
             android:gravity="center"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:text="Nova Anotação" />
 
         <android.support.design.widget.TextInputLayout
@@ -48,7 +48,7 @@
                 android:hint="Anotação:"
                 android:inputType="textMultiLine"
                 android:lines="8"
-                android:gravity="top|left"
+                android:gravity="top|start"
                 android:scrollbars="vertical" />
         </android.support.design.widget.TextInputLayout>
 

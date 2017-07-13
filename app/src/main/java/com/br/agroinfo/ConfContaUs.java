@@ -1,7 +1,5 @@
 package com.br.agroinfo;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +11,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Usuario;
@@ -21,13 +18,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
@@ -37,24 +30,20 @@ public class ConfContaUs extends AppCompatActivity {
 
     Animation animBalanc;
     TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga, textEndereco, textTelefone;
-    EditText nome, email,senha,senha_antiga, edtEndereco, edtTelefone;
+    EditText edtNome, edtEmail, edtSenha, edtSenhaAntiga, edtEndereco, edtTelefone;
     Button btnSalvarConfiguracoes;
-    DatabaseReference databaseReference;
-    FirebaseDatabase firebaseDatabase;
-    FirebaseUser usuarioF;
     boolean escolha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conf_conta_us);
-        inicFirebase();
-        final String emails = usuarioF.getEmail();
+        final String emails = FormularioLogin.usuario.getEmail();
 
         //resgatar os componentes
-        nome = (EditText) findViewById(R.id.edtNomeUs);
-        email = (EditText) findViewById(R.id.edtEmail);
-        senha = (EditText) findViewById(R.id.edtNovaSenha);
-        senha_antiga = (EditText) findViewById(R.id.edtSenhaAntiga);
+        edtNome = (EditText) findViewById(R.id.edtNomeUs);
+        edtEmail = (EditText) findViewById(R.id.edtEmail);
+        edtSenha = (EditText) findViewById(R.id.edtNovaSenha);
+        edtSenhaAntiga = (EditText) findViewById(R.id.edtSenhaAntiga);
         edtEndereco = (EditText) findViewById(R.id.edtEndereco);
         edtTelefone = (EditText) findViewById(R.id.edtTelefone);
         btnSalvarConfiguracoes = (Button) findViewById(R.id.btnSalvarConfiguracoes);
@@ -73,31 +62,31 @@ public class ConfContaUs extends AppCompatActivity {
         edtTelefone.addTextChangedListener(maskTel);
 
 
-        email.setText(usuarioF.getEmail());
+        edtEmail.setText(FormularioLogin.usuario.getEmail());
         btnSalvarConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 submForm();
                 if (checaNome() && checaEmail() && checaNovaSenha()){
 
-                    AuthCredential credencial = EmailAuthProvider.getCredential(emails, senha_antiga.getText().toString());
-                    usuarioF.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    AuthCredential credencial = EmailAuthProvider.getCredential(emails, edtSenhaAntiga.getText().toString());
+                    FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                if (!senha.getText().toString().trim().isEmpty()){
-                                    usuarioF.updatePassword(senha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                if (!edtSenha.getText().toString().trim().isEmpty()){
+                                    FormularioLogin.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 alerta("Senha alterada com sucesso");
                                             } else {
-                                                alerta("Erro ao alterar senha, tente novamente mais tarde");
+                                                alerta("Erro ao alterar edtSenha, tente novamente mais tarde");
                                             }
                                         }
                                     });
                                 }
-                                usuarioF.updateEmail(email.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                FormularioLogin.usuario.updateEmail(edtEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
@@ -108,8 +97,8 @@ public class ConfContaUs extends AppCompatActivity {
                                     }
                                 });
                                 UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(nome.getText().toString().trim()).build();
-                                usuarioF.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        .setDisplayName(edtNome.getText().toString().trim()).build();
+                                FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
@@ -118,11 +107,11 @@ public class ConfContaUs extends AppCompatActivity {
                                     }
                                 });
                                 Usuario u = new Usuario();
-                                u.setNome(usuarioF.getDisplayName());
+                                u.setNome(FormularioLogin.usuario.getDisplayName());
                                 u.setEndereco(edtEndereco.getText().toString());
                                 u.setTelefone(edtTelefone.getText().toString());
                                 u.setEscolha(escolha);
-                                databaseReference.child("Usuario").child(usuarioF.getUid()).setValue(u);
+                                FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
                             } else {
                                 alerta("Erro ao alterar, tente novamente mais tarde");
                             }
@@ -142,15 +131,17 @@ public class ConfContaUs extends AppCompatActivity {
         startActivity(i);
     }
     private void pegaDados() {
-        DatabaseReference db  = databaseReference.child("Usuario").child(usuarioF.getUid());
-        db.addValueEventListener(new ValueEventListener() {
+        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Usuario u = dataSnapshot.getValue(Usuario.class);
-                nome.setText(usuarioF.getDisplayName());
-                edtEndereco.setText(u.getEndereco());
-                edtTelefone.setText(u.getTelefone());
-                escolha = u.getEscolha();
+                if (dataSnapshot.exists()){
+                    Usuario u = dataSnapshot.getValue(Usuario.class);
+                    edtNome.setText(FormularioLogin.usuario.getDisplayName());
+                    edtEndereco.setText(u.getEndereco());
+                    edtTelefone.setText(u.getTelefone());
+                    escolha = u.getEscolha();
+                }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -163,27 +154,26 @@ public class ConfContaUs extends AppCompatActivity {
         Toast.makeText(ConfContaUs.this, mensagem, Toast.LENGTH_SHORT).show();
     }
 
-    private void inicFirebase() {
-        usuarioF = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+    @Override
+    protected void onStart() {
+        super.onStart();
         pegaDados();
     }
 
     private void submForm() {
         if (!checaNome()){
-            nome.setAnimation(animBalanc);
-            nome.startAnimation(animBalanc);
+            edtNome.setAnimation(animBalanc);
+            edtNome.startAnimation(animBalanc);
             return;
         }
         if (!checaEmail()) {
-            email.setAnimation(animBalanc);
-            email.startAnimation(animBalanc);
+            edtEmail.setAnimation(animBalanc);
+            edtEmail.startAnimation(animBalanc);
             return;
         }
         if (!checaNovaSenha()){
-            senha.setAnimation(animBalanc);
-            senha.startAnimation(animBalanc);
+            edtSenha.setAnimation(animBalanc);
+            edtSenha.startAnimation(animBalanc);
         }
         textNomeUs.setErrorEnabled(false);
         textEmailConf.setErrorEnabled(false);
@@ -191,21 +181,21 @@ public class ConfContaUs extends AppCompatActivity {
     }
     // Checar tudo
     private boolean checaNome(){
-        if(nome.getText().toString().trim().isEmpty()){
+        if(edtNome.getText().toString().trim().isEmpty()){
             textNomeUs.setErrorEnabled(true);
             textNomeUs.setError("Entre com um Nome de Usuário");
-            nome.setError("Necessita de Entrada Válida");
+            edtNome.setError("Necessita de Entrada Válida");
             return false;
         }
         textNomeUs.setErrorEnabled(false);
         return true;
     }
    private boolean checaEmail(){
-        String b = email.getText().toString().trim();
+        String b = edtEmail.getText().toString().trim();
         if((b.isEmpty() || !eValido(b))){
             textEmailConf.setErrorEnabled(true);
             textEmailConf.setError("Entre com um E-mail Válido!");
-            email.setError("Necessita de Entrada Válida");
+            edtEmail.setError("Necessita de Entrada Válida");
             return false;
         }
         textEmailConf.setErrorEnabled(false);
@@ -215,9 +205,9 @@ public class ConfContaUs extends AppCompatActivity {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
     private boolean checaNovaSenha() {
-        if(!senha.getText().toString().trim().isEmpty() && senha_antiga.getText().toString().trim().length() <= 5){
-            textNovaSenha.setError("Entre com uma nova senha de no Mínimo 6 dígitos");
-            senha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
+        if(!edtSenha.getText().toString().trim().isEmpty() && edtSenhaAntiga.getText().toString().trim().length() <= 5){
+            textNovaSenha.setError("Entre com uma nova edtSenha de no Mínimo 6 dígitos");
+            edtSenha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
             return false;
         }
         textSenhaAntiga.setErrorEnabled(false);
