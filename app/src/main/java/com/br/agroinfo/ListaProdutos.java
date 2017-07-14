@@ -38,9 +38,9 @@ public class ListaProdutos extends AppCompatActivity {
         // configurar a acao de click
         btnNovoProd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirFormProd = new Intent(ListaProdutos.this, FormProd.class);
+                Publico.Intente(ListaProdutos.this, FormProd.class);
                 // solicitar para abir
-                startActivity(abrirFormProd);
+                finish();
 
             }
         });
@@ -55,6 +55,7 @@ public class ListaProdutos extends AppCompatActivity {
                 abrirEdicao.putExtra("Produto-enviado",produtoEnviado);
                 // solicitar para abir
                 startActivity(abrirEdicao);
+                finish();
             }
         });
 
@@ -87,8 +88,8 @@ public class ListaProdutos extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ListaProdutos.this, FormProd.class);
-        startActivity(i);
+        Publico.Intente(ListaProdutos.this, FormProd.class);
+        finish();
     }
 
 }

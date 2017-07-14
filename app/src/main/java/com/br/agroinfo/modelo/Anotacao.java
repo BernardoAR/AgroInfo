@@ -30,6 +30,6 @@ public class Anotacao implements Serializable{
 
     @Override
     public String toString() {
-        return novo_assunto.toString();
+        return novo_assunto;
     }
 }

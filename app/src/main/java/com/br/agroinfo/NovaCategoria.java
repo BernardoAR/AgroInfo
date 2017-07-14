@@ -9,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Categoria;
 import com.google.firebase.database.DataSnapshot;
@@ -49,6 +48,7 @@ public class NovaCategoria extends AppCompatActivity {
                 abrirEdicao.putExtra("Categoria-enviada",categoriaEnviada);
                 // solicitar para abir
                 startActivity(abrirEdicao);
+                finish();
             }
         });
 
@@ -61,7 +61,7 @@ public class NovaCategoria extends AppCompatActivity {
                 c.setId_categoria(UUID.randomUUID().toString());
                 c.setNova_categoria(categoriaStr.toUpperCase());
                 FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
-                alerta("Categoria Salva com Sucesso");
+                Publico.Alerta(NovaCategoria.this, "Categoria Salva com Sucesso");
                 edtNovaCat.setText("");
             }
         });
@@ -70,11 +70,8 @@ public class NovaCategoria extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(NovaCategoria.this, FormProd.class);
-        startActivity(i);
-    }
-    private void alerta(String s) {
-        Toast.makeText(NovaCategoria.this, s, Toast.LENGTH_SHORT).show();
+        Publico.Intente(NovaCategoria.this, FormProd.class);
+        finish();
     }
     // Pegar os Valores
     private void populaLista() {

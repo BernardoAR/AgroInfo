@@ -41,6 +41,7 @@ public class ListaVendas extends AppCompatActivity {
                 Intent abrirFormVendas = new Intent(ListaVendas.this, FormVendas.class);
                 // solicitar para abir
                 startActivity(abrirFormVendas);
+                finish();
 
             }
         });
@@ -52,9 +53,10 @@ public class ListaVendas extends AppCompatActivity {
                 Vendas vendaEnviada = arrayAdapterVenda.getItem(position);
 
                 Intent abrirEdicao = new Intent(ListaVendas.this, DetalhesVenda.class);
-                //abrirEdicao.putExtra("Venda-enviada", vendaEnviada);
+                abrirEdicao.putExtra("Venda-enviada", vendaEnviada);
                 // solicitar para abir
                 startActivity(abrirEdicao);
+                finish();
             }
         });
 
@@ -87,7 +89,7 @@ public class ListaVendas extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ListaVendas.this, FormProd.class);
-        startActivity(i);
+        Publico.Intente(ListaVendas.this, FormProd.class);
+        finish();
     }
 }

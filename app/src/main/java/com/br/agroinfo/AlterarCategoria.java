@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 import com.br.agroinfo.modelo.Categoria;
@@ -41,7 +40,8 @@ public class AlterarCategoria extends AppCompatActivity {
                 c.setId_categoria(altcategoria.getId_categoria());
                 c.setNova_categoria(edtAltCat.getText().toString().toUpperCase());
                 FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
-                alerta("Alterado com Sucesso");
+                Publico.Alerta(AlterarCategoria.this, "Alterado com Sucesso");
+                Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
                 finish();
                 // Limpa Campo
                 edtAltCat.setText("");
@@ -54,7 +54,8 @@ public class AlterarCategoria extends AppCompatActivity {
                 Categoria c = new Categoria();
                 c.setId_categoria(altcategoria.getId_categoria());
                 FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).removeValue();
-                alerta("Excluído com Sucesso");
+                Publico.Alerta(AlterarCategoria.this, "Excluído com Sucesso");
+                Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
                 finish();
                 // Limpa Campo
                 edtAltCat.setText("");
@@ -65,10 +66,7 @@ public class AlterarCategoria extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(AlterarCategoria.this, NovaCategoria.class);
-        startActivity(i);
-    }
-    private void alerta(String mensagem) {
-        Toast.makeText(AlterarCategoria.this, mensagem, Toast.LENGTH_SHORT).show();
+        Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
+        finish();
     }
 }

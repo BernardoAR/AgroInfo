@@ -18,6 +18,7 @@ public class DetalhesProduto extends AppCompatActivity {
     Produto mostraProduto;
     BigDecimal precoVendas;
     String id, idus;
+    String nomeProd, possEst, empVen, tel, end;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +37,18 @@ public class DetalhesProduto extends AppCompatActivity {
 
         if (mostraProduto != null){
             id = mostraProduto.getId_produto();
-            textNomeProduto.setText("Nome do Produto: " + mostraProduto.getNomeProduto());
+            nomeProd = ("Nome do Produto: " + mostraProduto.getNomeProduto());
+            textNomeProduto.setText(nomeProd);
             int quantidade = mostraProduto.getQuantidade();
             if (quantidade >= 1){
-                textQuantidadeDisp.setText("Possui Estoque: Possui");
-            } else { textQuantidadeDisp.setText("Possui Estoque: Possui"); }
+                possEst = ("Possui Estoque: Possui");
+                textQuantidadeDisp.setText(possEst);
+            } else {
+                possEst = ("Possui Estoque: Não possui");
+                textQuantidadeDisp.setText(possEst);
+            }
             float precoVenda = mostraProduto.getPrecoVenda();
-            precoVendas = FormProd.casas(precoVenda, 2);
+            precoVendas = FormProd.casas(precoVenda);
             textPrecoVenda.setText("Preço de Venda: " + String.valueOf(precoVendas) + "R$");
             pegaDadoExt();
         }
@@ -50,8 +56,8 @@ public class DetalhesProduto extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(DetalhesProduto.this, PesquisarProduto.class);
-        startActivity(i);
+        Publico.Intente(DetalhesProduto.this, PesquisarProduto.class);
+        finish();
     }
 
     private void pegaDadoExt() {
@@ -73,16 +79,21 @@ public class DetalhesProduto extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
-                textNomeEmp.setText("Empresário/Vendedor: " + u.getNome());
+                empVen = ("Empresário/Vendedor: " + u.getNome());
+                textNomeEmp.setText(empVen);
                 if (!u.getTelefone().trim().isEmpty()){
-                    textTelefoneCont.setText("Telefone: " + u.getTelefone());
+                    tel = ("Telefone: " + u.getTelefone());
+                    textTelefoneCont.setText(tel);
                 } else {
-                    textTelefoneCont.setText("Telefone: Não Informado");
+                    tel = ("Telefone: Não Informado");
+                    textTelefoneCont.setText(tel);
                 }
                 if (!u.getEndereco().trim().isEmpty()){
-                    textEndereco.setText("Endereço: " + u.getEndereco());
+                    end = ("Endereço: " + u.getEndereco());
+                    textEndereco.setText(end);
                 } else {
-                    textEndereco.setText("Endereço: Não Informado");
+                    end = ("Endereço: Não Informado");
+                    textEndereco.setText(end);
                 }
             }
             @Override

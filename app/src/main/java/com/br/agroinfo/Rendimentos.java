@@ -1,6 +1,5 @@
 package com.br.agroinfo;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Vendas;
 import com.github.mikephil.charting.charts.PieChart;
@@ -71,7 +69,7 @@ public class Rendimentos extends AppCompatActivity {
                                        int pos, long id) {
                 // Pegar ID e o Valor do Produto, forçar para que o Spinner pegue
                 posicaoMes = spnMes.getSelectedItemPosition();
-                alerta(String.valueOf(posicaoMes));
+                Publico.Alerta(Rendimentos.this, String.valueOf(posicaoMes));
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -84,8 +82,8 @@ public class Rendimentos extends AppCompatActivity {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 if (e == null) return;
-                BigDecimal casa = FormProd.casas(e.getY(), 2);
-                alerta(String.valueOf(casa) + "R$");
+                BigDecimal casa = FormProd.casas(e.getY());
+                Publico.Alerta(Rendimentos.this, String.valueOf(casa) + "R$");
             }
             @Override
             public void onNothingSelected() {
@@ -111,7 +109,7 @@ public class Rendimentos extends AppCompatActivity {
                                     if ((totalCusto != 0) && (totalVenda != 0)){
                                         metodoPieChart();
                                     } else {
-                                        alerta("Não possui valores para criar o Gráfico!");
+                                        Publico.Alerta(Rendimentos.this, "Não possui valores para criar o Gráfico!");
                                     }
 
                                 }
@@ -124,9 +122,6 @@ public class Rendimentos extends AppCompatActivity {
         });
     }
 
-    private void alerta(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-    }
 
     private void submForm() {
         if (!checaAno()) {
@@ -206,7 +201,7 @@ public class Rendimentos extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(Rendimentos.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(Rendimentos.this, MenuP.class);
+        finish();
     }
 }

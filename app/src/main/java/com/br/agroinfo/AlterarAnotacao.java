@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import com.br.agroinfo.modelo.Anotacao;
 
 
@@ -44,7 +44,8 @@ public class AlterarAnotacao extends AppCompatActivity {
                 a.setNovo_assunto(edtAssunto.getText().toString().replace('/', '-'));
                 a.setNova_anotacao(edtAlteracao.getText().toString());
                 FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
-                alerta("Alterado com Sucesso");
+                Publico.Alerta(AlterarAnotacao.this, "Alterado com Sucesso");
+                Publico.Intente(AlterarAnotacao.this, ListaAnotacoes.class);
                 limparCampos();
                 finish();
             }
@@ -55,7 +56,8 @@ public class AlterarAnotacao extends AppCompatActivity {
                 Anotacao a = new Anotacao();
                 a.setId_anotacao(altanotacao.getId_anotacao());
                 FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).removeValue();
-                alerta("Excluído com Sucesso");
+                Publico.Alerta(AlterarAnotacao.this, "Excluído com Sucesso");
+                Publico.Intente(AlterarAnotacao.this, ListaAnotacoes.class);
                 limparCampos();
                 finish();
             }
@@ -65,12 +67,8 @@ public class AlterarAnotacao extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(AlterarAnotacao.this, ListaAnotacoes.class);
-        startActivity(i);
-    }
-
-    private void alerta(String mensagem) {
-        Toast.makeText(AlterarAnotacao.this, mensagem, Toast.LENGTH_SHORT).show();
+        Publico.Intente(AlterarAnotacao.this, ListaAnotacoes.class);
+        finish();
     }
 
     private void limparCampos() {

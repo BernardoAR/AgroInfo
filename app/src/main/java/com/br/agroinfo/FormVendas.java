@@ -2,7 +2,6 @@ package com.br.agroinfo;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
@@ -37,7 +36,7 @@ public class FormVendas extends AppCompatActivity {
     String[] datas = new String[]
             {"Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro",
                     "Novembro", "Dezembro"};
-    String valorId, valor, dataC, id_categ, catego;
+    String valorId, valor, dataC, id_categ, catego, quantT;
     Button btnCalcular, btnVenda, btnVerVendas;
     EditText edtQuant, edtAno;
     TextView textQuanti, textPreco, textPrecoFin;
@@ -82,7 +81,7 @@ public class FormVendas extends AppCompatActivity {
                 int quantidade = Integer.valueOf(quant);
                 precoFinalV = precoVenda * quantidade;
                 precoFinalC = precoCusto * quantidade;
-                precoF = FormProd.casas(precoFinalV, 2);
+                precoF = FormProd.casas(precoFinalV);
                 textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
             }
         });
@@ -90,7 +89,7 @@ public class FormVendas extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submForm();
-                if (checaCalculo() && checaAno()) {
+                if (checaQuant() && checaAno() && checaCalculo()) {
                     // Modificar na Venda
                     pegaVCategoria();
                 }
@@ -99,9 +98,9 @@ public class FormVendas extends AppCompatActivity {
         //Clicar para Listar
         btnVerVendas.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent VerVendas = new Intent(FormVendas.this, ListaVendas.class);
+                Publico.Intente(FormVendas.this, ListaVendas.class);
                 // solicitar para abir
-                startActivity(VerVendas);
+                finish();
 
             }
         });
@@ -136,8 +135,9 @@ public class FormVendas extends AppCompatActivity {
                 precoCusto = item.getPrecoCusto();
                 precoVenda = item.getPrecoVenda();
                 dataC = item.getDataCadastro();
-                preco = FormProd.casas(precoVenda, 2);
-                textQuanti.setText("Quantidade Total: " + String.valueOf(total));
+                preco = FormProd.casas(precoVenda);
+                quantT = ("Quantidade Total: " + String.valueOf(total));
+                textQuanti.setText(quantT);
                 textPreco.setText("Preço: " + String.valueOf(preco) + " R$");
                 Toast tempo2 = Toast.makeText(FormVendas.this,valor,Toast.LENGTH_SHORT);
                 tempo2.show();
@@ -161,8 +161,8 @@ public class FormVendas extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(FormVendas.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(FormVendas.this, MenuP.class);
+        finish();
     }
 
     private void limpaCampos() {
@@ -172,9 +172,7 @@ public class FormVendas extends AppCompatActivity {
     private void inicFirebase() {
         populaLista();
     }
-    private void alerta(String mensagem) {
-        Toast.makeText(FormVendas.this, mensagem, Toast.LENGTH_SHORT).show();
-    }
+
     private void populaLista() {
         FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
@@ -244,14 +242,15 @@ public class FormVendas extends AppCompatActivity {
                 .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
         FormularioLogin.databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
-        alerta("Venda feita com Sucesso");
+        Publico.Alerta(FormVendas.this, "Venda feita com Sucesso");
         // Modificar no Campo do Produto
+        Publico.Intente(FormVendas.this, MenuP.class);
         limpaCampos();
         finish();
     }
 
     private void submForm() {
-        if (!checaCalculo()) {
+        if (!checaQuant()) {
             edtQuant.setAnimation(animBalanc);
             edtQuant.startAnimation(animBalanc);
             vib.vibrate(120);
@@ -263,10 +262,20 @@ public class FormVendas extends AppCompatActivity {
             vib.vibrate(120);
             return;
         }
+        if (!checaCalculo()) {
+            return;
+        }
         textQuant.setErrorEnabled(false);
         textAno.setErrorEnabled(false);
     }
-    private boolean checaCalculo(){
+    private boolean checaCalculo() {
+        if(precoFinalC <= 0  || precoFinalV <= 0){
+            Publico.Alerta(FormVendas.this, "É necessário fazer o cálculo antes da venda");
+            return false;
+        }
+        return true;
+    }
+    private boolean checaQuant(){
         int quant = 0;
         String calc = edtQuant.getText().toString().trim();
         if (!calc.isEmpty()){

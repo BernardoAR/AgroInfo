@@ -10,9 +10,9 @@ import com.google.firebase.auth.FirebaseUser;
  */
 
 public class Conexao {
-    private static FirebaseAuth firebaseAuth;
-    private static FirebaseAuth.AuthStateListener authStateListener;
-    private static FirebaseUser firebaseUser;
+    static FirebaseAuth firebaseAuth;
+    static FirebaseAuth.AuthStateListener authStateListener;
+    static FirebaseUser firebaseUser;
 
     private Conexao(){
 

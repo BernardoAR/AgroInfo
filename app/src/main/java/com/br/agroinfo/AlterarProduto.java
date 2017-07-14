@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
@@ -90,6 +92,7 @@ public class AlterarProduto extends AppCompatActivity {
                     FormularioLogin.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
                     alerta("Alterado com Sucesso");
+                    Publico.Intente(AlterarProduto.this, ListaProdutos.class);
                     limpaCampos();
                     finish();
                 }
@@ -99,11 +102,30 @@ public class AlterarProduto extends AppCompatActivity {
         btnExcluirProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                        .child(altproduto.getId_produto()).removeValue();
-                alerta("Excluído com Sucesso");
-                limpaCampos();
-                finish();
+                Query vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+                        .orderByChild("Id_produto").equalTo(altproduto.getId_produto());
+                vendas.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
+                            objSnapshot.getRef().setValue(null);
+                        }
+                        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                                .child(altproduto.getId_produto()).removeValue();
+                        alerta("Excluído com Sucesso");
+                        limpaCampos();
+                        Publico.Intente(AlterarProduto.this, ListaProdutos.class);
+                        finish();
+                    }
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
             }
         });
     }
@@ -111,8 +133,8 @@ public class AlterarProduto extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(AlterarProduto.this, ListaProdutos.class);
-        startActivity(i);
+        Publico.Intente(AlterarProduto.this, ListaProdutos.class);
+        finish();
     }
 
     private void limpaCampos() {
@@ -130,36 +152,36 @@ public class AlterarProduto extends AppCompatActivity {
         FormularioLogin.databaseReference.child("Produto").child("Produtos")
                 .child(altproduto.getId_produto()).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                id_categ = dataSnapshot.getValue().toString();
-                setId_Catego(id_categ);
-                Toast.makeText(AlterarProduto.this,"PegaVCategoria:" + id_categ, Toast.LENGTH_SHORT).show();
-                categorias();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        id_categ = dataSnapshot.getValue().toString();
+                        setId_Catego(id_categ);
+                        Toast.makeText(AlterarProduto.this,"PegaVCategoria:" + id_categ, Toast.LENGTH_SHORT).show();
+                        categorias();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void categorias() {
         Toast.makeText(AlterarProduto.this,"PegaCCategoria:" + getId_Catego(), Toast.LENGTH_SHORT).show();
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(getId_Catego()).child("edtNovaCat")
+        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(getId_Catego()).child("nova_categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                nome_categ = dataSnapshot.getValue().toString();
-                setNome_Catego(nome_categ);
-                colocaNomeCateg();
-                Toast.makeText(AlterarProduto.this,nome_categ, Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        nome_categ = dataSnapshot.getValue().toString();
+                        setNome_Catego(nome_categ);
+                        colocaNomeCateg();
+                        Toast.makeText(AlterarProduto.this,nome_categ, Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                    }
+                });
     }
     private void colocaNomeCateg(){
         textCateg.setText("Categoria: " + getNome_Catego());
@@ -216,10 +238,10 @@ public class AlterarProduto extends AppCompatActivity {
         return true;
     }
     private boolean checaQuant(){
-        String quanti = edtPrecoCusto.getText().toString().trim();
+        String quanti = edtQuantidade.getText().toString().trim();
         int quant = 0;
         if (!quanti.isEmpty()){
-            quant = Integer.valueOf(edtPrecoCusto.getText().toString().trim());
+            quant = Integer.valueOf(quanti);
         }
         if(quant < 1){
             textQuant.setErrorEnabled(true);

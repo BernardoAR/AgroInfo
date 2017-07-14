@@ -1,6 +1,5 @@
 package com.br.agroinfo;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -11,7 +10,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,9 +77,9 @@ public class ConfContaUs extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                alerta("Senha alterada com sucesso");
+                                                Publico.Alerta(ConfContaUs.this, "Senha alterada com sucesso");
                                             } else {
-                                                alerta("Erro ao alterar edtSenha, tente novamente mais tarde");
+                                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar edtSenha, tente novamente mais tarde");
                                             }
                                         }
                                     });
@@ -90,9 +88,9 @@ public class ConfContaUs extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            alerta("E-mail Alterado com Sucesso");
+                                            Publico.Alerta(ConfContaUs.this, "E-mail Alterado com Sucesso");
                                         } else {
-                                            alerta("Erro ao alterar e-mail, tente novamente mais tarde");
+                                            Publico.Alerta(ConfContaUs.this, "Erro ao alterar e-mail, tente novamente mais tarde");
                                         }
                                     }
                                 });
@@ -102,7 +100,7 @@ public class ConfContaUs extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()){
-                                            alerta("Nome Alterado com Sucesso!");
+                                            Publico.Alerta(ConfContaUs.this, "Nome Alterado com Sucesso!");
                                         }
                                     }
                                 });
@@ -113,11 +111,12 @@ public class ConfContaUs extends AppCompatActivity {
                                 u.setEscolha(escolha);
                                 FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
                             } else {
-                                alerta("Erro ao alterar, tente novamente mais tarde");
+                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar, tente novamente mais tarde");
                             }
                         }
 
                     });
+                    Publico.Intente(ConfContaUs.this, MenuP.class);
                     finish();
                     }
                 }
@@ -127,8 +126,8 @@ public class ConfContaUs extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ConfContaUs.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(ConfContaUs.this, MenuP.class);
+        finish();
     }
     private void pegaDados() {
         FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
@@ -149,9 +148,6 @@ public class ConfContaUs extends AppCompatActivity {
             }
 
         });
-    }
-    private void alerta(String mensagem) {
-        Toast.makeText(ConfContaUs.this, mensagem, Toast.LENGTH_SHORT).show();
     }
 
     @Override

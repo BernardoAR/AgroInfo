@@ -60,7 +60,7 @@ public class Produto implements Serializable {
 
     @Override
     public String toString() {
-        return nomeProduto.toString();
+        return nomeProduto;
     }
 
 }

@@ -28,6 +28,6 @@ public class Categoria implements Serializable{
 
     @Override
     public String toString() {
-        return nova_categoria.toString();
+        return nova_categoria;
     }
 }

@@ -24,6 +24,7 @@ public class DetalhesVenda extends AppCompatActivity {
     BigDecimal precoV;
     Button btnExcluirVenda;
     String id_prod, id_Produ, nome_prod, nome_Produ;
+    String ano, mes, quantV, prod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +43,14 @@ public class DetalhesVenda extends AppCompatActivity {
         textAno = (TextView) findViewById(R.id.Ano);
 
         if (altvenda != null) {
-            textAno.setText("Ano: " + String.valueOf(altvenda.getAno()));
-            textMes.setText("Mes: " + String.valueOf(altvenda.getMes()));
-            precoV = FormProd.casas(altvenda.getPreco_venda(), 2);
+            ano = ("Ano: " + String.valueOf(altvenda.getAno()));
+            mes = ("Mes: " + String.valueOf(altvenda.getMes()));
+            quantV = ("Quantidade da venda: " + altvenda.getQuant_venda());
+            textAno.setText(ano);
+            textMes.setText(mes);
+            precoV = FormProd.casas(altvenda.getPreco_venda());
             textPreco.setText("Preço Venda: " + String.valueOf(precoV) + "R$");
-            textQuantV.setText("Quantidade da venda: " + altvenda.getQuant_venda());
+            textQuantV.setText(quantV);
         }
         pegaVProduto();
         btnExcluirVenda.setOnClickListener(new View.OnClickListener() {
@@ -54,7 +58,8 @@ public class DetalhesVenda extends AppCompatActivity {
             public void onClick(View v) {
                 FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
                         .child(altvenda.getId_venda()).removeValue();
-                alerta("Excluído com Sucesso");
+                Publico.Alerta(DetalhesVenda.this, "Excluído com Sucesso");
+                Publico.Intente(DetalhesVenda.this, ListaVendas.class);
                 finish();
             }
         });
@@ -63,12 +68,8 @@ public class DetalhesVenda extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(DetalhesVenda.this, ListaVendas.class);
-        startActivity(i);
-    }
-
-    private void alerta(String mensagem) {
-        Toast.makeText(DetalhesVenda.this, mensagem, Toast.LENGTH_SHORT).show();
+        Publico.Intente(DetalhesVenda.this, ListaVendas.class);
+        finish();
     }
 
     private void pegaVProduto() {
@@ -106,16 +107,9 @@ public class DetalhesVenda extends AppCompatActivity {
                 });
     }
     private void colocaNomeProdu(){
-        textProd.setText("Produto: " + getNome_Produ());
+        prod = ("Produto: " + getNome_Produ());
+        textProd.setText(prod);
     }
-
-    // Fazer com que fique com duas decimais FORÇADAMENTE
-    public static BigDecimal casas(float d, int casasDec) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(casasDec, BigDecimal.ROUND_HALF_UP);
-        return bd;
-    }
-
 
     public void setId_Produ(String id_Produ) { this.id_Produ = id_Produ; }
 

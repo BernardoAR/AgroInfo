@@ -57,14 +57,15 @@ public class PesquisarProduto extends AppCompatActivity {
                 abrirVisualizacao.putExtra("Produto-enviado",produtoEnviado);
                 // solicitar para abir
                 startActivity(abrirVisualizacao);
+                finish();
             }
         });
     }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(PesquisarProduto.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(PesquisarProduto.this, MenuP.class);
+        finish();
     }
     public void populaLista(){
         Query query = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.br.agroinfo.dao.Conexao;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,7 +64,7 @@ public class FormularioLogin extends Activity {
                 if (((email != null) && (!email.isEmpty())) && ((senha != null) && (!senha.isEmpty()))) {
                     login(email, senha);
                 } else {
-                    alerta("Algum dos campos está vazio");
+                    Publico.Alerta(FormularioLogin.this, "Algum dos campos está vazio");
                 }
             }
         });
@@ -75,7 +74,6 @@ public class FormularioLogin extends Activity {
                 Intent abrirCadastro = new Intent(FormularioLogin.this, FormularioCadastro.class);
                 // solicitar para abir
                 startActivity(abrirCadastro);
-
             }
         });
         textResetarSenha.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +107,7 @@ public class FormularioLogin extends Activity {
                             usuario = Conexao.getFirebaseUser();
                             TestaDados();
                         } else {
-                            alerta("E-mail ou Senha não Correspondem!");
+                            Publico.Alerta(FormularioLogin.this, "E-mail ou Senha não Correspondem!");
                         }
                     }
                 });
@@ -123,8 +121,8 @@ public class FormularioLogin extends Activity {
                 if (existe1){
                     TestaDados2();
                 } else {
-                    Intent abrirCOP = new Intent(FormularioLogin.this, CadastrosOpcionais.class);
-                    startActivity(abrirCOP);
+                    Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
+                    finish();
                 }
             }
             @Override
@@ -140,11 +138,11 @@ public class FormularioLogin extends Activity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 existe = dataSnapshot.hasChild(usuario.getUid());
                 if (existe){
-                    Intent abrirMenuP = new Intent(FormularioLogin.this, MenuP.class);
-                    startActivity(abrirMenuP);
+                    Publico.Intente(FormularioLogin.this, MenuP.class);
+                    finish();
                 } else {
-                    Intent abrirCOP = new Intent(FormularioLogin.this, CadastrosOpcionais.class);
-                    startActivity(abrirCOP);
+                    Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
+                    finish();
                 }
             }
             @Override
@@ -165,10 +163,6 @@ public class FormularioLogin extends Activity {
         System.exit(0);
     }
 
-    private void alerta(String s) {
-        Toast.makeText(FormularioLogin.this, s, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -176,8 +170,8 @@ public class FormularioLogin extends Activity {
         autent = Conexao.getFirebaseAuth();
         if (autent.getCurrentUser() != null){
             usuario = autent.getCurrentUser();
-            Intent abrirMenuP = new Intent(FormularioLogin.this, MenuP.class);
-            startActivity(abrirMenuP);
+            Publico.Intente(FormularioLogin.this, MenuP.class);
+            finish();
         }
     }
     //

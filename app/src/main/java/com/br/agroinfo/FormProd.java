@@ -1,7 +1,6 @@
 package com.br.agroinfo;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
@@ -23,8 +22,6 @@ import com.br.agroinfo.modelo.Produto;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -75,9 +72,9 @@ public class FormProd extends AppCompatActivity {
         // Configura a Ação de clique
         btnCateg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirCateg = new Intent(FormProd.this, NovaCategoria.class);
+                Publico.Intente(FormProd.this, NovaCategoria.class);
                 // solicitar para abir
-                startActivity(abrirCateg);
+                finish();
 
             }
         });
@@ -111,7 +108,8 @@ public class FormProd extends AppCompatActivity {
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
                     FormularioLogin.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
-                    alerta("Cadastrado com Sucesso!");
+                    Publico.Alerta(FormProd.this, "Cadastrado com Sucesso!");
+                    Publico.Intente(FormProd.this, MenuP.class);
                     limpaCampos();
                     finish();
                 }
@@ -119,9 +117,9 @@ public class FormProd extends AppCompatActivity {
         });
         btnListProd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirListaProd = new Intent(FormProd.this, ListaProdutos.class);
+                Publico.Intente(FormProd.this, ListaProdutos.class);
                 // solicitar para abir
-                startActivity(abrirListaProd);
+                finish();
 
             }
         });
@@ -155,8 +153,8 @@ public class FormProd extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(FormProd.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(FormProd.this, MenuP.class);
+        finish();
     }
     private void limpaCampos() {
         edtNomeProd.setText("");
@@ -166,14 +164,11 @@ public class FormProd extends AppCompatActivity {
         edtDataCadastro.setText("");
     }
 
-    private void alerta(String mensagem) {
-        Toast.makeText(FormProd.this, mensagem, Toast.LENGTH_SHORT).show();
-    }
 
     // Fazer com que fique com duas decimais FORÇADAMENTE
-    public static BigDecimal casas(float d, int casasDec) {
+    public static BigDecimal casas(float d) {
         BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(casasDec, BigDecimal.ROUND_HALF_UP);
+        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
         return bd;
     }
     //Void para ver todos
@@ -227,10 +222,10 @@ public class FormProd extends AppCompatActivity {
         return true;
     }
     private boolean checaQuant(){
-        String quanti = edtPrecoCusto.getText().toString().trim();
+        String quanti = edtQuantidade.getText().toString().trim();
         int quant = 0;
         if (!quanti.isEmpty()){
-            quant = Integer.valueOf(edtPrecoCusto.getText().toString().trim());
+            quant = Integer.valueOf(quanti);
         }
         if(quant < 1){
             textQuant.setErrorEnabled(true);
@@ -242,7 +237,7 @@ public class FormProd extends AppCompatActivity {
         return true;
     }
     private boolean checaData(){
-        String data = edtPrecoCusto.getText().toString().trim();
+        String data = edtDataCadastro.getText().toString().trim();
         if(data.length() < 6){
             textDataCLayout.setErrorEnabled(true);
             textDataCLayout.setError("Indique uma data");

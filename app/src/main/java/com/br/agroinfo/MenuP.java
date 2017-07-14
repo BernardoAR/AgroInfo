@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Usuario;
@@ -30,7 +29,6 @@ public class MenuP extends AppCompatActivity
         setContentView(R.layout.activity_menu_p);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -61,8 +59,7 @@ public class MenuP extends AppCompatActivity
                             escolha = u.getEscolha();
                             textNomeUsuario.setText(u.getNome().toUpperCase());
                         } else {
-                            Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
-                            startActivity(abrirLogin);
+                            Publico.Alerta(MenuP.this, "Está vindo para cá");
                         }
                     }
                     @Override
@@ -73,8 +70,8 @@ public class MenuP extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         verificaUsuario();
     }
 
@@ -82,7 +79,7 @@ public class MenuP extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
-        alerta(String.valueOf(escolha));
+        Publico.Alerta(MenuP.this, String.valueOf(escolha));
         // Preparar todos
         MenuItem anotacoes = menu.findItem(R.id.nav_anotacoes);
         MenuItem produtos = menu.findItem(R.id.nav_prod);
@@ -109,13 +106,11 @@ public class MenuP extends AppCompatActivity
         }
         return super.onPrepareOptionsMenu(menu);
     }
-    private void alerta(String mensagem){
-        Toast.makeText(this, mensagem, Toast.LENGTH_SHORT).show();
-    }
+
     private void verificaUsuario() {
         if (FormularioLogin.autent.getCurrentUser() == null){
-            Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
-            startActivity(abrirLogin);
+            Publico.Intente(MenuP.this, FormularioLogin.class);
+            finish();
         } else {
             pegaNomeeEsc();
         }
@@ -149,47 +144,47 @@ public class MenuP extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected( MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) {
 
         // Views itens clicados, suas ações
         int id = item.getItemId();
 
         if (id == R.id.nav_anotacoes) {
-            Intent abrirAnotacoes = new Intent(MenuP.this,ListaAnotacoes.class);
+            Publico.Intente(MenuP.this,ListaAnotacoes.class);
             // solicitar para abir
             invalidateOptionsMenu();
-            startActivity(abrirAnotacoes);
+            finish();
         } else if (id == R.id.nav_prod) {
-            Intent abrirProd = new Intent(MenuP.this,FormProd.class);
+            Publico.Intente(MenuP.this,FormProd.class);
             invalidateOptionsMenu();
-            startActivity(abrirProd);
+            finish();
         } else  if(id == R.id.nav_rendimentos){
-           Intent abrirRendimentos = new Intent(MenuP.this, Rendimentos.class);
-            startActivity(abrirRendimentos);
+            Publico.Intente(MenuP.this, Rendimentos.class);
+            invalidateOptionsMenu();
+            finish();
         } else  if(id == R.id.nav_vendas){
-            Intent abrirVendas = new Intent(MenuP.this, FormVendas.class);
+            Publico.Intente(MenuP.this, FormVendas.class);
             invalidateOptionsMenu();
-            startActivity(abrirVendas);
+            finish();
         }else  if(id == R.id.nav_pesquisa){
-            Intent abrirPesquisa = new Intent(MenuP.this, PesquisarProduto.class);
+            Publico.Intente(MenuP.this, PesquisarProduto.class);
             invalidateOptionsMenu();
-            startActivity(abrirPesquisa);
-
+            finish();
         } else  if(id == R.id.nav_cont){
             if (escolha){
-                Intent abrirCont = new Intent(MenuP.this, ConfContaUs.class);
+                Publico.Intente(MenuP.this, ConfContaUs.class);
+                invalidateOptionsMenu();
                 finish();
-                startActivity(abrirCont);
             } else {
-                Intent abrirCont = new Intent(MenuP.this, ConfConta.class);
+                Publico.Intente(MenuP.this, ConfConta.class);
+                invalidateOptionsMenu();
                 finish();
-                startActivity(abrirCont);
             }
         } else  if(id == R.id.nav_sair){
             //Deslogar
             Conexao.deslogar();
-            Intent abrirLogin = new Intent(MenuP.this, FormularioLogin.class);
-            startActivity(abrirLogin);
+            Publico.Intente(MenuP.this, FormularioLogin.class);
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

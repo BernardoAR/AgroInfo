@@ -2,7 +2,6 @@ package com.br.agroinfo;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -15,10 +14,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
@@ -72,17 +71,33 @@ public class CadastrosOpcionais extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                alerta("Cadastrado completamente com Sucesso!");
+                                Publico.Alerta(CadastrosOpcionais.this, "Cadastrado completamente com Sucesso!");
                             }
                         }
                     });
-                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
-                    finish();
-                    Intent abrirLogin = new Intent(CadastrosOpcionais.this, MenuP.class);
-                    startActivity(abrirLogin);
+                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Publico.Intente(CadastrosOpcionais.this, MenuP.class);
+                            finish();
+                        }
+                    });
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        verificaUsuario();
+    }
+
+    private void verificaUsuario() {
+        if (FormularioLogin.autent.getCurrentUser() == null){
+            Publico.Intente(CadastrosOpcionais.this, FormularioLogin.class);
+            finish();
+        }
     }
 
     //Excluir o Criado
@@ -103,15 +118,20 @@ public class CadastrosOpcionais extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    alerta("Conta deletada com Sucesso!");
+                                    Publico.Alerta(CadastrosOpcionais.this, "Conta deletada com Sucesso!");
+                                    Publico.Intente(CadastrosOpcionais.this, FormularioLogin.class);
                                     finish();
-                                    Intent abrirFormC = new Intent(CadastrosOpcionais.this, FormularioLogin.class);
-                                    startActivity(abrirFormC);
                                 } else {
-                                    alerta("Não foi possível excluir, tente novamente mais tarde");
+                                    Publico.Alerta(CadastrosOpcionais.this, "Não foi possível excluir, tente novamente mais tarde");
+                                    finish();
                                 }
                             }
                         });
+            }
+        });
+        dialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
         });
         dialog.show();
@@ -126,16 +146,12 @@ public class CadastrosOpcionais extends AppCompatActivity {
             return;
         }
         if (!algSelect()){
-            alerta("Marque um dos dois campos");
+            Publico.Alerta(CadastrosOpcionais.this, "Marque um dos dois campos");
         }
         if (!algSelect2()){
-            alerta("Cliente não possui os campos Endereço e Telefone");
+            Publico.Alerta(CadastrosOpcionais.this, "Cliente não possui os campos Endereço e Telefone");
         }
         textNome.setErrorEnabled(false);
-    }
-
-    private void alerta(String mensagem) {
-        Toast.makeText(CadastrosOpcionais.this, mensagem, Toast.LENGTH_SHORT).show();
     }
 
     private boolean checaNome(){
@@ -154,22 +170,14 @@ public class CadastrosOpcionais extends AppCompatActivity {
         String Telefone, Endereco;
         Telefone = edtTelefone.getText().toString();
         Endereco = edtEndereco.getText().toString();
-        if (((pressionado == 2) && ((!Telefone.trim().isEmpty()) || (!Endereco.trim().isEmpty())))){
-            return false;
-        } else {
-            return true;
-        }
+        return !((pressionado == 2) && ((!Telefone.trim().isEmpty()) || (!Endereco.trim().isEmpty())));
     }
     private static int pressionado;
     public boolean algSelect(){
         if (pressionado == 1){
             return true;
         } else
-        if (pressionado == 2){
-            return true;
-        } else {
-            return false;
-        }
+            return pressionado == 2;
     }
 
     //SOMENTE PUBLIC E VOID PARA FUNCIONAR

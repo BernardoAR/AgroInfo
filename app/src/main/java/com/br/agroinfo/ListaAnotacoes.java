@@ -39,9 +39,9 @@ public class ListaAnotacoes extends AppCompatActivity {
         // configurar a acao de click
         btnNovaAn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirNova_anotacao = new Intent(ListaAnotacoes.this, NovaAnotacao.class);
+                Publico.Intente(ListaAnotacoes.this, NovaAnotacao.class);
                 // solicitar para abir
-                startActivity(abrirNova_anotacao);
+                finish();
 
             }
         });
@@ -56,6 +56,7 @@ public class ListaAnotacoes extends AppCompatActivity {
                 abrirEdicao.putExtra("Anotacao-enviada",anotacaoEnviada);
                 // solicitar para abir
                 startActivity(abrirEdicao);
+                finish();
             }
         });
     }
@@ -63,8 +64,8 @@ public class ListaAnotacoes extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(ListaAnotacoes.this, MenuP.class);
-        startActivity(i);
+        Publico.Intente(ListaAnotacoes.this, MenuP.class);
+        finish();
     }
     // Pegar os Valores
     private void populaLista() {

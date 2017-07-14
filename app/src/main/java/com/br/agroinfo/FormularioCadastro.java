@@ -1,7 +1,6 @@
 package com.br.agroinfo;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.Toast;
 
 import com.br.agroinfo.dao.Conexao;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -77,8 +75,8 @@ public class FormularioCadastro extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(FormularioCadastro.this, FormularioLogin.class);
-        startActivity(i);
+        Publico.Intente(FormularioCadastro.this, FormularioLogin.class);
+        finish();
     }
 
     private void criarUsuario(String email, String senha) {
@@ -87,12 +85,12 @@ public class FormularioCadastro extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            alerta("Usuário Cadastrado com Sucesso");
+                            Publico.Alerta(FormularioCadastro.this, "Usuário Cadastrado com Sucesso");
                             limpaCampos();
                             Conexao.deslogar();
                             finish();
                         } else {
-                            alerta("Erro de Cadastro, e-mail existente");
+                            Publico.Alerta(FormularioCadastro.this, "Erro de Cadastro, e-mail existente");
                         }
                     }
                 });
@@ -104,10 +102,6 @@ public class FormularioCadastro extends Activity {
         edtConfSenha.setText("");
     }
 
-    // ALERTA
-    private void alerta(String mensagem) {
-        Toast.makeText(FormularioCadastro.this, mensagem, Toast.LENGTH_SHORT).show();
-    }
 
     // Ver se tudo está correto nos preenchimentos
     private void submForm() {

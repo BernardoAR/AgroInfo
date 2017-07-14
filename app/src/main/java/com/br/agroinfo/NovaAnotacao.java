@@ -1,7 +1,6 @@
 package com.br.agroinfo;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import com.br.agroinfo.modelo.Anotacao;
 
@@ -71,7 +70,8 @@ public class NovaAnotacao extends AppCompatActivity {
                     a.setNovo_assunto(data.replace('/', '-') + " - " + assunto);
                     a.setNova_anotacao(anotacao);
                     FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
-                    alerta("Salvado com Sucesso");
+                    Publico.Alerta(NovaAnotacao.this, "Salvado com Sucesso");
+                    Publico.Intente(NovaAnotacao.this, ListaAnotacoes.class);
                     limparCampos();
                     finish();
                 }
@@ -83,13 +83,10 @@ public class NovaAnotacao extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(NovaAnotacao.this, ListaAnotacoes.class);
-        startActivity(i);
+        Publico.Intente(NovaAnotacao.this, ListaAnotacoes.class);
+        finish();
     }
 
-    private void alerta(String mensagem) {
-        Toast.makeText(NovaAnotacao.this, mensagem, Toast.LENGTH_SHORT).show();
-    }
 
     private void limparCampos() {
         edtNovaAn.setText("");
