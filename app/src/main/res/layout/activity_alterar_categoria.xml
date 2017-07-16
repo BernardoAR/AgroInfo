@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:gravity="center"
-        android:text="Alterar Categria"
+        android:text="Alterar Categoria"
         android:textSize="30sp"
         android:layout_height="wrap_content" />
 

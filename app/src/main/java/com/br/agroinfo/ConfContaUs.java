@@ -121,7 +121,6 @@ public class ConfContaUs extends AppCompatActivity {
                     }
                 }
         });
-
     }
     @Override
     public void onBackPressed() {

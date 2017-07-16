@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="fill_parent"
         android:gravity="center"
-        android:text="Nova Categria"
+        android:text="Nova Categoria"
         android:textSize="30sp"
         android:layout_height="wrap_content" />
 

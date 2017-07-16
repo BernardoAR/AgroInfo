@@ -79,6 +79,7 @@ public class NovaCategoria extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                listCategoria.clear();
                 for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
                     Categoria c = objSnapshot.getValue(Categoria.class);
                     listCategoria.add(c);

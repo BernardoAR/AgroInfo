@@ -1,5 +1,7 @@
 package com.br.agroinfo;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -102,31 +104,53 @@ public class AlterarProduto extends AppCompatActivity {
         btnExcluirProd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
-                        .orderByChild("Id_produto").equalTo(altproduto.getId_produto());
-                vendas.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
-                            objSnapshot.getRef().setValue(null);
-                        }
-                        FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                                .child(altproduto.getId_produto()).removeValue();
-                        alerta("Excluído com Sucesso");
-                        limpaCampos();
-                        Publico.Intente(AlterarProduto.this, ListaProdutos.class);
-                        finish();
+                AlertDialog.Builder dialogo = new AlertDialog.Builder(AlterarProduto.this);
+                dialogo.setCancelable(false);
+                dialogo.setTitle("AgroInfo");
+                dialogo.setMessage("Você tem certeza que quer excluir o Produto? Além do produto, as vendas desse produto também serão excluídas!");
+                dialogo.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletarProduto();
+                        dialog.cancel();
                     }
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {}
                 });
+                dialogo.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog dialogos = dialogo.create();
+                dialogos.show();
             }
+        });
+    }
+
+    private void deletarProduto() {
+        Query vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+                .orderByChild("Id_produto").equalTo(altproduto.getId_produto());
+        vendas.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()){
+                    for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
+                        objSnapshot.getRef().setValue(null);
+                    }
+                }
+                FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                        .child(altproduto.getId_produto()).removeValue();
+                alerta("Excluído com Sucesso");
+                limpaCampos();
+                Publico.Intente(AlterarProduto.this, ListaProdutos.class);
+                finish();
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
