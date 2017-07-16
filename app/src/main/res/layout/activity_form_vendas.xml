@@ -32,7 +32,6 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:ems="10"
-           android:inputType="number"
            android:hint="Quantidade total:"
            android:textSize="18sp"/>
        <TextView
@@ -40,7 +39,6 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:ems="10"
-           android:inputType="number"
            android:hint="Preço:"
            android:textSize="18sp"/>
        <android.support.design.widget.TextInputLayout

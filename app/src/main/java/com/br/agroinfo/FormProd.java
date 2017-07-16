@@ -23,7 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -164,13 +163,6 @@ public class FormProd extends AppCompatActivity {
         edtDataCadastro.setText("");
     }
 
-
-    // Fazer com que fique com duas decimais FORÇADAMENTE
-    public static BigDecimal casas(float d) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-        return bd;
-    }
     //Void para ver todos
     private void submForm() {
         if (!checaNomeProd()) {

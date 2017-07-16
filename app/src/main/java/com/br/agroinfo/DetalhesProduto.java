@@ -48,7 +48,7 @@ public class DetalhesProduto extends AppCompatActivity {
                 textQuantidadeDisp.setText(possEst);
             }
             float precoVenda = mostraProduto.getPrecoVenda();
-            precoVendas = FormProd.casas(precoVenda);
+            precoVendas = Publico.Casas(precoVenda);
             textPrecoVenda.setText("Preço de Venda: " + String.valueOf(precoVendas) + "R$");
             pegaDadoExt();
         }

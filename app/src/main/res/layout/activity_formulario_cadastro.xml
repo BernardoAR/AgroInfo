@@ -18,7 +18,7 @@
             android:layout_width="fill_parent"
             android:gravity="center"
             android:layout_height="wrap_content"
-            android:textSize="30dp"
+            android:textSize="30sp"
             android:text="Cadastre-se" />
 
         <android.support.design.widget.TextInputLayout

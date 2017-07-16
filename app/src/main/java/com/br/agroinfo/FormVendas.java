@@ -81,7 +81,7 @@ public class FormVendas extends AppCompatActivity {
                 int quantidade = Integer.valueOf(quant);
                 precoFinalV = precoVenda * quantidade;
                 precoFinalC = precoCusto * quantidade;
-                precoF = FormProd.casas(precoFinalV);
+                precoF = Publico.Casas(precoFinalV);
                 textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
             }
         });
@@ -135,7 +135,7 @@ public class FormVendas extends AppCompatActivity {
                 precoCusto = item.getPrecoCusto();
                 precoVenda = item.getPrecoVenda();
                 dataC = item.getDataCadastro();
-                preco = FormProd.casas(precoVenda);
+                preco = Publico.Casas(precoVenda);
                 quantT = ("Quantidade Total: " + String.valueOf(total));
                 textQuanti.setText(quantT);
                 textPreco.setText("Preço: " + String.valueOf(preco) + " R$");

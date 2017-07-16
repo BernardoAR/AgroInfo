@@ -20,7 +20,6 @@ public class DetalhesVenda extends AppCompatActivity {
 
     TextView textProd, textPreco, textQuantV, textMes, textAno;
     Vendas altvenda;
-    Produto produto;
     BigDecimal precoV;
     Button btnExcluirVenda;
     String id_prod, id_Produ, nome_prod, nome_Produ;
@@ -32,7 +31,6 @@ public class DetalhesVenda extends AppCompatActivity {
         setContentView(R.layout.activity_detalhes_venda);
         Intent abrirEdicao = getIntent();
         altvenda = (Vendas) abrirEdicao.getSerializableExtra("Venda-enviada");
-        produto = new Produto();
 
         //resgatar os componentes
         btnExcluirVenda = (Button) findViewById(R.id.btnExcluirVenda);
@@ -48,7 +46,7 @@ public class DetalhesVenda extends AppCompatActivity {
             quantV = ("Quantidade da venda: " + altvenda.getQuant_venda());
             textAno.setText(ano);
             textMes.setText(mes);
-            precoV = FormProd.casas(altvenda.getPreco_venda());
+            precoV = Publico.Casas(altvenda.getPreco_venda());
             textPreco.setText("Preço Venda: " + String.valueOf(precoV) + "R$");
             textQuantV.setText(quantV);
         }

@@ -82,7 +82,7 @@ public class Rendimentos extends AppCompatActivity {
             @Override
             public void onValueSelected(Entry e, Highlight h) {
                 if (e == null) return;
-                BigDecimal casa = FormProd.casas(e.getY());
+                BigDecimal casa = Publico.Casas(e.getY());
                 Publico.Alerta(Rendimentos.this, String.valueOf(casa) + "R$");
             }
             @Override

@@ -31,7 +31,6 @@ public class AlterarProduto extends AppCompatActivity {
     EditText edtNomeProd, edtPrecoCusto, edtPrecoVenda, edtQuantidade;
     TextView textCateg;
     Produto altproduto;
-    Categoria categoria;
     Button btnSalvarProd, btnExcluirProd;
     TextInputLayout textPrecoCus, textPrecoVen, textNomeProd, textQuant;
     Vibrator vib;
@@ -45,7 +44,6 @@ public class AlterarProduto extends AppCompatActivity {
         setContentView(R.layout.activity_alterar_produto);
         Intent abrirEdicao = getIntent();
         altproduto = (Produto) abrirEdicao.getSerializableExtra("Produto-enviado");
-        categoria = new Categoria();
 
         //resgatar os componentes
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
@@ -65,8 +63,8 @@ public class AlterarProduto extends AppCompatActivity {
             BigDecimal precoC, precoV;
             float pC = altproduto.getPrecoCusto();
             float pV = altproduto.getPrecoVenda();
-            precoC = casas(pC, 2);
-            precoV = casas(pV, 2);
+            precoC = Publico.Casas(pC);
+            precoV = Publico.Casas(pV);
             edtNomeProd.setText(altproduto.getNomeProduto());
             edtPrecoCusto.setText(String.valueOf(precoC));
             edtPrecoVenda.setText(String.valueOf(precoV));
@@ -208,15 +206,10 @@ public class AlterarProduto extends AppCompatActivity {
                 });
     }
     private void colocaNomeCateg(){
-        textCateg.setText("Categoria: " + getNome_Catego());
+        String textoCateg = ("Categoria: " + getNome_Catego());
+        textCateg.setText(textoCateg);
     }
 
-    // Fazer com que fique com duas decimais FORÇADAMENTE
-    public static BigDecimal casas(float d, int casasDec) {
-        BigDecimal bd = new BigDecimal(Float.toString(d));
-        bd = bd.setScale(casasDec, BigDecimal.ROUND_HALF_UP);
-        return bd;
-    }
     //Void para ver todos
     private void submForm() {
         if (!checaNomeProd()) {
