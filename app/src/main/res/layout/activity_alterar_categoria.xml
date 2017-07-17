@@ -2,40 +2,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.br.agroinfo.ListaAnotacoes"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:gravity="center"
-        android:text="Alterar Categoria"
-        android:textSize="30sp"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/alteracaoCat"
+    <include
+        layout="@layout/barra_ferr"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Nome da Categoria"
-        android:layout_marginTop="20dp"
-        android:inputType="textPersonName" />
+        android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/btnSalvarCategoria"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Salvar Categoria" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <Button
-        android:id="@+id/btnExcluirCategoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Excluir Categoria" />
+        <EditText
+            android:id="@+id/alteracaoCat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nome da Categoria"
+            android:layout_marginTop="20dp"
+            android:inputType="textPersonName" />
 
+        <Button
+            android:id="@+id/btnSalvarCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Salvar Categoria" />
+
+        <Button
+            android:id="@+id/btnExcluirCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Excluir Categoria" />
+    </LinearLayout>
 
 </LinearLayout>

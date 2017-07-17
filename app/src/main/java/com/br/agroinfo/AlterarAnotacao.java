@@ -3,9 +3,11 @@ package com.br.agroinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.br.agroinfo.modelo.Anotacao;
 
@@ -21,6 +23,11 @@ public class AlterarAnotacao extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alterar_anotacao);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("Alterar Anotação");
 
         Intent abrirEdicao = getIntent();
         altanotacao = (Anotacao) abrirEdicao.getSerializableExtra("Anotacao-enviada");

@@ -1,9 +1,12 @@
 package com.br.agroinfo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,23 +14,33 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
 import com.br.agroinfo.dao.Conexao;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FormularioLogin extends Activity {
+public class FormularioLogin extends AppCompatActivity {
 
     //Criando os objetos necessários
-
+    private SignInButton btnLogGoogle;
     EditText edtEmail, edtSenha;
     Button btnLogin, btnCadastrar;
     public static FirebaseAuth autent;
@@ -35,24 +48,55 @@ public class FormularioLogin extends Activity {
     public static FirebaseDatabase firebaseDatabase;
     public static DatabaseReference databaseReference;
     boolean existe1, existe;
+    public static boolean googleL;
     TextView textResetarSenha;
     String email, senha;
     //Chamado serve para ver se a persistência já foi chamada
     public static boolean chamado = false;
+    private static final int RC_SIGN_IN = 1;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String TAG = "Activity_Normal";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_login);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("AgroInfo - Entrar");
         //Vinculando os objetos aos IDs
         edtEmail = (EditText) findViewById(R.id.editEmail);
         edtSenha = (EditText) findViewById(R.id.editSenha);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         textResetarSenha = (TextView) findViewById(R.id.textResetarSenha);
-
+        btnLogGoogle = (SignInButton) findViewById(R.id.btnLogGoogle);
         // Request Focus para os edittexts
         edtEmail.requestFocus();
         edtSenha.requestFocus();
+
+        // SIGNIN GOOGLE
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Publico.Alerta(FormularioLogin.this, "Erro");
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+        btnLogGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logar();
+            }
+        });
         //Programando o Botão para realizar Login
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -63,6 +107,7 @@ public class FormularioLogin extends Activity {
                 senha = edtSenha.getText().toString().trim();
                 if (((email != null) && (!email.isEmpty())) && ((senha != null) && (!senha.isEmpty()))) {
                     login(email, senha);
+                    googleL = false;
                 } else {
                     Publico.Alerta(FormularioLogin.this, "Algum dos campos está vazio");
                 }
@@ -85,6 +130,49 @@ public class FormularioLogin extends Activity {
         });
     }
 
+    //LOGAR GOOGLE
+    private void logar() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            if (result.isSuccess()) {
+                // Se foi com sucesso, logar
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount conta) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + conta.getId());
+
+        AuthCredential credential = GoogleAuthProvider.getCredential(conta.getIdToken(), null);
+        autent.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Publico.Alerta(FormularioLogin.this, "Autenticação Falhou");
+                        } else {
+                            usuario = Conexao.getFirebaseUser();
+                            googleL = true;
+                            TestaDados();
+                        }
+                        // ...
+                    }
+                });
+    }
+
+    //
     private void inicializarFirebase() {
         FirebaseApp.initializeApp(FormularioLogin.this);
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -140,7 +228,10 @@ public class FormularioLogin extends Activity {
                 if (existe){
                     Publico.Intente(FormularioLogin.this, MenuP.class);
                     finish();
-                } else {
+                } else if (!existe && !googleL){
+                    Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
+                    finish();
+                } else if (!existe && googleL) {
                     Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
                     finish();
                 }

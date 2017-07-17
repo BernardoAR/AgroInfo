@@ -29,6 +29,9 @@ public class MenuP extends AppCompatActivity
         setContentView(R.layout.activity_menu_p);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("Menu Principal");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

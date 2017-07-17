@@ -4,9 +4,9 @@
     package="com.br.agroinfo">
 
     <supports-screens
+        android:compatibleWidthLimitDp="320"
         android:largeScreens="false"
-        android:xlargeScreens="false"
-        android:compatibleWidthLimitDp="320" />
+        android:xlargeScreens="false" />
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,10 +19,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        tools:replace="android:label">
+        tools:replace="android:label" >
         <activity
             android:name=".FormularioLogin"
-            android:label="@string/title_activity_login"
             android:windowSoftInputMode="stateAlwaysVisible">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,11 +30,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FormularioCadastro"
-            android:label="@string/title_activity_cadastro" />
+            android:name=".FormularioCadastro" />
         <activity
             android:name=".MenuP"
-            android:label=""
             android:launchMode="singleInstance" />
         <activity android:name=".FormProd" />
         <activity android:name=".ConfConta" />
@@ -57,7 +54,6 @@
         <activity android:name=".Rendimentos" />
         <activity android:name=".ListaVendas" />
         <activity android:name=".DetalhesVenda" />
-
     </application>
 
 </manifest>

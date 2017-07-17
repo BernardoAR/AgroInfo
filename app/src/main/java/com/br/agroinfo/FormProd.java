@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -46,7 +48,11 @@ public class FormProd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form_prod);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("Novo Produto");
         // Pega as partes do Layout
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
         spnCateg = (Spinner) findViewById(R.id.spnCateg);
@@ -221,7 +227,7 @@ public class FormProd extends AppCompatActivity {
         }
         if(quant < 1){
             textQuant.setErrorEnabled(true);
-            textQuant.setError("Indique a edtQuantidade, sendo maior que 0");
+            textQuant.setError("Indique a Quantidade, sendo maior que 0");
             edtQuantidade.setError("Necessita de Entrada Válida");
             return false;
         }

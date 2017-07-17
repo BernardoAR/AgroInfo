@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -16,13 +18,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.br.agroinfo.dao.Conexao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
-public class FormularioCadastro extends Activity {
+public class FormularioCadastro extends AppCompatActivity {
     private Vibrator vib;
     Animation animBalanc;
     TextInputLayout textEmail_Layout, textSenha_Layout ,textConfirmar_Senha_Layout;
@@ -36,6 +39,11 @@ public class FormularioCadastro extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_cadastro);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("Cadastre-se");
 
         //Resgatar componentes do Layout de texto
         textEmail_Layout = (TextInputLayout) findViewById(R.id.textEmail_Layout);
@@ -161,7 +169,7 @@ public class FormularioCadastro extends Activity {
     }
 
     //Checar certas variáveis acima
-    private static boolean eValido(String email){
+    public static boolean eValido(String email){
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
     private void requestFocus(View view){

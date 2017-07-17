@@ -9,41 +9,55 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        <TextView
-            android:id="@+id/textNomeProduto"
+        <include
+            layout="@layout/barra_ferr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nome do Produto: "
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/textPrecoVenda"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Preço de Venda: "
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/textQuantidadeDisp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Possui Estoque: "
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/textNomeEmp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Empresário/Vendedor: "
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/textEndereco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Endereço:"
-            android:textSize="20sp"/>
-        <TextView
-            android:id="@+id/textTelefoneCont"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Telefone: "
-            android:textSize="20sp"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+            <TextView
+                android:id="@+id/textNomeProduto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nome do Produto: "
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/textPrecoVenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Preço de Venda: "
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/textQuantidadeDisp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Possui Estoque: "
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/textNomeEmp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Empresário/Vendedor: "
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/textEndereco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Endereço:"
+                android:textSize="20sp"/>
+            <TextView
+                android:id="@+id/textTelefoneCont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Telefone: "
+                android:textSize="20sp"/>
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

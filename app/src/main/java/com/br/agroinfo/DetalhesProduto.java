@@ -3,6 +3,7 @@ package com.br.agroinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.br.agroinfo.modelo.Produto;
@@ -24,6 +25,11 @@ public class DetalhesProduto extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhes_produto);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
+        titulo.setText("Detalhes do Produto");
         Intent abrirVisualizacao = getIntent();
         mostraProduto = (Produto) abrirVisualizacao.getSerializableExtra("Produto-enviado");
 
