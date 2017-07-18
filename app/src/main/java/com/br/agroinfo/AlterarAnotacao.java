@@ -27,7 +27,9 @@ public class AlterarAnotacao extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Alterar Anotação");
+        titulo.setText("ALTERAR ANOTAÇÃO");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent abrirEdicao = getIntent();
         altanotacao = (Anotacao) abrirEdicao.getSerializableExtra("Anotacao-enviada");
@@ -69,6 +71,12 @@ public class AlterarAnotacao extends AppCompatActivity {
                 finish();
             }
         });
+    }
+    // Função do botão voltar
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

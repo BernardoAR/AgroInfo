@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.br.agroinfo.modelo.Categoria;
@@ -52,7 +51,10 @@ public class FormProd extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Novo Produto");
+        titulo.setText("NOVO PRODUTO");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         // Pega as partes do Layout
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
         spnCateg = (Spinner) findViewById(R.id.spnCateg);
@@ -94,7 +96,7 @@ public class FormProd extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 submForm();
-                if (checaNumC() && checaNumV() && checaNomeProd() && checaQuant() && checaData()){
+                if ( checaCategoria() && checaNomeProd() && checaNumC() && checaNumV() &&  checaQuant() && checaData()){
                     // Método para Conversão de Float
                     Float precoC = Float.valueOf(edtPrecoCusto.getText().toString());
                     Float precoV = Float.valueOf(edtPrecoVenda.getText().toString());
@@ -136,10 +138,6 @@ public class FormProd extends AppCompatActivity {
                 Categoria item = (Categoria) parent.getItemAtPosition(pos);
                 String valor = item.getNova_categoria();
                 valorId = item.getId_categoria();
-                Toast tempo2 = Toast.makeText(FormProd.this,valor,Toast.LENGTH_SHORT);
-                tempo2.show();
-                Toast tempo = Toast.makeText(FormProd.this,String.valueOf(valorId),Toast.LENGTH_SHORT);
-                tempo.show();
             }
 
             @Override
@@ -147,6 +145,11 @@ public class FormProd extends AppCompatActivity {
                 // Faz Nada
             }
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -171,6 +174,10 @@ public class FormProd extends AppCompatActivity {
 
     //Void para ver todos
     private void submForm() {
+        if (!checaCategoria()){
+            Publico.Alerta(FormProd.this, "Não possui categoria correspondente");
+            return;
+        }
         if (!checaNomeProd()) {
             edtNomeProd.setAnimation(animBalanc);
             edtNomeProd.startAnimation(animBalanc);
@@ -206,6 +213,13 @@ public class FormProd extends AppCompatActivity {
         textPrecoV.setErrorEnabled(false);
         textQuant.setErrorEnabled(false);
         textDataCLayout.setErrorEnabled(false);
+    }
+
+    private boolean checaCategoria() {
+        if (valorId == null){
+            return false;
+        }
+        return true;
     }
 
     private boolean checaNomeProd(){

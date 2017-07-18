@@ -33,7 +33,10 @@ public class ListaVendas extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Vendas");
+        titulo.setText("VENDAS");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         populaLista();
         // pega o botao
         btnNovaVenda = (Button) findViewById(R.id.btnNovaVenda);
@@ -45,9 +48,7 @@ public class ListaVendas extends AppCompatActivity {
         // configurar a acao de click
         btnNovaVenda.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent abrirFormVendas = new Intent(ListaVendas.this, FormVendas.class);
-                // solicitar para abir
-                startActivity(abrirFormVendas);
+                Publico.Intente(ListaVendas.this, FormVendas.class);
                 finish();
 
             }
@@ -91,6 +92,12 @@ public class ListaVendas extends AppCompatActivity {
                     }
 
                 });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
@@ -58,7 +57,9 @@ public class FormVendas extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Nova Venda");
+        titulo.setText("NOVA VENDA");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         inicFirebase();
         //Chamar Componentes
         btnCalcular = (Button) findViewById(R.id.btnCalcular);
@@ -116,7 +117,6 @@ public class FormVendas extends AppCompatActivity {
                                        int pos, long id) {
                 // Pegar ID e o Valor do Produto, forçar para que o Spinner pegue
                 posicaoMes = spnMes.getSelectedItemPosition();
-                Toast.makeText(FormVendas.this, String.valueOf(posicaoMes), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -145,10 +145,6 @@ public class FormVendas extends AppCompatActivity {
                 quantT = ("Quantidade Total: " + String.valueOf(total));
                 textQuanti.setText(quantT);
                 textPreco.setText("Preço: " + String.valueOf(preco) + " R$");
-                Toast tempo2 = Toast.makeText(FormVendas.this,valor,Toast.LENGTH_SHORT);
-                tempo2.show();
-                Toast tempo = Toast.makeText(FormVendas.this,String.valueOf(valorId),Toast.LENGTH_SHORT);
-                tempo.show();
             }
 
             @Override
@@ -162,6 +158,11 @@ public class FormVendas extends AppCompatActivity {
         arrayAdapterMes = new ArrayAdapter<>(FormVendas.this,android.R.layout.simple_spinner_item, datas);
         arrayAdapterMes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnMes.setAdapter(arrayAdapterMes);
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -206,7 +207,6 @@ public class FormVendas extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         id_categ = dataSnapshot.getValue().toString();
-                        Toast.makeText(FormVendas.this,"PegaVCategoria:" + id_categ, Toast.LENGTH_SHORT).show();
                         setCatego(id_categ);
                         salvarCateg();
                     }

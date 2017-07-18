@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.br.agroinfo.dao.Conexao;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 public class MenuP extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     TextView textNomeUsuario;
+    WebView textoBV;
     boolean escolha;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class MenuP extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Menu Principal");
+        titulo.setText("MENU PRINCIPAL");
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -48,7 +50,7 @@ public class MenuP extends AppCompatActivity
 
         //Com o ID já pego, pegar o edtNome que possui nesse id
         textNomeUsuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
-
+        textoBV = (WebView) findViewById(R.id.textoBV);
     }
     // PEGAR A CATEGORIA
     private void pegaNomeeEsc() {
@@ -61,8 +63,13 @@ public class MenuP extends AppCompatActivity
                             Usuario u = dataSnapshot.getValue(Usuario.class);
                             escolha = u.getEscolha();
                             textNomeUsuario.setText(u.getNome().toUpperCase());
-                        } else {
-                            Publico.Alerta(MenuP.this, "Está vindo para cá");
+                            if (escolha){
+                                String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é sua área administrativa, nela você terá total controle e autonomia para gerenciar seu negócio. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
+                                textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
+                            } else {
+                                String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é a sua área do cliente onde você terá a possibilidade de pesquisar por produtos em estabelecimentos com os melhores preços para você. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
+                                textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
+                            }
                         }
                     }
                     @Override
@@ -82,7 +89,6 @@ public class MenuP extends AppCompatActivity
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();
-        Publico.Alerta(MenuP.this, String.valueOf(escolha));
         // Preparar todos
         MenuItem anotacoes = menu.findItem(R.id.nav_anotacoes);
         MenuItem produtos = menu.findItem(R.id.nav_prod);

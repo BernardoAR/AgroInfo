@@ -58,7 +58,10 @@ public class Rendimentos extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Rendimentos");
+        titulo.setText("RENDIMENTO MENSAL");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         spnMes = (Spinner) findViewById(R.id.spnMes);
         edtAno = (EditText) findViewById(R.id.edtAno);
         btnChecRend = (Button) findViewById(R.id.btnChecRend);
@@ -76,7 +79,6 @@ public class Rendimentos extends AppCompatActivity {
                                        int pos, long id) {
                 // Pegar ID e o Valor do Produto, forçar para que o Spinner pegue
                 posicaoMes = spnMes.getSelectedItemPosition();
-                Publico.Alerta(Rendimentos.this, String.valueOf(posicaoMes));
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -205,6 +207,12 @@ public class Rendimentos extends AppCompatActivity {
         textAno.setErrorEnabled(false);
         return true;
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

@@ -38,7 +38,9 @@ public class NovaCategoria extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Nova Categoria");
+        titulo.setText("NOVA CATEGORIA");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         populaLista();
 
         //Resgatar Componentes
@@ -72,6 +74,11 @@ public class NovaCategoria extends AppCompatActivity {
                 edtNovaCat.setText("");
             }
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

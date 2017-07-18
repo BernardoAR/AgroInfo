@@ -7,9 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.br.agroinfo.modelo.Produto;
 import com.br.agroinfo.modelo.Vendas;
 
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +31,10 @@ public class DetalhesVenda extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Detalhes da Venda");
+        titulo.setText("DETALHES DA VENDA");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         Intent abrirEdicao = getIntent();
         altvenda = (Vendas) abrirEdicao.getSerializableExtra("Venda-enviada");
 
@@ -68,6 +68,11 @@ public class DetalhesVenda extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
     @Override
     public void onBackPressed() {
@@ -83,7 +88,6 @@ public class DetalhesVenda extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         id_prod = dataSnapshot.getValue().toString();
                         setId_Produ(id_prod);
-                        Toast.makeText(DetalhesVenda.this,"PegaVProduto:" + id_prod, Toast.LENGTH_SHORT).show();
                         categorias();
                     }
                     @Override
@@ -94,7 +98,6 @@ public class DetalhesVenda extends AppCompatActivity {
     }
 
     private void categorias() {
-        Toast.makeText(DetalhesVenda.this,"PegaPProduro:" + getId_Produ(), Toast.LENGTH_SHORT).show();
         FormularioLogin.databaseReference.child("Produto").child("Produtos").child(getId_Produ()).child("nomeProduto")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -102,7 +105,6 @@ public class DetalhesVenda extends AppCompatActivity {
                         nome_prod = dataSnapshot.getValue().toString();
                         setNome_Produ(nome_prod);
                         colocaNomeProdu();
-                        Toast.makeText(DetalhesVenda.this,nome_prod, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

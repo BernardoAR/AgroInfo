@@ -42,7 +42,9 @@ public class CadastrosOpcionais extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Outros Cadastros");
+        titulo.setText("OUTROS CADASTROS");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Resgatar componentes
         textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
         textNome = (TextInputLayout) findViewById(R.id.textNome);
@@ -78,17 +80,11 @@ public class CadastrosOpcionais extends AppCompatActivity {
                     }
                     UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
                             .setDisplayName(nome).build();
-                    FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                Publico.Alerta(CadastrosOpcionais.this, "Cadastrado completamente com Sucesso!");
-                            }
-                        }
-                    });
+                    FormularioLogin.usuario.updateProfile(atualizaPerfil);
                     FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Publico.Alerta(CadastrosOpcionais.this, "Cadastrado completamente com Sucesso!");
                             Publico.Intente(CadastrosOpcionais.this, MenuP.class);
                             finish();
                         }
@@ -98,6 +94,11 @@ public class CadastrosOpcionais extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
     @Override
     protected void onStart() {
         super.onStart();

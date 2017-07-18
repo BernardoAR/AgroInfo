@@ -47,9 +47,7 @@
         <activity android:name=".FormVendas" />
         <activity android:name=".ConfContaUs" />
         <activity android:name=".DetalhesProduto" />
-        <activity
-            android:name=".CadastrosOpcionais"
-            android:launchMode="singleInstance" />
+        <activity android:name=".CadastrosOpcionais" />
         <activity android:name=".ResetarSenha" />
         <activity android:name=".Rendimentos" />
         <activity android:name=".ListaVendas" />

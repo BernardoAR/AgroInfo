@@ -1,6 +1,7 @@
 package com.br.agroinfo;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.br.agroinfo.modelo.Categoria;
 import com.br.agroinfo.modelo.Produto;
@@ -47,9 +48,11 @@ public class AlterarProduto extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Alterar Produto");
+        titulo.setText("ALTERAR PRODUTO");
         Intent abrirEdicao = getIntent();
         altproduto = (Produto) abrirEdicao.getSerializableExtra("Produto-enviado");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //resgatar os componentes
         edtNomeProd = (EditText) findViewById(R.id.edtNomeProd);
@@ -59,6 +62,8 @@ public class AlterarProduto extends AppCompatActivity {
         btnSalvarProd = (Button) findViewById(R.id.btnSalvarProd);
         btnExcluirProd = (Button) findViewById(R.id.btnExcluirProd);
         textCateg = (TextView) findViewById(R.id.textCateg);
+        animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
+        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         // Layout
         textPrecoCus = (TextInputLayout) findViewById(R.id.textPrecoCus);
         textPrecoVen = (TextInputLayout) findViewById(R.id.textPrecoVen);
@@ -81,7 +86,7 @@ public class AlterarProduto extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 submForm();
-                if (checaNumC() && checaNumV() && checaNomeProd() && checaQuant()) {
+                if (checaNomeProd() && checaNumC() && checaNumV() && checaQuant()) {
                     Produto p = new Produto();
                     Categoria c = new Categoria();
                     p.setId_produto(altproduto.getId_produto());
@@ -97,7 +102,7 @@ public class AlterarProduto extends AppCompatActivity {
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
                     FormularioLogin.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
-                    alerta("Alterado com Sucesso");
+                    Publico.Alerta(AlterarProduto.this, "Alterado com Sucesso");
                     Publico.Intente(AlterarProduto.this, ListaProdutos.class);
                     limpaCampos();
                     finish();
@@ -111,7 +116,7 @@ public class AlterarProduto extends AppCompatActivity {
                 AlertDialog.Builder dialogo = new AlertDialog.Builder(AlterarProduto.this);
                 dialogo.setCancelable(false);
                 dialogo.setTitle("AgroInfo");
-                dialogo.setMessage("Você tem certeza que quer excluir o Produto? Além do produto, as vendas desse produto também serão excluídas!");
+                dialogo.setMessage("Você deseja realmente excluir o Produto? Além do produto, as vendas desse produto também serão excluídas!");
                 dialogo.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         deletarProduto();
@@ -142,7 +147,7 @@ public class AlterarProduto extends AppCompatActivity {
                 }
                 FormularioLogin.databaseReference.child("Produto").child("Produtos")
                         .child(altproduto.getId_produto()).removeValue();
-                alerta("Excluído com Sucesso");
+                Publico.Alerta(AlterarProduto.this, "Excluído com Sucesso");
                 limpaCampos();
                 Publico.Intente(AlterarProduto.this, ListaProdutos.class);
                 finish();
@@ -156,6 +161,11 @@ public class AlterarProduto extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -172,10 +182,6 @@ public class AlterarProduto extends AppCompatActivity {
         edtQuantidade.setText("");
     }
 
-    private void alerta(String mensagem) {
-        Toast.makeText(AlterarProduto.this, mensagem, Toast.LENGTH_SHORT).show();
-    }
-
     private void pegaVCategoria() {
         FormularioLogin.databaseReference.child("Produto").child("Produtos")
                 .child(altproduto.getId_produto()).child("Categoria")
@@ -184,7 +190,6 @@ public class AlterarProduto extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         id_categ = dataSnapshot.getValue().toString();
                         setId_Catego(id_categ);
-                        Toast.makeText(AlterarProduto.this,"PegaVCategoria:" + id_categ, Toast.LENGTH_SHORT).show();
                         categorias();
                     }
                     @Override
@@ -195,7 +200,6 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void categorias() {
-        Toast.makeText(AlterarProduto.this,"PegaCCategoria:" + getId_Catego(), Toast.LENGTH_SHORT).show();
         FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(getId_Catego()).child("nova_categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -203,7 +207,6 @@ public class AlterarProduto extends AppCompatActivity {
                         nome_categ = dataSnapshot.getValue().toString();
                         setNome_Catego(nome_categ);
                         colocaNomeCateg();
-                        Toast.makeText(AlterarProduto.this,nome_categ, Toast.LENGTH_SHORT).show();
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

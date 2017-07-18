@@ -32,7 +32,10 @@ public class ListaProdutos extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Produtos");
+        titulo.setText("PRODUTOS");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         populaLista();
         // pega o botao
         btnNovoProd = (Button) findViewById(R.id.btnNovoProd);
@@ -89,6 +92,11 @@ public class ListaProdutos extends AppCompatActivity {
             }
 
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

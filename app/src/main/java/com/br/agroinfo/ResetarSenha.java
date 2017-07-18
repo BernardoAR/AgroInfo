@@ -7,13 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 public class ResetarSenha extends AppCompatActivity {
-    TextInputEditText edtEmail;
+    EditText edtEmail;
     Button btnResetar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +24,20 @@ public class ResetarSenha extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Resetar Senha");
-        edtEmail = (TextInputEditText) findViewById(R.id.edtEmail);
+        titulo.setText("RESETAR SENHA");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        edtEmail = (EditText) findViewById(R.id.edtEmail);
         btnResetar = (Button) findViewById(R.id.btnResetar);
         eventoClique();
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

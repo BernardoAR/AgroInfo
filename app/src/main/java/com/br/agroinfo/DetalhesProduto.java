@@ -29,7 +29,10 @@ public class DetalhesProduto extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Detalhes do Produto");
+        titulo.setText("DETALHES DO PRODUTO");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         Intent abrirVisualizacao = getIntent();
         mostraProduto = (Produto) abrirVisualizacao.getSerializableExtra("Produto-enviado");
 
@@ -59,6 +62,12 @@ public class DetalhesProduto extends AppCompatActivity {
             pegaDadoExt();
         }
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

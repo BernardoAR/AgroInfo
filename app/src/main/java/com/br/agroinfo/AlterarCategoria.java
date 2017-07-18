@@ -33,7 +33,9 @@ public class AlterarCategoria extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Alterar Categoria");
+        titulo.setText("ALTERAR CATEGORIA");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         Intent abrirEdicao = getIntent();
         altcategoria = (Categoria) abrirEdicao.getSerializableExtra("Categoria-enviada");
@@ -68,7 +70,7 @@ public class AlterarCategoria extends AppCompatActivity {
                 AlertDialog.Builder dialogo = new AlertDialog.Builder(AlterarCategoria.this);
                 dialogo.setCancelable(false);
                 dialogo.setTitle("AgroInfo");
-                dialogo.setMessage("Você tem certeza que quer excluir a Categoria? Além da categoria, as vendas e os produtos incluídos na categoria também serão excluídas!");
+                dialogo.setMessage("Você deseja realmente excluir a Categoria? Além da categoria, as vendas e os produtos incluídos na categoria também serão excluídas!");
                 dialogo.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         deletarCategoria();
@@ -137,6 +139,11 @@ public class AlterarCategoria extends AppCompatActivity {
         edtAltCat.setText("");
         Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
         finish();
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

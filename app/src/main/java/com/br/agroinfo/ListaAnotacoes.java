@@ -3,7 +3,6 @@ package com.br.agroinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,7 +35,9 @@ public class ListaAnotacoes extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Anotações");
+        titulo.setText("ANOTAÇÕES");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Modificar na Nuvem e no Aplicativo
         populaLista();
         // pega o botao
@@ -73,6 +74,11 @@ public class ListaAnotacoes extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
         return true;
     }
     @Override

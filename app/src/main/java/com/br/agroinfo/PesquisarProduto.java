@@ -40,7 +40,9 @@ public class PesquisarProduto extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Pesquisar Produto");
+        titulo.setText("PESQUISAR PRODUTO");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Pega o que foi digitado no Edit
         pesquisa = (EditText) findViewById(R.id.pesquisa);
         btnPesquisar= (Button) findViewById(R.id.btnPesquisar);
@@ -68,6 +70,12 @@ public class PesquisarProduto extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -98,7 +106,7 @@ public class PesquisarProduto extends AppCompatActivity {
     }
     private void checaPopulacao() {
         if (listProduto.isEmpty() || listProduto == null){
-            Toast.makeText(PesquisarProduto.this, "Não foi encontrado resultados", Toast.LENGTH_SHORT).show();
+            Publico.Alerta(PesquisarProduto.this, "Não foi encontrado resultados");
         }
     }
 

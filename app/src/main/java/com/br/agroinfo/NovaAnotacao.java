@@ -37,7 +37,10 @@ public class NovaAnotacao extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Nova Anotação");
+        titulo.setText("NOVA ANOTAÇÃO");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         //resgatar os componentes
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         btnSelData = (Button) findViewById(R.id.btnSelData);
@@ -85,6 +88,11 @@ public class NovaAnotacao extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override

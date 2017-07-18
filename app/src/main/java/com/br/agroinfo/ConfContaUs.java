@@ -38,6 +38,7 @@ public class ConfContaUs extends AppCompatActivity {
     EditText edtNome, edtEmail, edtSenha, edtSenhaAntiga, edtEndereco, edtTelefone;
     Button btnSalvarConfiguracoes, btnExcluirUsuario;
     boolean escolha;
+    String emails, senhaAtual;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +47,10 @@ public class ConfContaUs extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("Configurações");
-        final String emails = FormularioLogin.usuario.getEmail();
-
+        titulo.setText("CONFIGURAÇÕES");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        emails = FormularioLogin.usuario.getEmail();
         //resgatar os componentes
         edtNome = (EditText) findViewById(R.id.edtNomeUs);
         edtEmail = (EditText) findViewById(R.id.edtEmail);
@@ -79,58 +81,63 @@ public class ConfContaUs extends AppCompatActivity {
             public void onClick(View view) {
                 submForm();
                 if (checaNome() && checaEmail() && checaNovaSenha()){
-                    AuthCredential credencial = EmailAuthProvider.getCredential(emails, edtSenhaAntiga.getText().toString());
-                    FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                if (!edtSenha.getText().toString().trim().isEmpty()){
-                                    FormularioLogin.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    senhaAtual = edtSenhaAntiga.getText().toString().trim();
+                    if (!senhaAtual.isEmpty()){
+                        AuthCredential credencial = EmailAuthProvider.getCredential(emails, senhaAtual);
+                        FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    if (!edtSenha.getText().toString().trim().isEmpty()){
+                                        FormularioLogin.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Publico.Alerta(ConfContaUs.this, "Senha alterada com sucesso");
+                                                } else {
+                                                    Publico.Alerta(ConfContaUs.this, "Erro ao alterar edtSenha, tente novamente mais tarde");
+                                                }
+                                            }
+                                        });
+                                    }
+                                    FormularioLogin.usuario.updateEmail(edtEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Publico.Alerta(ConfContaUs.this, "Senha alterada com sucesso");
+                                                Publico.Alerta(ConfContaUs.this, "E-mail Alterado com Sucesso");
                                             } else {
-                                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar edtSenha, tente novamente mais tarde");
+                                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar e-mail, tente novamente mais tarde");
                                             }
                                         }
                                     });
+                                    UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(edtNome.getText().toString().trim()).build();
+                                    FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                Publico.Alerta(ConfContaUs.this, "Nome Alterado com Sucesso!");
+                                            }
+                                        }
+                                    });
+                                    Usuario u = new Usuario();
+                                    u.setNome(FormularioLogin.usuario.getDisplayName());
+                                    u.setEndereco(edtEndereco.getText().toString());
+                                    u.setTelefone(edtTelefone.getText().toString());
+                                    u.setEscolha(escolha);
+                                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
+                                } else {
+                                    Publico.Alerta(ConfContaUs.this, "Erro ao alterar, tente novamente mais tarde");
                                 }
-                                FormularioLogin.usuario.updateEmail(edtEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Publico.Alerta(ConfContaUs.this, "E-mail Alterado com Sucesso");
-                                        } else {
-                                            Publico.Alerta(ConfContaUs.this, "Erro ao alterar e-mail, tente novamente mais tarde");
-                                        }
-                                    }
-                                });
-                                UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(edtNome.getText().toString().trim()).build();
-                                FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()){
-                                            Publico.Alerta(ConfContaUs.this, "Nome Alterado com Sucesso!");
-                                        }
-                                    }
-                                });
-                                Usuario u = new Usuario();
-                                u.setNome(FormularioLogin.usuario.getDisplayName());
-                                u.setEndereco(edtEndereco.getText().toString());
-                                u.setTelefone(edtTelefone.getText().toString());
-                                u.setEscolha(escolha);
-                                FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
-                            } else {
-                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar, tente novamente mais tarde");
                             }
-                        }
 
-                    });
-                    Publico.Intente(ConfContaUs.this, MenuP.class);
-                    finish();
+                        });
+                        Publico.Intente(ConfContaUs.this, MenuP.class);
+                        finish();
+                    } else {
+                        Publico.Alerta(ConfContaUs.this, "O campo de senha atual está vazio");
                     }
+                }
                 }
         });
         btnExcluirUsuario.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +146,7 @@ public class ConfContaUs extends AppCompatActivity {
                 AlertDialog.Builder dialogo = new AlertDialog.Builder(ConfContaUs.this);
                 dialogo.setCancelable(false);
                 dialogo.setTitle("AgroInfo");
-                dialogo.setMessage("Você tem certeza que quer excluir a conta? Não haverá como desfazer a ação, tudo será perdido");
+                dialogo.setMessage("Você deseja realmente excluir a conta? Não haverá como desfazer a ação, tudo em sua conta será perdido");
                 dialogo.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         deletarContaUs();
@@ -159,49 +166,69 @@ public class ConfContaUs extends AppCompatActivity {
     }
 
     private void deletarContaUs() {
-        FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).removeValue();
-        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).removeValue();
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).removeValue();
-        Query produto = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid());
-        produto.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot.exists()){
-                    for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
-                        objSnapshot.getRef().setValue(null);
-                    }
-                }
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    FormularioLogin.usuario.delete()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Conexao.deslogar();
-                                        Publico.Alerta(ConfContaUs.this, "Conta de usuário deletada com Sucesso!");
-                                        Publico.Intente(ConfContaUs.this, FormularioLogin.class);
-                                        finish();
-                                    } else {
-                                        Publico.Alerta(ConfContaUs.this, "Não foi possível excluir, tente novamente mais tarde");
+        senhaAtual = edtSenhaAntiga.getText().toString().trim();
+        if (!senhaAtual.isEmpty()){
+            AuthCredential credencial = EmailAuthProvider.getCredential(emails, senhaAtual);
+            FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).removeValue();
+                        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).removeValue();
+                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).removeValue();
+                        Query produto = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid());
+                        produto.addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                if (dataSnapshot.exists()){
+                                    for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
+                                        objSnapshot.getRef().setValue(null);
                                     }
                                 }
-                            });
+                            }
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {}
+                        });
+                        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    FormularioLogin.usuario.delete()
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        FormularioLogin.autent.signOut();
+                                                        Publico.Alerta(ConfContaUs.this, "Conta de usuário deletada com Sucesso!");
+                                                        Publico.Intente(ConfContaUs.this, FormularioLogin.class);
+                                                        finish();
+                                                    } else {
+                                                        Publico.Alerta(ConfContaUs.this, "Não foi possível excluir, tente novamente mais tarde");
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        });
+                    } else {
+                        Publico.Alerta(ConfContaUs.this, "Senha atual incorreta!");
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Publico.Alerta(ConfContaUs.this, "O campo de senha atual está vazio");
+        }
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -248,13 +275,20 @@ public class ConfContaUs extends AppCompatActivity {
             edtEmail.startAnimation(animBalanc);
             return;
         }
+        if (!checaSenha()){
+            edtSenhaAntiga.setAnimation(animBalanc);
+            edtSenhaAntiga.startAnimation(animBalanc);
+            return;
+        }
         if (!checaNovaSenha()){
             edtSenha.setAnimation(animBalanc);
             edtSenha.startAnimation(animBalanc);
+            return;
         }
         textNomeUs.setErrorEnabled(false);
         textEmailConf.setErrorEnabled(false);
         textSenhaAntiga.setErrorEnabled(false);
+        textNovaSenha.setErrorEnabled(false);
     }
     // Checar tudo
     private boolean checaNome(){
@@ -281,13 +315,25 @@ public class ConfContaUs extends AppCompatActivity {
     private static boolean eValido(String email){
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-    private boolean checaNovaSenha() {
-        if(!edtSenha.getText().toString().trim().isEmpty() && edtSenhaAntiga.getText().toString().trim().length() <= 5){
-            textNovaSenha.setError("Entre com uma nova edtSenha de no Mínimo 6 dígitos");
-            edtSenha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
+    private boolean checaSenha() {
+        String a = edtSenhaAntiga.getText().toString().trim();
+        if(a.length() <= 5){
+            textSenhaAntiga.setError("Entre com a Senha Antiga Corretamente");
+            edtSenhaAntiga.setError("Entrada Obrigatória!");
             return false;
         }
         textSenhaAntiga.setErrorEnabled(false);
+        return true;
+    }
+
+    private boolean checaNovaSenha() {
+        String a = edtSenha.getText().toString().trim();
+        if(!a.isEmpty() && a.length() <= 5){
+            textNovaSenha.setError("Entre com uma nova Senha de no Mínimo 6 dígitos");
+            edtSenha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
+            return false;
+        }
+        textNovaSenha.setErrorEnabled(false);
         return true;
     }
 
