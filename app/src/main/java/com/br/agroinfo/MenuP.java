@@ -25,6 +25,7 @@ public class MenuP extends AppCompatActivity
     TextView textNomeUsuario;
     WebView textoBV;
     boolean escolha;
+    ValueEventListener valores;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class MenuP extends AppCompatActivity
     }
     // PEGAR A CATEGORIA
     private void pegaNomeeEsc() {
-        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+        valores = FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -70,6 +71,8 @@ public class MenuP extends AppCompatActivity
                                 String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é a sua área do cliente onde você terá a possibilidade de pesquisar por produtos em estabelecimentos com os melhores preços para você. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
                                 textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
                             }
+                        } else {
+                            FormularioLogin.databaseReference.removeEventListener(valores);
                         }
                     }
                     @Override
@@ -198,5 +201,11 @@ public class MenuP extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FormularioLogin.databaseReference.removeEventListener(valores);
     }
 }

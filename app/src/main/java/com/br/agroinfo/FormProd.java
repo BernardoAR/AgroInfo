@@ -42,7 +42,7 @@ public class FormProd extends AppCompatActivity {
     String valorId;
     private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
-
+    ValueEventListener pop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -290,23 +290,23 @@ public class FormProd extends AppCompatActivity {
 
     // Pegar os Valores
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
+        pop = FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listCategoria.clear();
-                for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
-                    Categoria c = objSnapshot.getValue(Categoria.class);
-                    listCategoria.add(c);
-                }
-                arrayAdapterCategoria = new ArrayAdapter<>(FormProd.this,
-                        android.R.layout.simple_list_item_1, listCategoria);
-                spnCateg.setAdapter(arrayAdapterCategoria);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        listCategoria.clear();
+                        for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
+                            Categoria c = objSnapshot.getValue(Categoria.class);
+                            listCategoria.add(c);
+                        }
+                        arrayAdapterCategoria = new ArrayAdapter<>(FormProd.this,
+                                android.R.layout.simple_list_item_1, listCategoria);
+                        spnCateg.setAdapter(arrayAdapterCategoria);
+                        FormularioLogin.databaseReference.removeEventListener(pop);
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
     }
 
 }

@@ -39,6 +39,8 @@ public class ConfContaUs extends AppCompatActivity {
     Button btnSalvarConfiguracoes, btnExcluirUsuario;
     boolean escolha;
     String emails, senhaAtual;
+    ValueEventListener pegaDado;
+    ChildEventListener produto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,8 +178,8 @@ public class ConfContaUs extends AppCompatActivity {
                         FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).removeValue();
                         FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).removeValue();
                         FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).removeValue();
-                        Query produto = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid());
-                        produto.addChildEventListener(new ChildEventListener() {
+                        produto = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+                                .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                 if (dataSnapshot.exists()){
@@ -238,7 +240,7 @@ public class ConfContaUs extends AppCompatActivity {
         finish();
     }
     private void pegaDados() {
-        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+        pegaDado = FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -249,6 +251,7 @@ public class ConfContaUs extends AppCompatActivity {
                     edtTelefone.setText(u.getTelefone());
                     escolha = u.getEscolha();
                 }
+                FormularioLogin.databaseReference.removeEventListener(pegaDado);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

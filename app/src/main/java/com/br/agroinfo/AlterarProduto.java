@@ -38,7 +38,7 @@ public class AlterarProduto extends AppCompatActivity {
     Vibrator vib;
     Animation animBalanc;
     String id_categ, id_Catego, nome_categ, nome_Catego;
-
+    ChildEventListener vendas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +135,9 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void deletarProduto() {
-        Query vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
-                .orderByChild("Id_produto").equalTo(altproduto.getId_produto());
-        vendas.addChildEventListener(new ChildEventListener() {
+        vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+                .orderByChild("Id_produto").equalTo(altproduto.getId_produto())
+                .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()){
@@ -145,12 +145,6 @@ public class AlterarProduto extends AppCompatActivity {
                         objSnapshot.getRef().setValue(null);
                     }
                 }
-                FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                        .child(altproduto.getId_produto()).removeValue();
-                Publico.Alerta(AlterarProduto.this, "Excluído com Sucesso");
-                limpaCampos();
-                Publico.Intente(AlterarProduto.this, ListaProdutos.class);
-                finish();
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -161,6 +155,13 @@ public class AlterarProduto extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                .child(altproduto.getId_produto()).removeValue();
+        Publico.Alerta(AlterarProduto.this, "Excluído com Sucesso");
+        limpaCampos();
+        Publico.Intente(AlterarProduto.this, ListaProdutos.class);
+        finish();
+        FormularioLogin.databaseReference.removeEventListener(vendas);
     }
     @Override
     public boolean onSupportNavigateUp() {

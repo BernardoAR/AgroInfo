@@ -20,7 +20,7 @@ public class DetalhesProduto extends AppCompatActivity {
     BigDecimal precoVendas;
     String id, idus;
     String nomeProd, possEst, empVen, tel, end;
-
+    ValueEventListener dadosExt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +90,7 @@ public class DetalhesProduto extends AppCompatActivity {
     }
 
     private void pegaDadosExternos() {
-        FormularioLogin.databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
+        dadosExt = FormularioLogin.databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
@@ -118,4 +118,9 @@ public class DetalhesProduto extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FormularioLogin.databaseReference.removeEventListener(dadosExt);
+    }
 }

@@ -30,7 +30,7 @@ public class PesquisarProduto extends AppCompatActivity {
     ListView lstProd;
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
-
+    ValueEventListener pop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +83,8 @@ public class PesquisarProduto extends AppCompatActivity {
         finish();
     }
     public void populaLista(){
-        Query query = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase());
-                query.addValueEventListener(new ValueEventListener() {
+        pop = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase())
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         listProduto.clear();
@@ -107,6 +107,8 @@ public class PesquisarProduto extends AppCompatActivity {
     private void checaPopulacao() {
         if (listProduto.isEmpty() || listProduto == null){
             Publico.Alerta(PesquisarProduto.this, "Não foi encontrado resultados");
+        } else {
+            FormularioLogin.databaseReference.removeEventListener(pop);
         }
     }
 

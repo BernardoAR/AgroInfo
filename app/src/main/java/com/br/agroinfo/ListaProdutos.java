@@ -24,6 +24,7 @@ public class ListaProdutos extends AppCompatActivity {
     ListView listProdutos;
     private List<Produto> listProduto = new ArrayList<>() ;
     private ArrayAdapter<Produto> arrayAdapterProduto;
+    ValueEventListener pop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class ListaProdutos extends AppCompatActivity {
         setContentView(R.layout.activity_lista_produtos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
         titulo.setText("PRODUTOS");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,27 +73,27 @@ public class ListaProdutos extends AppCompatActivity {
     }
 
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+        pop = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                listProduto.clear();
-                for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
-                    Produto p = objSnapshot.getValue(Produto.class);
-                    listProduto.add(p);
-                }
-                arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
-                        android.R.layout.simple_list_item_1, listProduto);
-                listProdutos.setAdapter(arrayAdapterProduto);
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        listProduto.clear();
+                        for (DataSnapshot objSnapshot:dataSnapshot.getChildren()) {
+                            Produto p = objSnapshot.getValue(Produto.class);
+                            listProduto.add(p);
+                        }
+                        arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
+                                android.R.layout.simple_list_item_1, listProduto);
+                        listProdutos.setAdapter(arrayAdapterProduto);
+                        FormularioLogin.databaseReference.removeEventListener(pop);
+                    }
 
-            }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    }
 
-            }
-
-        });
+                });
     }
     @Override
     public boolean onSupportNavigateUp() {

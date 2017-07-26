@@ -202,7 +202,7 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     private void TestaDados() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 existe1 = dataSnapshot.hasChild("Usuario");
@@ -228,10 +228,7 @@ public class FormularioLogin extends AppCompatActivity {
                 if (existe){
                     Publico.Intente(FormularioLogin.this, MenuP.class);
                     finish();
-                } else if (!existe && !googleL){
-                    Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
-                    finish();
-                } else if (!existe && googleL) {
+                } else {
                     Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
                     finish();
                 }

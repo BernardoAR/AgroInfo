@@ -22,6 +22,7 @@ import java.util.List;
 public class ListaVendas extends AppCompatActivity {
     Button btnNovaVenda;
     ListView lstVendas;
+    ValueEventListener lista;
     private List<Vendas> listVendas = new ArrayList<>() ;
     private ArrayAdapter<Vendas> arrayAdapterVenda;
 
@@ -71,7 +72,7 @@ public class ListaVendas extends AppCompatActivity {
     }
 
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).orderByChild("mes_ano")
+        lista = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).orderByChild("mes_ano")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -83,15 +84,18 @@ public class ListaVendas extends AppCompatActivity {
                         arrayAdapterVenda = new ArrayAdapter<>(ListaVendas.this,
                                 android.R.layout.simple_list_item_1, listVendas);
                         lstVendas.setAdapter(arrayAdapterVenda);
-
+                        FormularioLogin.databaseReference.removeEventListener(lista);
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
 
                 });
+    }
+    protected void onStop() {
+        super.onStop();
+        FormularioLogin.databaseReference.removeEventListener(lista);
     }
 
     @Override

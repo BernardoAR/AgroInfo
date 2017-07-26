@@ -24,6 +24,7 @@ import java.util.List;
 public class ListaAnotacoes extends AppCompatActivity {
     ListView listAnotacoes;
     Button btnNovaAn;
+    ValueEventListener lista;
     private List<Anotacao> listAnotacao = new ArrayList<>();
     private ArrayAdapter<Anotacao> arrayAdapterAnotacao;
 
@@ -89,7 +90,7 @@ public class ListaAnotacoes extends AppCompatActivity {
     }
     // Pegar os Valores
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid())
+        lista = FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,12 +102,11 @@ public class ListaAnotacoes extends AppCompatActivity {
                 arrayAdapterAnotacao = new ArrayAdapter<>(ListaAnotacoes.this,
                         android.R.layout.simple_list_item_1, listAnotacao);
                 listAnotacoes.setAdapter(arrayAdapterAnotacao);
-
+                FormularioLogin.databaseReference.removeEventListener(lista);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
 
         });

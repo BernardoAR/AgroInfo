@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Produto implements Serializable {
 
-    String nomeProduto, dataCadastro, id_produto;
+    String nomeProduto, dataCadastro, id_produto, us_prod;
     float precoCusto, precoVenda;
     int quantidade;
 
@@ -55,8 +55,6 @@ public class Produto implements Serializable {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-
-
 
     @Override
     public String toString() {

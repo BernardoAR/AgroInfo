@@ -49,6 +49,7 @@ public class FormVendas extends AppCompatActivity {
     float precoCusto, precoVenda, precoFinalC,precoFinalV;
     private Vibrator vib;
     Animation animBalanc;
+    ValueEventListener pop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,7 +182,7 @@ public class FormVendas extends AppCompatActivity {
     }
 
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+        pop = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -193,7 +194,7 @@ public class FormVendas extends AppCompatActivity {
                         arrayAdapterProduto = new ArrayAdapter<>(FormVendas.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         spnProd.setAdapter(arrayAdapterProduto);
-
+                        FormularioLogin.databaseReference.removeEventListener(pop);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {

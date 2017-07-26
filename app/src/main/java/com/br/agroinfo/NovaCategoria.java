@@ -27,6 +27,7 @@ public class NovaCategoria extends AppCompatActivity {
     Button btnCadastrar;
     ListView lstCategoria;
     String categoriaStr;
+    ValueEventListener lista;
     private List<Categoria> listCategoria = new ArrayList<>() ;
     private ArrayAdapter<Categoria> arrayAdapterCategoria;
 
@@ -65,13 +66,29 @@ public class NovaCategoria extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 categoriaStr = edtNovaCat.getText().toString();
-                // Inserir os detalhes no BD
-                Categoria c = new Categoria();
-                c.setId_categoria(UUID.randomUUID().toString());
-                c.setNova_categoria(categoriaStr.toUpperCase());
-                FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
-                Publico.Alerta(NovaCategoria.this, "Categoria Salva com Sucesso");
-                edtNovaCat.setText("");
+                if (!categoriaStr.isEmpty()){
+                    FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).orderByChild("nova_categoria").equalTo(categoriaStr.toUpperCase())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()){
+                                        Publico.Alerta(NovaCategoria.this, "Categoria já existe!");
+                                    } else {
+                                        // Inserir os detalhes no BD
+                                        Categoria c = new Categoria();
+                                        c.setId_categoria(UUID.randomUUID().toString());
+                                        c.setNova_categoria(categoriaStr.toUpperCase());
+                                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                                        Publico.Alerta(NovaCategoria.this, "Categoria Salva com Sucesso");
+                                        edtNovaCat.setText("");
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            });
+                } else {
+                    Publico.Alerta(NovaCategoria.this, "É necessário preencher o campo com o nome de uma Categoria");
+                }
             }
         });
     }
@@ -89,7 +106,7 @@ public class NovaCategoria extends AppCompatActivity {
     }
     // Pegar os Valores
     private void populaLista() {
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
+        lista = FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,7 +118,7 @@ public class NovaCategoria extends AppCompatActivity {
                 arrayAdapterCategoria = new ArrayAdapter<>(NovaCategoria.this,
                         android.R.layout.simple_list_item_1, listCategoria);
                 lstCategoria.setAdapter(arrayAdapterCategoria);
-
+                FormularioLogin.databaseReference.removeEventListener(lista);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

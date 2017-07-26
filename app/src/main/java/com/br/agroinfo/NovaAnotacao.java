@@ -29,6 +29,7 @@ public class NovaAnotacao extends AppCompatActivity {
     TextInputLayout textAssunto, textAnotacao, textDataLayout;
     Button btnCadastrar, btnSelData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -35,6 +35,7 @@ public class ConfConta extends AppCompatActivity {
     Button btnSalvarConfiguracoes, btnExcluirCliente;
     boolean escolha;
     String emails, senhaAtual;
+    ValueEventListener pegaDado;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,7 +209,7 @@ public class ConfConta extends AppCompatActivity {
     }
 
     private void pegaDados() {
-        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+        pegaDado = FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -217,6 +218,7 @@ public class ConfConta extends AppCompatActivity {
                     edtNome.setText(FormularioLogin.usuario.getDisplayName());
                     escolha = u.getEscolha();
                 }
+                FormularioLogin.databaseReference.removeEventListener(pegaDado);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

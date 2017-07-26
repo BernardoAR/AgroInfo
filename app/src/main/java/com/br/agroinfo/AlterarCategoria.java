@@ -18,13 +18,15 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class AlterarCategoria extends AppCompatActivity {
     EditText edtAltCat;
     Button btnSalvarCategoria;
     Categoria altcategoria;
     Button btnExcluirCategoria;
-
+    ChildEventListener exclusao;
+    String strCat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +54,32 @@ public class AlterarCategoria extends AppCompatActivity {
         btnSalvarCategoria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Categoria c = new Categoria();
-                c.setId_categoria(altcategoria.getId_categoria());
-                c.setNova_categoria(edtAltCat.getText().toString().toUpperCase());
-                FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
-                Publico.Alerta(AlterarCategoria.this, "Alterado com Sucesso");
-                Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
-                finish();
-                // Limpa Campo
-                edtAltCat.setText("");
+                strCat = edtAltCat.getText().toString();
+                if (!strCat.isEmpty()){
+                    FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).orderByChild("nova_categoria").equalTo(strCat.toUpperCase())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()){
+                                        Publico.Alerta(AlterarCategoria.this, "Categoria já existe!");
+                                    } else {
+                                        Categoria c = new Categoria();
+                                        c.setId_categoria(altcategoria.getId_categoria());
+                                        c.setNova_categoria(strCat.toUpperCase());
+                                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                                        Publico.Alerta(AlterarCategoria.this, "Alterado com Sucesso");
+                                        Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
+                                        finish();
+                                        // Limpa Campo
+                                        edtAltCat.setText("");
+                                    }
+                                }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            });
+                } else {
+                    Publico.Alerta(AlterarCategoria.this, "É necessário preencher o campo com o nome de uma Categoria");
+                }
             }
         });
 
@@ -90,9 +109,10 @@ public class AlterarCategoria extends AppCompatActivity {
     }
 
     private void deletarCategoria() {
-        Query produtos = FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                .orderByChild("Categoria").equalTo(altcategoria.getId_categoria());
-        produtos.addChildEventListener(new ChildEventListener() {
+
+        exclusao = FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                .orderByChild("Categoria").equalTo(altcategoria.getId_categoria())
+                .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
@@ -137,6 +157,7 @@ public class AlterarCategoria extends AppCompatActivity {
         Publico.Alerta(AlterarCategoria.this, "Excluído com Sucesso");
         // Limpa Campo
         edtAltCat.setText("");
+        FormularioLogin.databaseReference.removeEventListener(exclusao);
         Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
         finish();
     }
