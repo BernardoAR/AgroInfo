@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.br.agroinfo.ListaAnotacoes"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include
         layout="@layout/barra_ferr"
@@ -23,6 +23,8 @@
             android:id="@+id/btnNovaAnotacao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="Nova Anotação" />
 
         <ListView

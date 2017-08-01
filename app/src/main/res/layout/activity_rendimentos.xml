@@ -50,6 +50,9 @@
                 android:id="@+id/btnChecRend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"
                 android:text="Checar Rendimentos" />
 
         <com.github.mikephil.charting.charts.PieChart

@@ -38,7 +38,7 @@ public class ConfContaUs extends AppCompatActivity {
     EditText edtNome, edtEmail, edtSenha, edtSenhaAntiga, edtEndereco, edtTelefone;
     Button btnSalvarConfiguracoes, btnExcluirUsuario;
     boolean escolha;
-    String emails, senhaAtual;
+    String emails, senhaAtual, nomeUs, nomeUsAnt, email, emailAnt;
     ValueEventListener pegaDado;
     ChildEventListener produto;
     @Override
@@ -75,8 +75,6 @@ public class ConfContaUs extends AppCompatActivity {
         //Máscara
         MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
         edtTelefone.addTextChangedListener(maskTel);
-
-
         edtEmail.setText(FormularioLogin.usuario.getEmail());
         btnSalvarConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +88,9 @@ public class ConfContaUs extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    Usuario u = new Usuario();
+                                    nomeUs = edtNome.getText().toString();
+                                    email = edtEmail.getText().toString();
                                     if (!edtSenha.getText().toString().trim().isEmpty()){
                                         FormularioLogin.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -102,40 +103,45 @@ public class ConfContaUs extends AppCompatActivity {
                                             }
                                         });
                                     }
-                                    FormularioLogin.usuario.updateEmail(edtEmail.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Publico.Alerta(ConfContaUs.this, "E-mail Alterado com Sucesso");
-                                            } else {
-                                                Publico.Alerta(ConfContaUs.this, "Erro ao alterar e-mail, tente novamente mais tarde");
+                                    if (!nomeUsAnt.equals(nomeUs)){
+                                        UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(edtNome.getText().toString().trim()).build();
+                                        FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    Publico.Alerta(ConfContaUs.this, "Nome Alterado com Sucesso!");
+                                                }
                                             }
-                                        }
-                                    });
-                                    UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
-                                            .setDisplayName(edtNome.getText().toString().trim()).build();
-                                    FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()){
-                                                Publico.Alerta(ConfContaUs.this, "Nome Alterado com Sucesso!");
+                                        });
+                                    }
+                                    if (!emailAnt.equals(email)){
+                                        FormularioLogin.usuario.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Publico.Alerta(ConfContaUs.this, "E-mail Alterado com Sucesso");
+                                                } else {
+                                                    Publico.Alerta(ConfContaUs.this, "Erro ao alterar e-mail, tente novamente mais tarde");
+                                                }
                                             }
-                                        }
-                                    });
-                                    Usuario u = new Usuario();
-                                    u.setNome(FormularioLogin.usuario.getDisplayName());
+                                        });
+                                    }
+                                    u.setNome(nomeUs);
                                     u.setEndereco(edtEndereco.getText().toString());
                                     u.setTelefone(edtTelefone.getText().toString());
                                     u.setEscolha(escolha);
                                     FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
+                                    Publico.Intente(ConfContaUs.this, MenuP.class);
+                                    finish();
                                 } else {
                                     Publico.Alerta(ConfContaUs.this, "Erro ao alterar, tente novamente mais tarde");
+                                    Publico.Intente(ConfContaUs.this, MenuP.class);
+                                    finish();
                                 }
                             }
 
                         });
-                        Publico.Intente(ConfContaUs.this, MenuP.class);
-                        finish();
                     } else {
                         Publico.Alerta(ConfContaUs.this, "O campo de senha atual está vazio");
                     }
@@ -250,6 +256,8 @@ public class ConfContaUs extends AppCompatActivity {
                     edtEndereco.setText(u.getEndereco());
                     edtTelefone.setText(u.getTelefone());
                     escolha = u.getEscolha();
+                    nomeUsAnt = FormularioLogin.usuario.getDisplayName();
+                    emailAnt = FormularioLogin.usuario.getEmail();
                 }
                 FormularioLogin.databaseReference.removeEventListener(pegaDado);
             }

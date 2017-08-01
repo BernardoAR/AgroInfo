@@ -84,13 +84,17 @@ public class FormVendas extends AppCompatActivity {
         btnCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigDecimal precoF;
-                String quant = edtQuant.getText().toString();
-                int quantidade = Integer.valueOf(quant);
-                precoFinalV = precoVenda * quantidade;
-                precoFinalC = precoCusto * quantidade;
-                precoF = Publico.Casas(precoFinalV);
-                textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
+                submForm();
+                if (checaQuant()) {
+                    BigDecimal precoF;
+                    String quant = edtQuant.getText().toString();
+                    int quantidade = Integer.valueOf(quant);
+                    precoFinalV = precoVenda * quantidade;
+                    precoFinalC = precoCusto * quantidade;
+                    precoF = Publico.Casas(precoFinalV);
+                    textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
+                }
+
             }
         });
         btnVenda.setOnClickListener(new View.OnClickListener() {

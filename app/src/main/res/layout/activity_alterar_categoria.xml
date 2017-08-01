@@ -28,17 +28,34 @@
             android:layout_marginTop="20dp"
             android:inputType="textPersonName" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
         <Button
             android:id="@+id/btnSalvarCategoria"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="start"
+            android:background="?attr/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="Salvar Categoria" />
 
         <Button
             android:id="@+id/btnExcluirCategoria"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            android:background="?attr/colorAccent"
+            android:textColor="@android:color/white"
             android:text="Excluir Categoria" />
+            </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

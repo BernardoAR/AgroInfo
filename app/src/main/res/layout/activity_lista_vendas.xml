@@ -23,12 +23,15 @@
             android:id="@+id/btnNovaVenda"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="Nova Venda" />
 
         <ListView
             android:layout_marginTop="20dp"
             android:id="@+id/lstVendas"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/borda_ui"/>
     </LinearLayout>
 </LinearLayout>

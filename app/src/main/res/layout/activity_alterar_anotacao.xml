@@ -49,18 +49,33 @@
                 android:gravity="top|start"
                 android:scrollbars="vertical" />
         </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
         <Button
             android:id="@+id/btnSalvarAnotacao"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="start"
+            android:background="?attr/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="Salvar Alteração" />
 
         <Button
             android:id="@+id/btnExcluirAnotacao"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:layout_gravity="end"
+            android:background="?attr/colorAccent"
+            android:textColor="@android:color/white"
             android:text="Excluir" />
-
+</LinearLayout>
     </LinearLayout>
 </LinearLayout>

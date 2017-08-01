@@ -52,6 +52,7 @@ public class MenuP extends AppCompatActivity
         //Com o ID já pego, pegar o edtNome que possui nesse id
         textNomeUsuario = (TextView) cabecalho.findViewById(R.id.nome_usuario);
         textoBV = (WebView) findViewById(R.id.textoBV);
+        verificaUsuario();
     }
     // PEGAR A CATEGORIA
     private void pegaNomeeEsc() {
@@ -63,7 +64,8 @@ public class MenuP extends AppCompatActivity
                             invalidateOptionsMenu();
                             Usuario u = dataSnapshot.getValue(Usuario.class);
                             escolha = u.getEscolha();
-                            textNomeUsuario.setText(u.getNome().toUpperCase());
+                            String nome = u.getNome().toUpperCase();
+                            textNomeUsuario.setText(nome);
                             if (escolha){
                                 String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é sua área administrativa, nela você terá total controle e autonomia para gerenciar seu negócio. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
                                 textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
@@ -71,21 +73,17 @@ public class MenuP extends AppCompatActivity
                                 String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é a sua área do cliente onde você terá a possibilidade de pesquisar por produtos em estabelecimentos com os melhores preços para você. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
                                 textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
                             }
-                        } else {
-                            FormularioLogin.databaseReference.removeEventListener(valores);
                         }
+                        FormularioLogin.databaseReference.removeEventListener(valores);
                     }
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
+                    public void onCancelled(DatabaseError databaseError) {}
                 });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        verificaUsuario();
     }
 
     @Override
@@ -110,7 +108,7 @@ public class MenuP extends AppCompatActivity
         sair.setVisible(true);
         if (escolha) {
             pesquisa.setVisible(false);
-        } else if (!escolha){
+        } else{
             anotacoes.setVisible(false);
             produtos.setVisible(false);
             rendimentos.setVisible(false);

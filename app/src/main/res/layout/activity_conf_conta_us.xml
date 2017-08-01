@@ -110,16 +110,32 @@
                     android:hint="Telefone. Ex: (99) 99999-9999"
                     android:maxLength="15" />
             </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
             <Button
                 android:id="@+id/btnSalvarConfiguracoes"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:background="?attr/colorPrimary"
+                android:textColor="@android:color/white"
                 android:text="Salvar Alterações" />
             <Button
                 android:id="@+id/btnExcluirUsuario"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="end"
+                android:background="?attr/colorAccent"
+                android:textColor="@android:color/white"
                 android:text="Excluir Conta" />
+                </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

@@ -43,6 +43,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="?attr/colorPrimary"
+                    android:textColor="@android:color/white"
                     android:text="Pesquisar" />
             </LinearLayout>
 
@@ -54,7 +56,9 @@
                 <ListView
                     android:id="@+id/lstProd"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/borda_ui"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
