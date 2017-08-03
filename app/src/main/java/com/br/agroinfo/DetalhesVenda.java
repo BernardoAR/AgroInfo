@@ -60,7 +60,7 @@ public class DetalhesVenda extends AppCompatActivity {
         btnExcluirVenda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+                Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid())
                         .child(altvenda.getId_venda()).removeValue();
                 Publico.Alerta(DetalhesVenda.this, "Excluído com Sucesso");
                 Publico.Intente(DetalhesVenda.this, ListaVendas.class);
@@ -82,7 +82,7 @@ public class DetalhesVenda extends AppCompatActivity {
     }
 
     private void pegaVProduto() {
-        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).child(altvenda.getId_venda()).child("Id_produto")
+        Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid()).child(altvenda.getId_venda()).child("Id_produto")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +98,7 @@ public class DetalhesVenda extends AppCompatActivity {
     }
 
     private void categorias() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos").child(getId_Produ()).child("nomeProduto")
+        Inicial.databaseReference.child("Produto").child("Produtos").child(getId_Produ()).child("nomeProduto")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

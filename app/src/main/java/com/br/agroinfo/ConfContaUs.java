@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.br.agroinfo.dao.Conexao;
 import com.br.agroinfo.modelo.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +24,6 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
@@ -52,7 +50,7 @@ public class ConfContaUs extends AppCompatActivity {
         titulo.setText("CONFIGURAÇÕES");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        emails = FormularioLogin.usuario.getEmail();
+        emails = Inicial.usuario.getEmail();
         //resgatar os componentes
         edtNome = (EditText) findViewById(R.id.edtNomeUs);
         edtEmail = (EditText) findViewById(R.id.edtEmail);
@@ -75,7 +73,7 @@ public class ConfContaUs extends AppCompatActivity {
         //Máscara
         MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
         edtTelefone.addTextChangedListener(maskTel);
-        edtEmail.setText(FormularioLogin.usuario.getEmail());
+        edtEmail.setText(Inicial.usuario.getEmail());
         btnSalvarConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +82,7 @@ public class ConfContaUs extends AppCompatActivity {
                     senhaAtual = edtSenhaAntiga.getText().toString().trim();
                     if (!senhaAtual.isEmpty()){
                         AuthCredential credencial = EmailAuthProvider.getCredential(emails, senhaAtual);
-                        FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Inicial.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
@@ -92,7 +90,7 @@ public class ConfContaUs extends AppCompatActivity {
                                     nomeUs = edtNome.getText().toString();
                                     email = edtEmail.getText().toString();
                                     if (!edtSenha.getText().toString().trim().isEmpty()){
-                                        FormularioLogin.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Inicial.usuario.updatePassword(edtSenha.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
@@ -106,7 +104,7 @@ public class ConfContaUs extends AppCompatActivity {
                                     if (!nomeUsAnt.equals(nomeUs)){
                                         UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
                                                 .setDisplayName(edtNome.getText().toString().trim()).build();
-                                        FormularioLogin.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Inicial.usuario.updateProfile(atualizaPerfil).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
@@ -116,7 +114,7 @@ public class ConfContaUs extends AppCompatActivity {
                                         });
                                     }
                                     if (!emailAnt.equals(email)){
-                                        FormularioLogin.usuario.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Inicial.usuario.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
@@ -131,7 +129,7 @@ public class ConfContaUs extends AppCompatActivity {
                                     u.setEndereco(edtEndereco.getText().toString());
                                     u.setTelefone(edtTelefone.getText().toString());
                                     u.setEscolha(escolha);
-                                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u);
+                                    Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid()).setValue(u);
                                     Publico.Intente(ConfContaUs.this, MenuP.class);
                                     finish();
                                 } else {
@@ -177,14 +175,14 @@ public class ConfContaUs extends AppCompatActivity {
         senhaAtual = edtSenhaAntiga.getText().toString().trim();
         if (!senhaAtual.isEmpty()){
             AuthCredential credencial = EmailAuthProvider.getCredential(emails, senhaAtual);
-            FormularioLogin.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
+            Inicial.usuario.reauthenticate(credencial).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
-                        FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).removeValue();
-                        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).removeValue();
-                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).removeValue();
-                        produto = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+                        Inicial.databaseReference.child("Anotacao").child(Inicial.usuario.getUid()).removeValue();
+                        Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid()).removeValue();
+                        Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).removeValue();
+                        produto = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                                 .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -203,18 +201,18 @@ public class ConfContaUs extends AppCompatActivity {
                             @Override
                             public void onCancelled(DatabaseError databaseError) {}
                         });
-                        FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    FormularioLogin.usuario.delete()
+                                    Inicial.usuario.delete()
                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
-                                                        FormularioLogin.autent.signOut();
+                                                        Inicial.autent.signOut();
                                                         Publico.Alerta(ConfContaUs.this, "Conta de usuário deletada com Sucesso!");
-                                                        Publico.Intente(ConfContaUs.this, FormularioLogin.class);
+                                                        Publico.Intente(ConfContaUs.this, Inicial.class);
                                                         finish();
                                                     } else {
                                                         Publico.Alerta(ConfContaUs.this, "Não foi possível excluir, tente novamente mais tarde");
@@ -246,20 +244,20 @@ public class ConfContaUs extends AppCompatActivity {
         finish();
     }
     private void pegaDados() {
-        pegaDado = FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+        pegaDado = Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
                     Usuario u = dataSnapshot.getValue(Usuario.class);
-                    edtNome.setText(FormularioLogin.usuario.getDisplayName());
+                    edtNome.setText(Inicial.usuario.getDisplayName());
                     edtEndereco.setText(u.getEndereco());
                     edtTelefone.setText(u.getTelefone());
                     escolha = u.getEscolha();
-                    nomeUsAnt = FormularioLogin.usuario.getDisplayName();
-                    emailAnt = FormularioLogin.usuario.getEmail();
+                    nomeUsAnt = Inicial.usuario.getDisplayName();
+                    emailAnt = Inicial.usuario.getEmail();
                 }
-                FormularioLogin.databaseReference.removeEventListener(pegaDado);
+                Inicial.databaseReference.removeEventListener(pegaDado);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

@@ -56,7 +56,7 @@ public class AlterarCategoria extends AppCompatActivity {
             public void onClick(View view) {
                 strCat = edtAltCat.getText().toString();
                 if (!strCat.isEmpty()){
-                    FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).orderByChild("nova_categoria").equalTo(strCat.toUpperCase())
+                    Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).orderByChild("nova_categoria").equalTo(strCat.toUpperCase())
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,7 +66,7 @@ public class AlterarCategoria extends AppCompatActivity {
                                         Categoria c = new Categoria();
                                         c.setId_categoria(altcategoria.getId_categoria());
                                         c.setNova_categoria(strCat.toUpperCase());
-                                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                                        Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).child(c.getId_categoria()).setValue(c);
                                         Publico.Alerta(AlterarCategoria.this, "Alterado com Sucesso");
                                         Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
                                         finish();
@@ -110,7 +110,7 @@ public class AlterarCategoria extends AppCompatActivity {
 
     private void deletarCategoria() {
 
-        exclusao = FormularioLogin.databaseReference.child("Produto").child("Produtos")
+        exclusao = Inicial.databaseReference.child("Produto").child("Produtos")
                 .orderByChild("Categoria").equalTo(altcategoria.getId_categoria())
                 .addChildEventListener(new ChildEventListener() {
             @Override
@@ -119,7 +119,7 @@ public class AlterarCategoria extends AppCompatActivity {
                     Produto p = dataSnapshot.getValue(Produto.class);
                     String id_produto = p.getId_produto();
                     for (DataSnapshot objSnapshot : dataSnapshot.getChildren()) {
-                        Query vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+                        Query vendas = Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid())
                                 .orderByChild("Id_produto").equalTo(id_produto);
                         vendas.addChildEventListener(new ChildEventListener() {
                             @Override
@@ -153,11 +153,11 @@ public class AlterarCategoria extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
 
         });
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(altcategoria.getId_categoria()).removeValue();
+        Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).child(altcategoria.getId_categoria()).removeValue();
         Publico.Alerta(AlterarCategoria.this, "Excluído com Sucesso");
         // Limpa Campo
         edtAltCat.setText("");
-        FormularioLogin.databaseReference.removeEventListener(exclusao);
+        Inicial.databaseReference.removeEventListener(exclusao);
         Publico.Intente(AlterarCategoria.this, NovaCategoria.class);
         finish();
     }

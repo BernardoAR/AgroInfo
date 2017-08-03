@@ -22,7 +22,6 @@ import com.br.agroinfo.modelo.Produto;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
@@ -96,12 +95,12 @@ public class AlterarProduto extends AppCompatActivity {
                     p.setPrecoVenda(Float.valueOf(edtPrecoVenda.getText().toString()));
                     p.setQuantidade(Integer.valueOf(edtQuantidade.getText().toString()));
                     c.setId_categoria(getId_Catego());
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                    Inicial.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).setValue(p);
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                    Inicial.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                            .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
+                    Inicial.databaseReference.child("Produto").child("Produtos")
+                            .child(p.getId_produto()).child("Usuario").setValue(Inicial.usuario.getUid());
                     Publico.Alerta(AlterarProduto.this, "Alterado com Sucesso");
                     Publico.Intente(AlterarProduto.this, ListaProdutos.class);
                     limpaCampos();
@@ -135,7 +134,7 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void deletarProduto() {
-        vendas = FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid())
+        vendas = Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid())
                 .orderByChild("Id_produto").equalTo(altproduto.getId_produto())
                 .addChildEventListener(new ChildEventListener() {
             @Override
@@ -155,13 +154,13 @@ public class AlterarProduto extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+        Inicial.databaseReference.child("Produto").child("Produtos")
                 .child(altproduto.getId_produto()).removeValue();
         Publico.Alerta(AlterarProduto.this, "Excluído com Sucesso");
         limpaCampos();
         Publico.Intente(AlterarProduto.this, ListaProdutos.class);
         finish();
-        FormularioLogin.databaseReference.removeEventListener(vendas);
+        Inicial.databaseReference.removeEventListener(vendas);
     }
     @Override
     public boolean onSupportNavigateUp() {
@@ -184,7 +183,7 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void pegaVCategoria() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+        Inicial.databaseReference.child("Produto").child("Produtos")
                 .child(altproduto.getId_produto()).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -201,7 +200,7 @@ public class AlterarProduto extends AppCompatActivity {
     }
 
     private void categorias() {
-        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(getId_Catego()).child("nova_categoria")
+        Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).child(getId_Catego()).child("nova_categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

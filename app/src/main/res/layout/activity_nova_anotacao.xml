@@ -42,7 +42,7 @@
                 android:layout_marginTop="10dp">
 
                 <EditText
-                    android:id="@+id/nova_anotacao"
+                    android:id="@+id/anotacao"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"

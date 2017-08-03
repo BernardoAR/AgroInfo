@@ -106,7 +106,7 @@ public class Rendimentos extends AppCompatActivity {
                 if (checaAno()){
                     String mes = String.valueOf(posicaoMes + 1);
                     String ano = edtAno.getText().toString();
-                    FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).orderByChild("mes_ano").equalTo(mes + "_" + ano)
+                    Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid()).orderByChild("mes_ano").equalTo(mes + "_" + ano)
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {

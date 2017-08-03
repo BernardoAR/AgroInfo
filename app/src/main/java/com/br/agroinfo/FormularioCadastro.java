@@ -10,10 +10,7 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Animation;
-import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -95,7 +92,7 @@ public class FormularioCadastro extends AppCompatActivity {
     }
 
     private void criarUsuario(String email, String senha) {
-        FormularioLogin.autent.createUserWithEmailAndPassword(email, senha)
+        Inicial.autent.createUserWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(FormularioCadastro.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

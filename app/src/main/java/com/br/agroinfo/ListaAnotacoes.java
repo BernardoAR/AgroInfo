@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListaAnotacoes extends AppCompatActivity {
@@ -62,7 +63,6 @@ public class ListaAnotacoes extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Anotacao anotacaoEnviada = arrayAdapterAnotacao.getItem(position);
-
                 Intent abrirEdicao = new Intent(ListaAnotacoes.this, AlterarAnotacao.class);
                 abrirEdicao.putExtra("Anotacao-enviada",anotacaoEnviada);
                 // solicitar para abir
@@ -90,7 +90,7 @@ public class ListaAnotacoes extends AppCompatActivity {
     }
     // Pegar os Valores
     private void populaLista() {
-        lista = FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid())
+        lista = Inicial.databaseReference.child("Anotacao").child(Inicial.usuario.getUid()).orderByChild("data")
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -102,7 +102,8 @@ public class ListaAnotacoes extends AppCompatActivity {
                 arrayAdapterAnotacao = new ArrayAdapter<>(ListaAnotacoes.this,
                         android.R.layout.simple_list_item_1, listAnotacao);
                 listAnotacoes.setAdapter(arrayAdapterAnotacao);
-                FormularioLogin.databaseReference.removeEventListener(lista);
+                Collections.reverse(listAnotacao);
+                Inicial.databaseReference.removeEventListener(lista);
             }
 
             @Override

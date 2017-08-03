@@ -23,8 +23,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.text.Normalizer;
-
 import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class CadastrosOpcionais extends AppCompatActivity {
@@ -56,7 +54,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (FormularioLogin.googleL){
-            edtNome.setText(FormularioLogin.usuario.getDisplayName());
+            edtNome.setText(Inicial.usuario.getDisplayName());
         }
         //Máscara
         MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
@@ -80,8 +78,8 @@ public class CadastrosOpcionais extends AppCompatActivity {
                     }
                     UserProfileChangeRequest atualizaPerfil = new UserProfileChangeRequest.Builder()
                             .setDisplayName(nome).build();
-                    FormularioLogin.usuario.updateProfile(atualizaPerfil);
-                    FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid()).setValue(u).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    Inicial.usuario.updateProfile(atualizaPerfil);
+                    Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid()).setValue(u).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Publico.Alerta(CadastrosOpcionais.this, "Cadastrado completamente com Sucesso!");
@@ -106,7 +104,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
     }
 
     private void verificaUsuario() {
-        if (FormularioLogin.autent.getCurrentUser() == null){
+        if (Inicial.autent.getCurrentUser() == null){
             Publico.Intente(CadastrosOpcionais.this, FormularioLogin.class);
             finish();
         }
@@ -125,7 +123,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
         });
         dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                FormularioLogin.usuario.delete()
+                Inicial.usuario.delete()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

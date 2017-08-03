@@ -32,6 +32,8 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
+
 public class FormProd extends AppCompatActivity {
     Button btnSelDataC, btnListProd, btnCateg, btnAdProd;
     Spinner spnCateg;
@@ -72,6 +74,9 @@ public class FormProd extends AppCompatActivity {
         textNomeProd = (TextInputLayout) findViewById(R.id.textNomeProd);
         textQuant = (TextInputLayout) findViewById(R.id.textQuant);
 
+        MaskEditTextChangedListener MaskData = new MaskEditTextChangedListener("##/##/##", edtDataCadastro);
+        edtDataCadastro.addTextChangedListener(MaskData);
+
         // Chamar Animações
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -110,11 +115,11 @@ public class FormProd extends AppCompatActivity {
                     p.setQuantidade(quant);
                     Categoria c = new Categoria();
                     c.setId_categoria(valorId);
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos").child(p.getId_produto()).setValue(p);
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
+                    Inicial.databaseReference.child("Produto").child("Produtos").child(p.getId_produto()).setValue(p);
+                    Inicial.databaseReference.child("Produto").child("Produtos")
                             .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
-                    FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                            .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
+                    Inicial.databaseReference.child("Produto").child("Produtos")
+                            .child(p.getId_produto()).child("Usuario").setValue(Inicial.usuario.getUid());
                     Publico.Alerta(FormProd.this, "Cadastrado com Sucesso!");
                     Publico.Intente(FormProd.this, MenuP.class);
                     limpaCampos();
@@ -290,7 +295,7 @@ public class FormProd extends AppCompatActivity {
 
     // Pegar os Valores
     private void populaLista() {
-        pop = FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
+        pop = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -302,7 +307,7 @@ public class FormProd extends AppCompatActivity {
                         arrayAdapterCategoria = new ArrayAdapter<>(FormProd.this,
                                 android.R.layout.simple_list_item_1, listCategoria);
                         spnCateg.setAdapter(arrayAdapterCategoria);
-                        FormularioLogin.databaseReference.removeEventListener(pop);
+                        Inicial.databaseReference.removeEventListener(pop);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}

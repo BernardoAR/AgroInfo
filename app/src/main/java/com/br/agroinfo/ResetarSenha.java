@@ -1,7 +1,6 @@
 package com.br.agroinfo;
 
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -41,7 +40,7 @@ public class ResetarSenha extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Publico.Intente(ResetarSenha.this, FormularioLogin.class);
+        Publico.Intente(ResetarSenha.this, Inicial.class);
         finish();
     }
     private void eventoClique() {
@@ -60,7 +59,7 @@ public class ResetarSenha extends AppCompatActivity {
     }
 
     private void resetarSenha(String email) {
-        FormularioLogin.autent.sendPasswordResetEmail(email).addOnCompleteListener(ResetarSenha.this, new OnCompleteListener<Void>() {
+        Inicial.autent.sendPasswordResetEmail(email).addOnCompleteListener(ResetarSenha.this, new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){

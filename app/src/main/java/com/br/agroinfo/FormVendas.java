@@ -186,7 +186,7 @@ public class FormVendas extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -198,7 +198,7 @@ public class FormVendas extends AppCompatActivity {
                         arrayAdapterProduto = new ArrayAdapter<>(FormVendas.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         spnProd.setAdapter(arrayAdapterProduto);
-                        FormularioLogin.databaseReference.removeEventListener(pop);
+                        Inicial.databaseReference.removeEventListener(pop);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -207,7 +207,7 @@ public class FormVendas extends AppCompatActivity {
     }
     // PEGAR A CATEGORIA
     private void pegaVCategoria() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos").child(valorId).child("Categoria")
+        Inicial.databaseReference.child("Produto").child("Produtos").child(valorId).child("Categoria")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -235,7 +235,7 @@ public class FormVendas extends AppCompatActivity {
         ve.setMes(posicaoMes + 1);
         ve.setAno(Integer.valueOf(ano));
         ve.setQuant_venda(Integer.valueOf(edtQuant.getText().toString()));
-        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).child(ve.getId_venda()).setValue(ve);
+        Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid()).child(ve.getId_venda()).setValue(ve);
 
         p.setId_produto(valorId);
         p.setNomeProduto(valor);
@@ -245,14 +245,14 @@ public class FormVendas extends AppCompatActivity {
         p.setDataCadastro(dataC);
         c.setId_categoria(getCatego());
 
-        FormularioLogin.databaseReference.child("Vendas").child(FormularioLogin.usuario.getUid()).child(ve.getId_venda())
+        Inicial.databaseReference.child("Vendas").child(Inicial.usuario.getUid()).child(ve.getId_venda())
                 .child("Id_produto").setValue(p.getId_produto());
-        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+        Inicial.databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).setValue(p);
-        FormularioLogin.databaseReference.child("Produto").child("Produtos")
+        Inicial.databaseReference.child("Produto").child("Produtos")
                 .child(p.getId_produto()).child("Categoria").setValue(c.getId_categoria());
-        FormularioLogin.databaseReference.child("Produto").child("Produtos")
-                .child(p.getId_produto()).child("Usuario").setValue(FormularioLogin.usuario.getUid());
+        Inicial.databaseReference.child("Produto").child("Produtos")
+                .child(p.getId_produto()).child("Usuario").setValue(Inicial.usuario.getUid());
         Publico.Alerta(FormVendas.this, "Venda feita com Sucesso");
         // Modificar no Campo do Produto
         Publico.Intente(FormVendas.this, MenuP.class);

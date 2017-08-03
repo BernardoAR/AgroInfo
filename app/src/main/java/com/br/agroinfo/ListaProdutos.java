@@ -73,7 +73,7 @@ public class ListaProdutos extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = FormularioLogin.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(FormularioLogin.usuario.getUid())
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,7 +85,7 @@ public class ListaProdutos extends AppCompatActivity {
                         arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         listProdutos.setAdapter(arrayAdapterProduto);
-                        FormularioLogin.databaseReference.removeEventListener(pop);
+                        Inicial.databaseReference.removeEventListener(pop);
                     }
 
                     @Override

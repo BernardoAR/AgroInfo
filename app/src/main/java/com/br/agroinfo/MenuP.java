@@ -56,7 +56,7 @@ public class MenuP extends AppCompatActivity
     }
     // PEGAR A CATEGORIA
     private void pegaNomeeEsc() {
-        valores = FormularioLogin.databaseReference.child("Usuario").child(FormularioLogin.usuario.getUid())
+        valores = Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,7 +74,7 @@ public class MenuP extends AppCompatActivity
                                 textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
                             }
                         }
-                        FormularioLogin.databaseReference.removeEventListener(valores);
+                        Inicial.databaseReference.removeEventListener(valores);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {}
@@ -118,7 +118,7 @@ public class MenuP extends AppCompatActivity
     }
 
     private void verificaUsuario() {
-        if (FormularioLogin.autent.getCurrentUser() == null){
+        if (Inicial.autent.getCurrentUser() == null){
             Publico.Intente(MenuP.this, FormularioLogin.class);
             finish();
         } else {
@@ -204,6 +204,6 @@ public class MenuP extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        FormularioLogin.databaseReference.removeEventListener(valores);
+        Inicial.databaseReference.removeEventListener(valores);
     }
 }

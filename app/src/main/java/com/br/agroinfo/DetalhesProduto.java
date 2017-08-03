@@ -76,7 +76,7 @@ public class DetalhesProduto extends AppCompatActivity {
     }
 
     private void pegaDadoExt() {
-        FormularioLogin.databaseReference.child("Produto").child("Produtos").child(id).child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
+        Inicial.databaseReference.child("Produto").child("Produtos").child(id).child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 idus = dataSnapshot.getValue().toString();
@@ -90,7 +90,7 @@ public class DetalhesProduto extends AppCompatActivity {
     }
 
     private void pegaDadosExternos() {
-        dadosExt = FormularioLogin.databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
+        dadosExt = Inicial.databaseReference.child("Usuario").child(idus).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Usuario u = dataSnapshot.getValue(Usuario.class);
@@ -121,6 +121,6 @@ public class DetalhesProduto extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        FormularioLogin.databaseReference.removeEventListener(dadosExt);
+        Inicial.databaseReference.removeEventListener(dadosExt);
     }
 }

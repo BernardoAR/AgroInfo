@@ -67,7 +67,7 @@ public class NovaCategoria extends AppCompatActivity {
             public void onClick(View view) {
                 categoriaStr = edtNovaCat.getText().toString();
                 if (!categoriaStr.isEmpty()){
-                    FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).orderByChild("nova_categoria").equalTo(categoriaStr.toUpperCase())
+                    Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).orderByChild("nova_categoria").equalTo(categoriaStr.toUpperCase())
                             .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -78,7 +78,7 @@ public class NovaCategoria extends AppCompatActivity {
                                         Categoria c = new Categoria();
                                         c.setId_categoria(UUID.randomUUID().toString());
                                         c.setNova_categoria(categoriaStr.toUpperCase());
-                                        FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid()).child(c.getId_categoria()).setValue(c);
+                                        Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).child(c.getId_categoria()).setValue(c);
                                         Publico.Alerta(NovaCategoria.this, "Categoria Salva com Sucesso");
                                         edtNovaCat.setText("");
                                     }
@@ -106,7 +106,7 @@ public class NovaCategoria extends AppCompatActivity {
     }
     // Pegar os Valores
     private void populaLista() {
-        lista = FormularioLogin.databaseReference.child("Categoria").child(FormularioLogin.usuario.getUid())
+        lista = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -118,7 +118,7 @@ public class NovaCategoria extends AppCompatActivity {
                 arrayAdapterCategoria = new ArrayAdapter<>(NovaCategoria.this,
                         android.R.layout.simple_list_item_1, listCategoria);
                 lstCategoria.setAdapter(arrayAdapterCategoria);
-                FormularioLogin.databaseReference.removeEventListener(lista);
+                Inicial.databaseReference.removeEventListener(lista);
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

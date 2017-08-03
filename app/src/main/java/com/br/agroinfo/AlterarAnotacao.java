@@ -11,11 +11,12 @@ import android.widget.TextView;
 
 import com.br.agroinfo.modelo.Anotacao;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 
 public class AlterarAnotacao extends AppCompatActivity {
 
-    EditText edtAlteracao, edtAssunto;
+    EditText edtAlteracao, edtAssunto, edtData;
     Button btnSalvarAnotacao, btnExcluirAnotacao;
     Anotacao altanotacao;
 
@@ -37,12 +38,17 @@ public class AlterarAnotacao extends AppCompatActivity {
         //resgatar os componentes
         edtAlteracao = (EditText) findViewById(R.id.alteracao);
         edtAssunto = (EditText) findViewById(R.id.edtAssuntos);
+        edtData = (EditText) findViewById(R.id.edtData);
         btnSalvarAnotacao = (Button) findViewById(R.id.btnSalvarAnotacao);
         btnExcluirAnotacao = (Button) findViewById(R.id.btnExcluirAnotacao);
 
+        MaskEditTextChangedListener MaskData = new MaskEditTextChangedListener("##/##/##", edtData);
+
+        edtData.addTextChangedListener(MaskData);
         if (altanotacao != null) {
-            edtAssunto.setText(altanotacao.getNovo_assunto());
-            edtAlteracao.setText(altanotacao.getNova_anotacao());
+            edtAssunto.setText(altanotacao.getAssunto());
+            edtAlteracao.setText(altanotacao.getAnotacao());
+            edtData.setText(altanotacao.getData().replace('-', '/'));
         }
 
         btnSalvarAnotacao.setOnClickListener(new View.OnClickListener() {
@@ -50,9 +56,10 @@ public class AlterarAnotacao extends AppCompatActivity {
             public void onClick(View view) {
                 Anotacao a = new Anotacao();
                 a.setId_anotacao(altanotacao.getId_anotacao());
-                a.setNovo_assunto(edtAssunto.getText().toString().replace('/', '-'));
-                a.setNova_anotacao(edtAlteracao.getText().toString());
-                FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
+                a.setAssunto(edtAssunto.getText().toString());
+                a.setData(edtData.getText().toString().replace('/', '-'));
+                a.setAnotacao(edtAlteracao.getText().toString());
+                Inicial.databaseReference.child("Anotacao").child(Inicial.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                 Publico.Alerta(AlterarAnotacao.this, "Alterado com Sucesso");
                 Publico.Intente(AlterarAnotacao.this, ListaAnotacoes.class);
                 limparCampos();
@@ -64,7 +71,7 @@ public class AlterarAnotacao extends AppCompatActivity {
             public void onClick(View v) {
                 Anotacao a = new Anotacao();
                 a.setId_anotacao(altanotacao.getId_anotacao());
-                FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).removeValue();
+                Inicial.databaseReference.child("Anotacao").child(Inicial.usuario.getUid()).child(a.getId_anotacao()).removeValue();
                 Publico.Alerta(AlterarAnotacao.this, "Excluído com Sucesso");
                 Publico.Intente(AlterarAnotacao.this, ListaAnotacoes.class);
                 limparCampos();

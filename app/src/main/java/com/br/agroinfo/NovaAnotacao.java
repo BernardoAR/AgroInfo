@@ -21,6 +21,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
 
+import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
+
 
 public class NovaAnotacao extends AppCompatActivity {
     private Vibrator vib;
@@ -45,7 +47,7 @@ public class NovaAnotacao extends AppCompatActivity {
         //resgatar os componentes
         btnCadastrar = (Button) findViewById(R.id.btnCadastrar);
         btnSelData = (Button) findViewById(R.id.btnSelData);
-        edtNovaAn = (EditText) findViewById(R.id.nova_anotacao);
+        edtNovaAn = (EditText) findViewById(R.id.anotacao);
         edtDataAn = (EditText) findViewById(R.id.edtDataAn);
         edtAssunto = (EditText) findViewById(R.id.edtAssunto);
         textAssunto = (TextInputLayout) findViewById(R.id.textAssunto);
@@ -64,6 +66,8 @@ public class NovaAnotacao extends AppCompatActivity {
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+        MaskEditTextChangedListener MaskData = new MaskEditTextChangedListener("##/##/##", edtDataAn);
+        edtDataAn.addTextChangedListener(MaskData);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,9 +82,10 @@ public class NovaAnotacao extends AppCompatActivity {
                     // Inserir os detalhes no BD
                     Anotacao a = new Anotacao();
                     a.setId_anotacao(UUID.randomUUID().toString());
-                    a.setNovo_assunto(data.replace('/', '-') + " - " + assunto);
-                    a.setNova_anotacao(anotacao);
-                    FormularioLogin.databaseReference.child("Anotacao").child(FormularioLogin.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
+                    a.setData(data.replace('/', '-'));
+                    a.setAssunto(assunto);
+                    a.setAnotacao(anotacao);
+                    Inicial.databaseReference.child("Anotacao").child(Inicial.usuario.getUid()).child(a.getId_anotacao()).setValue(a);
                     Publico.Alerta(NovaAnotacao.this, "Salvado com Sucesso");
                     Publico.Intente(NovaAnotacao.this, ListaAnotacoes.class);
                     limparCampos();

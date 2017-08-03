@@ -3,12 +3,9 @@ package com.br.agroinfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,16 +22,11 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class FormularioLogin extends AppCompatActivity {
@@ -43,16 +35,10 @@ public class FormularioLogin extends AppCompatActivity {
     private SignInButton btnLogGoogle;
     EditText edtEmail, edtSenha;
     Button btnLogin, btnCadastrar;
-    public static FirebaseAuth autent;
-    public static FirebaseUser usuario;
-    public static FirebaseDatabase firebaseDatabase;
-    public static DatabaseReference databaseReference;
     boolean existe1, existe;
     public static boolean googleL;
     TextView textResetarSenha;
     String email, senha;
-    //Chamado serve para ver se a persistência já foi chamada
-    public static boolean chamado = false;
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Activity_Normal";
@@ -60,11 +46,6 @@ public class FormularioLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_login);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        TextView titulo = (TextView) toolbar.findViewById(R.id.toolbar_title);
-        titulo.setText("AGROINFO - ENTRAR");
         //Vinculando os objetos aos IDs
         edtEmail = (EditText) findViewById(R.id.editEmail);
         edtSenha = (EditText) findViewById(R.id.editSenha);
@@ -150,10 +131,8 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount conta) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + conta.getId());
-
         AuthCredential credential = GoogleAuthProvider.getCredential(conta.getIdToken(), null);
-        autent.signInWithCredential(credential)
+        Inicial.autent.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -163,7 +142,7 @@ public class FormularioLogin extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Publico.Alerta(FormularioLogin.this, "Autenticação Falhou");
                         } else {
-                            usuario = Conexao.getFirebaseUser();
+                            Inicial.usuario = Conexao.getFirebaseUser();
                             googleL = true;
                             TestaDados();
                         }
@@ -173,26 +152,17 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     //
-    private void inicializarFirebase() {
-        FirebaseApp.initializeApp(FormularioLogin.this);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        if (!chamado){
-            firebaseDatabase.setPersistenceEnabled(true);
-            chamado = true;
-        }
-        databaseReference = firebaseDatabase.getReference();
-    }
 
 
     private void login(String email, String senha) {
-        autent.signInWithEmailAndPassword(email, senha)
+        Inicial.autent.signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(FormularioLogin.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             edtEmail.setText("");
                             edtSenha.setText("");
-                            usuario = Conexao.getFirebaseUser();
+                            Inicial.usuario = Conexao.getFirebaseUser();
                             TestaDados();
                         } else {
                             Publico.Alerta(FormularioLogin.this, "E-mail ou Senha não Correspondem!");
@@ -202,7 +172,7 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     private void TestaDados() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Inicial.databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 existe1 = dataSnapshot.hasChild("Usuario");
@@ -221,10 +191,10 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     private void TestaDados2() {
-        databaseReference.child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
+        Inicial.databaseReference.child("Usuario").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                existe = dataSnapshot.hasChild(usuario.getUid());
+                existe = dataSnapshot.hasChild(Inicial.usuario.getUid());
                 if (existe){
                     Publico.Intente(FormularioLogin.this, MenuP.class);
                     finish();
@@ -251,15 +221,4 @@ public class FormularioLogin extends AppCompatActivity {
         System.exit(0);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        inicializarFirebase();
-        autent = Conexao.getFirebaseAuth();
-        if (autent.getCurrentUser() != null){
-            usuario = autent.getCurrentUser();
-            Publico.Intente(FormularioLogin.this, MenuP.class);
-            finish();
-        }
-    }
 }
