@@ -85,7 +85,7 @@ public class ListaProdutos extends AppCompatActivity {
                         arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         listProdutos.setAdapter(arrayAdapterProduto);
-                        Inicial.databaseReference.removeEventListener(pop);
+                        checaPopulacao();
                     }
 
                     @Override
@@ -94,6 +94,14 @@ public class ListaProdutos extends AppCompatActivity {
                     }
 
                 });
+    }
+
+    private void checaPopulacao() {
+        if (listProduto.isEmpty() || listProduto == null){
+            Publico.Alerta(ListaProdutos.this, "Nenhum produto para ser exibido.");
+        }
+        Inicial.databaseReference.removeEventListener(pop);
+
     }
     @Override
     public boolean onSupportNavigateUp() {

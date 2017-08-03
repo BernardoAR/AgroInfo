@@ -14,7 +14,7 @@
 
         <item
             android:id="@+id/nav_rendimentos"
-            android:icon="@drawable/ic_lucros"
+            android:icon="@drawable/ic_rendimento"
             android:title="Rendimentos" />
         <item
             android:id="@+id/nav_vendas"
@@ -22,7 +22,7 @@
             android:title="Vendas" />
         <item
             android:id="@+id/nav_pesquisa"
-            android:icon="@drawable/ic_lucros"
+            android:icon="@drawable/ic_pesquisa"
             android:title="Pesquisar Produtos" />
         <item
             android:id="@+id/nav_cont"

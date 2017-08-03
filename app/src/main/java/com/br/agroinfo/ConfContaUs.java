@@ -212,7 +212,7 @@ public class ConfContaUs extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Inicial.autent.signOut();
                                                         Publico.Alerta(ConfContaUs.this, "Conta de usuário deletada com Sucesso!");
-                                                        Publico.Intente(ConfContaUs.this, Inicial.class);
+                                                        Publico.Intente(ConfContaUs.this, FormularioLogin.class);
                                                         finish();
                                                     } else {
                                                         Publico.Alerta(ConfContaUs.this, "Não foi possível excluir, tente novamente mais tarde");

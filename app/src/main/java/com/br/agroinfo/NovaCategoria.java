@@ -118,13 +118,17 @@ public class NovaCategoria extends AppCompatActivity {
                 arrayAdapterCategoria = new ArrayAdapter<>(NovaCategoria.this,
                         android.R.layout.simple_list_item_1, listCategoria);
                 lstCategoria.setAdapter(arrayAdapterCategoria);
-                Inicial.databaseReference.removeEventListener(lista);
+                checaPopulacao();
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
-
+    private void checaPopulacao() {
+        if (listCategoria.isEmpty() || listCategoria == null){
+            Publico.Alerta(NovaCategoria.this, "Nenhuma categoria para ser exibida.");
+        }
+        Inicial.databaseReference.removeEventListener(lista);
+    }
 }
 

@@ -103,14 +103,18 @@ public class ListaAnotacoes extends AppCompatActivity {
                         android.R.layout.simple_list_item_1, listAnotacao);
                 listAnotacoes.setAdapter(arrayAdapterAnotacao);
                 Collections.reverse(listAnotacao);
+                checaPopulacao();
                 Inicial.databaseReference.removeEventListener(lista);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-
+            public void onCancelled(DatabaseError databaseError) {}
         });
     }
 
+    private void checaPopulacao() {
+        if (listAnotacao.isEmpty() || listAnotacao == null){
+            Publico.Alerta(ListaAnotacoes.this, "Nenhuma anotação para ser exibida.");
+        } Inicial.databaseReference.removeEventListener(lista);
+    }
 }

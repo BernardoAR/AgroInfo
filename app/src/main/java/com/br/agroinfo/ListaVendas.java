@@ -84,7 +84,7 @@ public class ListaVendas extends AppCompatActivity {
                         arrayAdapterVenda = new ArrayAdapter<>(ListaVendas.this,
                                 android.R.layout.simple_list_item_1, listVendas);
                         lstVendas.setAdapter(arrayAdapterVenda);
-                        Inicial.databaseReference.removeEventListener(lista);
+                        checaPopulacao();
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -93,8 +93,10 @@ public class ListaVendas extends AppCompatActivity {
 
                 });
     }
-    protected void onStop() {
-        super.onStop();
+    private void checaPopulacao() {
+        if (listVendas.isEmpty() || listVendas == null){
+            Publico.Alerta(ListaVendas.this, "Nenhuma venda para ser exibida.");
+        }
         Inicial.databaseReference.removeEventListener(lista);
     }
 
