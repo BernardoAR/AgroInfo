@@ -218,7 +218,5 @@ public class FormularioLogin extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
-        System.exit(0);
     }
-
 }

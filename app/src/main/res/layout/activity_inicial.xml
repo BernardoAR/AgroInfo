@@ -17,11 +17,4 @@
         android:maxHeight="240dp"
         app:srcCompat="@drawable/info" />
 
-    <ProgressBar
-        android:id="@+id/progressBar2"
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
 </LinearLayout>
