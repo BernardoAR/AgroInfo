@@ -92,7 +92,7 @@ public class Rendimentos extends AppCompatActivity {
             public void onValueSelected(Entry e, Highlight h) {
                 if (e == null) return;
                 BigDecimal casa = Publico.Casas(e.getY());
-                Publico.Alerta(Rendimentos.this, String.valueOf(casa) + "R$");
+                Publico.Alerta(Rendimentos.this,   "R$" + String.valueOf(casa));
             }
             @Override
             public void onNothingSelected() {

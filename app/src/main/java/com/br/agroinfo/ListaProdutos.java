@@ -73,7 +73,7 @@ public class ListaProdutos extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

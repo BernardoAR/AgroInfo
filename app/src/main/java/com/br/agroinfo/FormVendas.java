@@ -92,7 +92,7 @@ public class FormVendas extends AppCompatActivity {
                     precoFinalV = precoVenda * quantidade;
                     precoFinalC = precoCusto * quantidade;
                     precoF = Publico.Casas(precoFinalV);
-                    textPrecoFin.setText("Preço Final: " + String.valueOf(precoF) + " R$");
+                    textPrecoFin.setText("Preço Final: R$ " + String.valueOf(precoF));
                 }
 
             }
@@ -149,7 +149,7 @@ public class FormVendas extends AppCompatActivity {
                 preco = Publico.Casas(precoVenda);
                 quantT = ("Quantidade Total: " + String.valueOf(total));
                 textQuanti.setText(quantT);
-                textPreco.setText("Preço: " + String.valueOf(preco) + " R$");
+                textPreco.setText("Preço: R$ " + String.valueOf(preco));
             }
 
             @Override
@@ -186,7 +186,7 @@ public class FormVendas extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

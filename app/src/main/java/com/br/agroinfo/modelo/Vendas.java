@@ -50,6 +50,6 @@ public class Vendas implements Serializable {
 
     @Override
     public String toString() {
-        return (" Mês " + String.valueOf(mes) + " Ano " + String.valueOf(ano) + " Preço " + String.valueOf(preco_venda));
+        return (" Mês " + String.valueOf(mes) + " Ano " + String.valueOf(ano) + " R$ " + String.valueOf(preco_venda));
     }
 }

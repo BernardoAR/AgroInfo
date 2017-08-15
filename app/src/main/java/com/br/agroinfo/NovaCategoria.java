@@ -106,7 +106,7 @@ public class NovaCategoria extends AppCompatActivity {
     }
     // Pegar os Valores
     private void populaLista() {
-        lista = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid())
+        lista = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).orderByChild("nova_categoria")
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

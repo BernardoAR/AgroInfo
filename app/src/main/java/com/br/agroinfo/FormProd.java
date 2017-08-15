@@ -295,7 +295,7 @@ public class FormProd extends AppCompatActivity {
 
     // Pegar os Valores
     private void populaLista() {
-        pop = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid())
+        pop = Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).orderByChild("nova_categoria")
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

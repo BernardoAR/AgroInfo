@@ -81,8 +81,8 @@ public class PesquisarProduto extends AppCompatActivity {
         finish();
     }
     public void populaLista(){
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").startAt(pesquisa.getText().toString().toUpperCase())
-                .addValueEventListener(new ValueEventListener() {
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
+                .startAt(pesquisa.getText().toString().toUpperCase()).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         listProduto.clear();

@@ -53,7 +53,7 @@ public class DetalhesVenda extends AppCompatActivity {
             textAno.setText(ano);
             textMes.setText(mes);
             precoV = Publico.Casas(altvenda.getPreco_venda());
-            textPreco.setText("Preço Venda: " + String.valueOf(precoV) + "R$");
+            textPreco.setText("Preço Venda: R$ " + String.valueOf(precoV));
             textQuantV.setText(quantV);
         }
         pegaVProduto();
