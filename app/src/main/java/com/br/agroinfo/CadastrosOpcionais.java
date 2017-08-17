@@ -26,7 +26,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 
 public class CadastrosOpcionais extends AppCompatActivity {
-    TextInputLayout textEndereco, textNome, textTelefone;
+    TextInputLayout textNome;
     EditText edtNome, edtEndereco, edtTelefone;
     Button btnCadastrar;
     private Vibrator vib;
@@ -44,9 +44,7 @@ public class CadastrosOpcionais extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //Resgatar componentes
-        textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
         textNome = (TextInputLayout) findViewById(R.id.textNome);
-        textTelefone = (TextInputLayout) findViewById(R.id.textTelefone);
         edtNome = (EditText) findViewById(R.id.edtNome);
         edtEndereco = (EditText) findViewById(R.id.edtEndereco);
         edtTelefone = (EditText) findViewById(R.id.edtTelefone);

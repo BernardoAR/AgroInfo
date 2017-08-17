@@ -141,7 +141,6 @@ public class FormProd extends AppCompatActivity {
                                        int pos, long id) {
                 // Pegar ID e o Valor da Categoria, forçar para que o Spinner pegue
                 Categoria item = (Categoria) parent.getItemAtPosition(pos);
-                String valor = item.getNova_categoria();
                 valorId = item.getId_categoria();
             }
 

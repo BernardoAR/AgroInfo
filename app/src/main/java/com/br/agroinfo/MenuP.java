@@ -82,11 +82,6 @@ public class MenuP extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         menu = navigationView.getMenu();

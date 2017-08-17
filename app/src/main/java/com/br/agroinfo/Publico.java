@@ -1,12 +1,9 @@
 package com.br.agroinfo;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.math.BigDecimal;
-
-import static com.br.agroinfo.R.id.toolbar;
 
 /**
  * Created by Bernardo on 14/07/2017.

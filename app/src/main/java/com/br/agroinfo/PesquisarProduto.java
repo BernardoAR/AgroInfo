@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.br.agroinfo.modelo.Produto;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -81,8 +82,9 @@ public class PesquisarProduto extends AppCompatActivity {
         finish();
     }
     public void populaLista(){
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
-                .startAt(pesquisa.getText().toString().toUpperCase()).addValueEventListener(new ValueEventListener() {
+        String pesquisas = pesquisa.getText().toString().toUpperCase().trim();
+        Query query = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto").equalTo(pesquisas);
+        pop = query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         listProduto.clear();
@@ -105,9 +107,8 @@ public class PesquisarProduto extends AppCompatActivity {
     private void checaPopulacao() {
         if (listProduto.isEmpty() || listProduto == null){
             Publico.Alerta(PesquisarProduto.this, "Não foi encontrado resultados");
-        } else {
-            Inicial.databaseReference.removeEventListener(pop);
         }
+        Inicial.databaseReference.removeEventListener(pop);
     }
 
 }

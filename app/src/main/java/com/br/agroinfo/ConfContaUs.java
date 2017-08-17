@@ -32,7 +32,7 @@ import br.com.jansenfelipe.androidmask.MaskEditTextChangedListener;
 public class ConfContaUs extends AppCompatActivity {
 
     Animation animBalanc;
-    TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga, textEndereco, textTelefone;
+    TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga;
     EditText edtNome, edtEmail, edtSenha, edtSenhaAntiga, edtEndereco, edtTelefone;
     Button btnSalvarConfiguracoes, btnExcluirUsuario;
     boolean escolha;
@@ -66,8 +66,6 @@ public class ConfContaUs extends AppCompatActivity {
         textEmailConf = (TextInputLayout) findViewById(R.id.textEmailConf);
         textNovaSenha = (TextInputLayout) findViewById(R.id.textNovaSenha);
         textSenhaAntiga = (TextInputLayout) findViewById(R.id.textSenhaAntiga);
-        textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
-        textTelefone = (TextInputLayout) findViewById(R.id.textTelefone);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
 
         //Máscara
