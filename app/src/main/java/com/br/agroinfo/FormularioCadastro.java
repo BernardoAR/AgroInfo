@@ -20,7 +20,9 @@ import android.widget.TextView;
 import com.br.agroinfo.dao.Conexao;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 
 public class FormularioCadastro extends AppCompatActivity {
     private Vibrator vib;
@@ -57,6 +59,9 @@ public class FormularioCadastro extends AppCompatActivity {
         rbEmpresa = (RadioButton) findViewById(R.id.rbEmpresa);
         rbCliente = (RadioButton) findViewById(R.id.rbCliente);
 
+        if (FormularioLogin.googleL){
+            edtEmail.setText(Inicial.usuario.getEmail());
+        }
         // Chamar os de Animação
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -72,12 +77,32 @@ public class FormularioCadastro extends AppCompatActivity {
 
                 if (checaEmail() && checaSenha() && checaConf_Senha()) {
                     // Inserir os detalhes no BD, dependendo de qual dos Radiobuttons for selecionado
-                    criarUsuario(email, senha);
+                    if (FormularioLogin.googleL){
+                        linkarUsuario(email, senha);
+                    } else {
+                        criarUsuario(email, senha);
+                    }
                 }
             }
         });
 
     }
+
+    private void linkarUsuario(String email, String senha) {
+        AuthCredential credencial = EmailAuthProvider.getCredential(email, senha);
+        Inicial.autent.getCurrentUser().linkWithCredential(credencial).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Publico.Alerta(FormularioCadastro.this, "Usuário Cadastrado com Sucesso");
+                    limpaCampos();
+                    Publico.Intente(FormularioCadastro.this, CadastrosOpcionais.class);
+                    finish();
+                }
+            }
+        });
+    }
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -89,6 +114,8 @@ public class FormularioCadastro extends AppCompatActivity {
         super.onBackPressed();
         Publico.Intente(FormularioCadastro.this, FormularioLogin.class);
         finish();
+        FormularioLogin.googleL = false;
+        Conexao.deslogar();
     }
 
     private void criarUsuario(String email, String senha) {
@@ -100,6 +127,7 @@ public class FormularioCadastro extends AppCompatActivity {
                             Publico.Alerta(FormularioCadastro.this, "Usuário Cadastrado com Sucesso");
                             limpaCampos();
                             Conexao.deslogar();
+                            Publico.Intente(FormularioCadastro.this, FormularioLogin.class);
                             finish();
                         } else {
                             Publico.Alerta(FormularioCadastro.this, "Erro de Cadastro, e-mail existente");

@@ -26,6 +26,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -186,7 +188,7 @@ public class FormVendas extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -195,6 +197,12 @@ public class FormVendas extends AppCompatActivity {
                             Produto p = objSnapshot.getValue(Produto.class);
                             listProduto.add(p);
                         }
+                        Collections.sort(listProduto, new Comparator<Produto>() {
+                            @Override
+                            public int compare(Produto o1, Produto o2) {
+                                return o1.getNomeProduto().compareTo(o2.getNomeProduto());
+                            }
+                        });
                         arrayAdapterProduto = new ArrayAdapter<>(FormVendas.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         spnProd.setAdapter(arrayAdapterProduto);

@@ -73,6 +73,10 @@ public class MenuP extends AppCompatActivity
                                 String texto = "Seja bem-vindo(a) ao AgroInfo! Esta é a sua área do cliente onde você terá a possibilidade de pesquisar por produtos em estabelecimentos com os melhores preços para você. Para iniciar sua experiência, clique no menu do canto superior esquerdo da tela e veja as possibilidades feitas para você.";
                                 textoBV.loadData("<p style=\"text-align: justify\">" + texto + "</p>", "text/html; charset=utf-8","UTF-8");
                             }
+                        } else {
+                            Conexao.deslogar();
+                            finish();
+                            Publico.Intente(MenuP.this, FormularioLogin.class);
                         }
                         Inicial.databaseReference.removeEventListener(valores);
                     }

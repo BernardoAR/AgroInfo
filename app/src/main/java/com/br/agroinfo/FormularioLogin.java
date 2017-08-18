@@ -41,6 +41,7 @@ public class FormularioLogin extends AppCompatActivity {
     private static final int RC_SIGN_IN = 1;
     private GoogleApiClient mGoogleApiClient;
     private static final String TAG = "Activity_Normal";
+    public static AuthCredential credential;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +131,7 @@ public class FormularioLogin extends AppCompatActivity {
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount conta) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(conta.getIdToken(), null);
+        credential = GoogleAuthProvider.getCredential(conta.getIdToken(), null);
         Inicial.autent.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -145,12 +146,9 @@ public class FormularioLogin extends AppCompatActivity {
                             googleL = true;
                             TestaDados();
                         }
-                        // ...
                     }
                 });
     }
-
-    //
 
 
     private void login(String email, String senha) {
@@ -177,7 +175,11 @@ public class FormularioLogin extends AppCompatActivity {
                 existe1 = dataSnapshot.hasChild("Usuario");
                 if (existe1){
                     TestaDados2();
-                } else {
+                } else if (!existe && googleL) {
+                    Publico.Intente(FormularioLogin.this, FormularioCadastro.class);
+                    Publico.Alerta(FormularioLogin.this, "Crie uma conta com o e-mail correspondente primeiro");
+                    finish();
+                } else if (!existe && !googleL){
                     Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
                     finish();
                 }
@@ -197,7 +199,11 @@ public class FormularioLogin extends AppCompatActivity {
                 if (existe){
                     Publico.Intente(FormularioLogin.this, MenuP.class);
                     finish();
-                } else {
+                } else if (!existe && googleL) {
+                    Publico.Intente(FormularioLogin.this, FormularioCadastro.class);
+                    Publico.Alerta(FormularioLogin.this, "Crie uma conta com o e-mail correspondente primeiro");
+                    finish();
+                } else if (!existe && !googleL){
                     Publico.Intente(FormularioLogin.this, CadastrosOpcionais.class);
                     finish();
                 }

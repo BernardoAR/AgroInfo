@@ -17,6 +17,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class ListaProdutos extends AppCompatActivity {
@@ -73,7 +75,7 @@ public class ListaProdutos extends AppCompatActivity {
     }
 
     private void populaLista() {
-        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("nomeProduto")
+        pop = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -82,9 +84,18 @@ public class ListaProdutos extends AppCompatActivity {
                             Produto p = objSnapshot.getValue(Produto.class);
                             listProduto.add(p);
                         }
+
+                        Collections.sort(listProduto, new Comparator<Produto>() {
+                            @Override
+                            public int compare(Produto o1, Produto o2) {
+                                return o1.getNomeProduto().compareTo(o2.getNomeProduto());
+                            }
+                        });
+
                         arrayAdapterProduto = new ArrayAdapter<>(ListaProdutos.this,
                                 android.R.layout.simple_list_item_1, listProduto);
                         listProdutos.setAdapter(arrayAdapterProduto);
+
                         checaPopulacao();
                     }
 

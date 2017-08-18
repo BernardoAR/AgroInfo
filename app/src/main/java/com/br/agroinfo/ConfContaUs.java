@@ -16,10 +16,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.br.agroinfo.modelo.Usuario;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -67,7 +72,6 @@ public class ConfContaUs extends AppCompatActivity {
         textNovaSenha = (TextInputLayout) findViewById(R.id.textNovaSenha);
         textSenhaAntiga = (TextInputLayout) findViewById(R.id.textSenhaAntiga);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
-
         //Máscara
         MaskEditTextChangedListener maskTel = new MaskEditTextChangedListener("(##) #####-####", edtTelefone);
         edtTelefone.addTextChangedListener(maskTel);
@@ -135,6 +139,7 @@ public class ConfContaUs extends AppCompatActivity {
                                     Publico.Intente(ConfContaUs.this, MenuP.class);
                                     finish();
                                 }
+                                limpaCampos();
                             }
 
                         });
@@ -182,23 +187,23 @@ public class ConfContaUs extends AppCompatActivity {
                         Inicial.databaseReference.child("Categoria").child(Inicial.usuario.getUid()).removeValue();
                         produto = Inicial.databaseReference.child("Produto").child("Produtos").orderByChild("Usuario").equalTo(Inicial.usuario.getUid())
                                 .addChildEventListener(new ChildEventListener() {
-                            @Override
-                            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                if (dataSnapshot.exists()){
-                                    for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
-                                        objSnapshot.getRef().setValue(null);
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        if (dataSnapshot.exists()){
+                                            for(DataSnapshot objSnapshot : dataSnapshot.getChildren()){
+                                                objSnapshot.getRef().setValue(null);
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            @Override
-                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                            @Override
-                            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                            @Override
-                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {}
-                        });
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                                    @Override
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {}
+                                });
                         Inicial.databaseReference.child("Usuario").child(Inicial.usuario.getUid()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -220,15 +225,27 @@ public class ConfContaUs extends AppCompatActivity {
                                 }
                             }
                         });
+                        limpaCampos();
                     } else {
-                        Publico.Alerta(ConfContaUs.this, "Senha atual incorreta!");
+                        Publico.Alerta(ConfContaUs.this, "Senha Incorreta!");
                     }
                 }
             });
         } else {
-            Publico.Alerta(ConfContaUs.this, "O campo de senha atual está vazio");
+            Publico.Alerta(ConfContaUs.this, "Campo senha vazio!");
         }
+        }
+
+    private void limpaCampos() {
+        edtSenhaAntiga.setText("");
+        edtSenha.setText("");
+        edtEmail.setText("");
+        edtEndereco.setText("");
+        edtNome.setText("");
+        edtTelefone.setText("");
     }
+
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();

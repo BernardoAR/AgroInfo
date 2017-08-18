@@ -88,7 +88,7 @@ public class ConfConta extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Publico.Alerta(ConfConta.this, "Senha alterada com sucesso");
                                                 } else {
-                                                    Publico.Alerta(ConfConta.this, "Erro ao alterar edtSenha, tente novamente mais tarde");
+                                                    Publico.Alerta(ConfConta.this, "Erro ao alterar Senha, tente novamente mais tarde");
                                                 }
                                             }
                                         });
