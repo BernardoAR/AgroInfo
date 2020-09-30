@@ -1,4 +1,4 @@
-package com.br.projeto.modelo;
+package com.br.agroinfo.modelo;
 
 import java.io.Serializable;
 
@@ -8,14 +8,15 @@ import java.io.Serializable;
 
 public class Categoria implements Serializable{
 
-    private int id_categoria;
-    private String nova_categoria;
+    private String nova_categoria, id_categoria;
 
-    public int getId_categoria() {
+    public String getId_categoria() {
         return id_categoria;
     }
 
-    public void setId_categoria(int id_categoria) { this.id_categoria = id_categoria; }
+    public void setId_categoria(String id_categoria) {
+        this.id_categoria = id_categoria;
+    }
 
     public String getNova_categoria() {
         return nova_categoria;
@@ -27,7 +28,6 @@ public class Categoria implements Serializable{
 
     @Override
     public String toString() {
-        return nova_categoria.toString();
-
+        return nova_categoria;
     }
 }

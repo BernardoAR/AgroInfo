@@ -1,32 +1,20 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.br.agroinfo.Inicial"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.br.projeto.Inicial" >
+    android:background="#48A259">
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="fill_parent"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Entrar "
-         />
-
-    <Button
-        android:id="@+id/btnCadastro"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Cadastre-se" />
-    <Button
-        android:id="@+id/btnTeste"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="testar" />
+        android:adjustViewBounds="true"
+        android:maxWidth="240dp"
+        android:maxHeight="240dp"
+        app:srcCompat="@drawable/info" />
 
 </LinearLayout>

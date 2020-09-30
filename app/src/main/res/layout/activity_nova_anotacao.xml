@@ -2,91 +2,98 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.br.projeto.Nova_anotacao"
-    >
+    tools:context="com.br.agroinfo.NovaAnotacao" >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="fill_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:text="Nova Anotação" />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textAssunto"
+        <include
+            layout="@layout/barra_ferr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <EditText
-                android:id="@+id/edtAssunto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Assunto" />
-
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textAnotacao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-
-            <EditText
-                android:id="@+id/nova_anotacao"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Anotação:"
-                android:inputType="textMultiLine"
-                android:lines="8"
-                android:gravity="top|left"
-                android:scrollbars="vertical" />
-        </android.support.design.widget.TextInputLayout>
-
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnSelData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecionar" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/textDataLayout"
+                android:id="@+id/textAssunto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
                 <EditText
-                    android:id="@+id/edtDataAn"
+                    android:id="@+id/edtAssunto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:maxLength="8"
-                    android:inputType="date"
-                    android:hint="Data: Dia/Mês/Ano" />
+                    android:hint="Assunto" />
+
             </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textAnotacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <EditText
+                    android:id="@+id/anotacao"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Anotação:"
+                    android:inputType="textMultiLine"
+                    android:lines="8"
+                    android:gravity="top|start"
+                    android:scrollbars="vertical" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnSelData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="10dp"
+                    android:text="Selecionar" />
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textDataLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+                    <EditText
+                        android:id="@+id/edtDataAn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:maxLength="8"
+                        android:inputType="date"
+                        android:hint="Data: Dia/Mês/Ano" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btnCadastrar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"
+                android:text="Cadastrar" />
+
         </LinearLayout>
-
-
-        <Button
-            android:id="@+id/btnCadastrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cadastrar" />
-
     </LinearLayout>
-
 </ScrollView>
 
 

@@ -1,4 +1,4 @@
-package com.br.projeto;
+package com.br.agroinfo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.br.projeto", appContext.getPackageName());
+        assertEquals("com.br.agroinfo", appContext.getPackageName());
     }
 }

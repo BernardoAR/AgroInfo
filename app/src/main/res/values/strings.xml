@@ -4,7 +4,7 @@
     <string name="app_name">AgroInfo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">AgroInfo</string>
+    <string name="title_activity_login">Agroinfo</string>
     <string name="title_activity_cadastro">Cadastre-se</string>
     <string name="title_activity_menu_principal">MenuPrincipal</string>
 

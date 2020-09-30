@@ -1,119 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.br.projeto.FormProd">
+    tools:context="com.br.agroinfo.FormProd">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="fill_parent"
-            android:gravity="center"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:text="Novo Produto:" />
-        <EditText
-            android:id="@+id/edtNomeProd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nome do Produto:"
-            android:inputType="textPersonName"
-            android:layout_marginTop="20dp"
-            />
-
-        <Spinner
-            android:id="@+id/spnCateg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textPrecoC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <EditText
-                android:id="@+id/editPrecoCusto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Preço de custo (R$/unidade):"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:maxLength="7" />
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/textPrecoV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-            <EditText
-                android:id="@+id/editPrecoVenda"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Preço de venda (R$/unidadde):"
-                android:ems="10"
-                android:inputType="numberDecimal"
-                android:maxLength="7" />
-        </android.support.design.widget.TextInputLayout>
-
-        <EditText
-            android:id="@+id/quantidade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Quantidade:"
-            android:inputType="number" />
+        <include layout="@layout/barra_ferr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnSelDataC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Selecionar:" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
             <android.support.design.widget.TextInputLayout
-                android:id="@+id/textDataCLayout"
+                android:id="@+id/textNomeProd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
                 <EditText
-                    android:id="@+id/DataCadastro"
+                    android:id="@+id/edtNomeProd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:maxLength="8"
-                    android:inputType="date"
-                    android:hint="Data Cadastro:" />
+                    android:hint="Nome do Produto:"
+                    android:inputType="textPersonName"
+                    android:layout_marginTop="20dp" />
             </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <Spinner
+                android:id="@+id/spnCateg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="10"
+                android:layout_gravity="start"
+                />
+
+                <Button
+                    android:id="@+id/btnAdCat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="end"
+                    android:background="?attr/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:text="Nova Categoria" />
+
+              </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textPrecoC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <EditText
+                    android:id="@+id/editPrecoCusto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Preço de custo (R$/unidade):"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:maxLength="7" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textPrecoV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <EditText
+                    android:id="@+id/editPrecoVenda"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Preço de venda (R$/unidadde):"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:maxLength="7" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textQuant"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <EditText
+                    android:id="@+id/quantidade"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Quantidade:"
+                    android:inputType="number" />
+            </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnSelDataC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="10dp"
+                    android:text="Selecionar:" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textDataCLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+                    <EditText
+                        android:id="@+id/DataCadastro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:maxLength="8"
+                        android:inputType="date"
+                        android:hint="Data Cadastro:" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/btnAdProd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adicionar Produto"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:background="?attr/colorPrimary"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/btnListProd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Listar Produtos"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:layout_gravity="start"
+                android:background="?attr/colorPrimary"
+                android:textColor="@android:color/white"/>
+                </LinearLayout>
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnAdProd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Adicionar Produto" />
-        <Button
-            android:id="@+id/btnListProd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Listar Produtos" />
-        <Button
-            android:id="@+id/btnAdCat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nova Categoria" />
     </LinearLayout>
-
-
-    </ScrollView>
+</ScrollView>
