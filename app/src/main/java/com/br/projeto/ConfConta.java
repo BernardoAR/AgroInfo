@@ -2,6 +2,7 @@ package com.br.projeto;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,42 +11,38 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.br.projeto.dao.DAO;
 import com.br.projeto.modelo.Cliente;
 import com.br.projeto.modelo.Sessao;
 import com.br.projeto.modelo.Usuario;
 
-import static com.br.projeto.FormularioCadastro.checaemails;
 import static com.br.projeto.FormularioCadastro.checaemails2;
 import static com.br.projeto.dao.DAO.getEmail;
-import static com.br.projeto.dao.DAO.getEndereco;
 import static com.br.projeto.dao.DAO.getNome;
-import static com.br.projeto.dao.DAO.getTelefone;
 
 
-public class ConfContaUs extends AppCompatActivity {
+public class ConfConta extends AppCompatActivity {
 
     String nome_usuario;
     Animation animBalanc;
-    TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga, textEndereco, textTelefone;
-    EditText nome, email,senha,senha_antiga, edtEndereco, edtTelefone;
+    TextInputLayout textNomeUs, textEmailConf, textNovaSenha, textSenhaAntiga;
+    EditText nome, email,senha,senha_antiga;
     Button btnSalvarConfiguracoes;
+    Button btnExcluirCliente;
     Sessao sessao;
-    Usuario conta;
+    Cliente cliente;
     DAO dao;
     long retornoDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conf_conta_us);
+        setContentView(R.layout.activity_conf_conta);
 
-        conta = new Usuario();
+        cliente = new Cliente();
         sessao = new Sessao(this);
-        dao = new DAO(ConfContaUs.this);
+        dao = new DAO(ConfConta.this);
 
         //resgatar os componentes
 
@@ -53,54 +50,47 @@ public class ConfContaUs extends AppCompatActivity {
         email = (EditText) findViewById(R.id.edtEmail);
         senha = (EditText) findViewById(R.id.edtNovaSenha);
         senha_antiga = (EditText) findViewById(R.id.edtSenhaAntiga);
-        edtEndereco = (EditText) findViewById(R.id.edtEndereco);
-        edtTelefone = (EditText) findViewById(R.id.edtTelefone);
         btnSalvarConfiguracoes = (Button) findViewById(R.id.btnSalvarConfiguracoes);
+        btnExcluirCliente = (Button) findViewById(R.id.btnExcluirCliente);
 
         //TextInputLayouts que terão, animação
         textNomeUs = (TextInputLayout) findViewById(R.id.textNomeUs);
         textEmailConf = (TextInputLayout) findViewById(R.id.textEmailConf);
         textNovaSenha = (TextInputLayout) findViewById(R.id.textNovaSenha);
         textSenhaAntiga = (TextInputLayout) findViewById(R.id.textSenhaAntiga);
-        textEndereco = (TextInputLayout) findViewById(R.id.textEndereco);
-        textTelefone = (TextInputLayout) findViewById(R.id.textTelefone);
         animBalanc = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.balancar);
 
 
-        nome_usuario = dao.getNomeUs();
+        nome_usuario = dao.getNomeCl();
+
         nome.setText(getNome());
         email.setText(getEmail());
-        edtEndereco.setText(getEndereco());
-        edtTelefone.setText(getTelefone());
-
 
         btnSalvarConfiguracoes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String emailstr = email.getText().toString();
-                checaemails = dao.checaEmailsUs(emailstr);
+                checaemails2 = dao.checaEmailsCli(emailstr);
                 submForm();
                 if (checaNome() && checaEmail() && checaSenha() && checaNovaSenha()){
-                    conta.setId_usuario(MenuP.ID);
-                    conta.setNome(nome.getText().toString());
-                    conta.setEmail(email.getText().toString());
-                    conta.setEndereco(edtEndereco.getText().toString());
-                    conta.setTelefone(edtTelefone.getText().toString());
+                    cliente.setId_cliente(MenuP.ID);
+                    cliente.setNome(nome.getText().toString());
+                    cliente.setEmail(email.getText().toString());
                     if (senha.getText().toString().trim().isEmpty()) {
-                        conta.setSenha(senha_antiga.getText().toString());
+                        cliente.setSenha(senha_antiga.getText().toString());
                     } else {
-                        conta.setSenha(senha.getText().toString());
+                        cliente.setSenha(senha.getText().toString());
                     }
-                    dao.alterarUsuario(conta);
+                    dao.alterarCliente(cliente);
                     dao.close();
 
                     if (retornoDB == -1) {
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(ConfContaUs.this);
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
                         dialog.setTitle("AgroInfo");
                         dialog.setMessage("Erro ao alterar!");
                         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                ConfContaUs.this.finish();
+                                ConfConta.this.finish();
                             }
                         });
 
@@ -109,12 +99,12 @@ public class ConfContaUs extends AppCompatActivity {
 
                     } else {
 
-                        AlertDialog.Builder dialog = new AlertDialog.Builder(ConfContaUs.this);
+                        AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
                         dialog.setTitle("AgroInfo");
                         dialog.setMessage("Alterado com sucesso!");
                         dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                ConfContaUs.this.finish();
+                                ConfConta.this.finish();
                             }
                         });
 
@@ -122,6 +112,51 @@ public class ConfContaUs extends AppCompatActivity {
                         dialog.show();
                     }
                 }
+            }
+        });
+
+        btnExcluirCliente.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                cliente.setId_cliente(cliente.getId_cliente());
+
+                dao.excluirCliente(cliente);
+                dao.close();
+
+
+                if (retornoDB == -1) {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Erro ao excluir sua conta!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ConfConta.this.finish();
+                        }
+                    });
+
+
+                    dialog.show();
+
+                } else {
+
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(ConfConta.this);
+                    dialog.setTitle("AgroInfo");
+                    dialog.setMessage("Conta excluída com sucesso!");
+                    dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            sessao.dizLogado(false);
+                            sessao.dizID(0);
+                            Intent abrirLogin = new Intent(ConfConta.this, FormularioLogin.class);
+                            // solicitar para abir
+                            startActivity(abrirLogin);
+                        }
+                    });
+
+
+                    dialog.show();
+                }
+
             }
         });
 
@@ -164,9 +199,9 @@ public class ConfContaUs extends AppCompatActivity {
     }
     private boolean checaEmail(){
         String b = email.getText().toString().trim();
-        String c = dao.getEmailUs();
-        if((b.isEmpty() || checaemails) && (!b.equals(c))){
-            if (checaemails){
+        String c = dao.getEmailCl();
+        if((b.isEmpty() || checaemails2) && (!b.equals(c))){
+            if (checaemails2){
                 textEmailConf.setErrorEnabled(true);
                 textEmailConf.setError("E-mail já existente!");
                 email.setError("Necessita de Entrada Válida");
@@ -183,7 +218,7 @@ public class ConfContaUs extends AppCompatActivity {
     }
     //Pegar a string de e-mail do ID
     private boolean checaSenha() {
-        String a = dao.getSenhaUs();
+        String a = dao.getSenhaCl();
         if(senha_antiga.getText().toString().trim().length() <= 5 || !senha_antiga.getText().toString().trim().equals(a)){
             textSenhaAntiga.setError("Entre com a Senha Antiga Corretamente");
             senha_antiga.setError("Entrada Obrigatória!");
@@ -195,7 +230,7 @@ public class ConfContaUs extends AppCompatActivity {
     private boolean checaNovaSenha() {
         if(!senha.getText().toString().trim().isEmpty() && senha_antiga.getText().toString().trim().length() <= 5){
             textNovaSenha.setError("Entre com uma nova senha de no Mínimo 6 dígitos");
-            senha.setError("Entrada Opcional, porém obrigado 6 dígitos!");
+            senha.setError("Entrada Opcional, porém obrigatório 6 dígitos!");
             return false;
         }
         textSenhaAntiga.setErrorEnabled(false);

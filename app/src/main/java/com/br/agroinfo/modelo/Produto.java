@@ -1,4 +1,4 @@
-package com.br.agroinfo.modelo;
+package com.br.projeto.modelo;
 
 import java.io.Serializable;
 
@@ -8,15 +8,17 @@ import java.io.Serializable;
 
 public class Produto implements Serializable {
 
-    String nomeProduto, dataCadastro, id_produto, us_prod;
-    float precoCusto, precoVenda;
-    int quantidade;
+    private int id_produto;
 
-    public String getId_produto() {
+    String nomeProduto, DataCadastro;
+    float PrecoCusto, PrecoVenda;
+    int Quantidade;
+
+    public int getId_produto() {
         return id_produto;
     }
 
-    public void setId_produto(String id_produto) {
+    public void setId_produto(int id_produto) {
         this.id_produto = id_produto;
     }
 
@@ -29,38 +31,42 @@ public class Produto implements Serializable {
     }
 
     public String getDataCadastro() {
-        return dataCadastro;
+        return DataCadastro;
     }
 
-    public void setDataCadastro(String dataCadastro) { this.dataCadastro = dataCadastro;}
+    public void setDataCadastro(String dataCadastro) {
+        DataCadastro = dataCadastro;
+    }
+
+    public void setPrecoCusto(float precoCusto) {
+        PrecoCusto = precoCusto;
+    }
 
     public float getPrecoCusto() {
-        return precoCusto;
-    }
-
-    public void setPrecoCusto(float precoCusto) { this.precoCusto = precoCusto; }
-
-    public float getPrecoVenda() {
-        return precoVenda;
+        return PrecoCusto;
     }
 
     public void setPrecoVenda(float precoVenda) {
-        this.precoVenda = precoVenda;
+        PrecoVenda = precoVenda;
+    }
+
+    public float getPrecoVenda() {
+        return PrecoVenda;
     }
 
     public int getQuantidade() {
-        return quantidade;
+        return Quantidade;
     }
 
     public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
+        Quantidade = quantidade;
     }
 
     @Override
     public String toString() {
-        return nomeProduto + "  R$ " + precoVenda;
-    }
+        return nomeProduto.toString();
 
+    }
 }
 
 
