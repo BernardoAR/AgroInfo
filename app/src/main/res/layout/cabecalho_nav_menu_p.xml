@@ -20,10 +20,11 @@
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
+        android:id="@+id/nome_usuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Nome do App"
+        android:text="Nome do "
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView

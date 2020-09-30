@@ -1,17 +1,19 @@
 package com.br.projeto.modelo;
 
+/**
+ * Created by Bernardo on 10/06/2017.
+ */
 
-public class Usuario{
+public class Cliente {
+    private int id_cliente;
 
-    private int id_usuario;
+    String nome, email, senha, confirmar_senha;
 
-    String nome, email, senha, confirmar_senha, endereco, telefone;
-
-    public int getId_usuario() {
-        return id_usuario;
+    public int getId_cliente() {
+        return id_cliente;
     }
 
-    public void setId_usuario(int id_usuario) { this.id_usuario = id_usuario; }
+    public void setId_cliente(int id_cliente) { this.id_cliente = id_cliente; }
 
     public String getNome() { return nome; }
 
@@ -33,22 +35,6 @@ public class Usuario{
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
-
-    public String getEndereco() {
-        return endereco;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getTelefone() {
-        return telefone;
     }
 
     public String getConfirmar_senha() {

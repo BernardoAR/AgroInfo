@@ -15,12 +15,18 @@
         android:id="@+id/btnLogin"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Entrar " />
+        android:text="Entrar "
+         />
 
     <Button
         android:id="@+id/btnCadastro"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Cadastre-se" />
+    <Button
+        android:id="@+id/btnTeste"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="testar" />
 
 </LinearLayout>

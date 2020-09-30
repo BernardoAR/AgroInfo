@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.br.projeto.FormProd">
+
+
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="fill_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="Alterar Produto" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textNomeProd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/edtNomeProd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nome do Produto"
+            android:inputType="textPersonName"
+            android:layout_marginTop="20dp"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:id="@+id/textCateg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:hint="Categoria: "
+        android:textSize="18dp"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textPrecoCus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/editPrecoCusto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Preço de custo (R$/unidadde)"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textPrecoVen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/editPrecoVenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Preço de venda (R$/unidadde)"
+            android:ems="10"
+            android:inputType="numberDecimal" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/textQuantidade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <EditText
+            android:id="@+id/quantidade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Quantidade"
+            android:inputType="number" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/btnSalvarProd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Salvar Produto" />
+    <Button
+        android:id="@+id/btnExcluirProd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Excluir Produto" />
+
+</LinearLayout>

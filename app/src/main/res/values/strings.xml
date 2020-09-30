@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Projeto</string>
+    <string name="app_name">AgroInfo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">Login</string>
+    <string name="title_activity_login">AgroInfo</string>
     <string name="title_activity_cadastro">Cadastre-se</string>
     <string name="title_activity_menu_principal">MenuPrincipal</string>
 
@@ -29,5 +29,6 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Nome_Usuario">Teste</string>
 
 </resources>
